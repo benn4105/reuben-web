@@ -54,8 +54,11 @@ export default function ReuxPage() {
           <p className="text-2xl md:text-3xl text-gray-400 font-light mb-10">
             A new paradigm for structured computing.
           </p>
-          <div className="flex justify-center gap-4">
-            <AnimatedButton href="https://github.com/reuben/reux" variant="primary">
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <AnimatedButton href="/projects/reux/demo" variant="primary">
+              Try Live Demo
+            </AnimatedButton>
+            <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
               View on GitHub
             </AnimatedButton>
             <AnimatedButton href="#" variant="secondary">

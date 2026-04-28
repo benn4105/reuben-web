@@ -6,6 +6,11 @@ import { Environment, Float } from "@react-three/drei";
 import * as THREE from "three";
 import { useScroll, useVelocity, useSpring } from "framer-motion";
 
+function randomUnit(seed: number) {
+  const value = Math.sin(seed * 12.9898) * 43758.5453;
+  return value - Math.floor(value);
+}
+
 function AbstractShape() {
   const pointsRef = useRef<THREE.Points>(null);
 
@@ -29,8 +34,8 @@ function AbstractShape() {
       const progress = i / particleCount;
       const y = (progress - 0.5) * 20; // Height spread from -10 to 10
       
-      const radius = 2 + (Math.random() * 0.6 - 0.3); // Thickness of the helix arm
-      const angle = y * 1.5 + (Math.random() * 0.4 - 0.2); // Twist calculation
+      const radius = 2 + (randomUnit(i + 1) * 0.6 - 0.3); // Thickness of the helix arm
+      const angle = y * 1.5 + (randomUnit(i + 5000) * 0.4 - 0.2); // Twist calculation
       
       const isSecondStrand = i % 2 === 0;
       const strandOffset = isSecondStrand ? Math.PI : 0;
@@ -88,9 +93,9 @@ function Particles() {
   const positions = useMemo(() => {
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 15;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 15;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 15;
+      pos[i * 3] = (randomUnit(i + 100) - 0.5) * 15;
+      pos[i * 3 + 1] = (randomUnit(i + 200) - 0.5) * 15;
+      pos[i * 3 + 2] = (randomUnit(i + 300) - 0.5) * 15;
     }
     return pos;
   }, [count]);
@@ -119,15 +124,15 @@ function Particles() {
 function Shooters() {
   const count = 20;
   const shooters = useMemo(() => {
-    return Array.from({ length: count }).map(() => ({
-      x: (Math.random() - 0.5) * 40,
-      y: (Math.random() - 0.5) * 20,
-      z: -10 - Math.random() * 15,
-      length: 0.06 + Math.random() * 0.1, // Doubled length
-      speed: 0.5 + Math.random() * 1.5,
-      direction: Math.random() > 0.5 ? 1 : -1,
-      color: Math.random() > 0.5 ? "#00F0FF" : "#8A2BE2",
-      thickness: 0.02 + Math.random() * 0.04 // Doubled thickness
+    return Array.from({ length: count }).map((_, i) => ({
+      x: (randomUnit(i + 400) - 0.5) * 40,
+      y: (randomUnit(i + 500) - 0.5) * 20,
+      z: -10 - randomUnit(i + 600) * 15,
+      length: 0.06 + randomUnit(i + 700) * 0.1, // Doubled length
+      speed: 0.5 + randomUnit(i + 800) * 1.5,
+      direction: randomUnit(i + 900) > 0.5 ? 1 : -1,
+      color: randomUnit(i + 1000) > 0.5 ? "#00F0FF" : "#8A2BE2",
+      thickness: 0.02 + randomUnit(i + 1100) * 0.04 // Doubled thickness
     }));
   }, []);
 
@@ -142,10 +147,10 @@ function Shooters() {
         // Wrap around bounds
         if (s.direction === 1 && child.position.x > 25) {
           child.position.x = -25;
-          child.position.y = (Math.random() - 0.5) * 20;
+          child.position.y = (randomUnit(i + Math.floor(state.clock.elapsedTime * 10)) - 0.5) * 20;
         } else if (s.direction === -1 && child.position.x < -25) {
           child.position.x = 25;
-          child.position.y = (Math.random() - 0.5) * 20;
+          child.position.y = (randomUnit(i + Math.floor(state.clock.elapsedTime * 10)) - 0.5) * 20;
         }
       });
     }

@@ -67,6 +67,9 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.8 }}
             className="flex flex-col sm:flex-row items-center gap-6"
           >
+            <AnimatedButton href="/projects/reux/demo" variant="primary">
+              Try Reux Demo
+            </AnimatedButton>
             <AnimatedButton href="/projects" variant="primary">
               Explore Projects
             </AnimatedButton>

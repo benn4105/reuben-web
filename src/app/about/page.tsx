@@ -65,7 +65,7 @@ export default function AboutPage() {
             <div className="glass-card p-8 rounded-2xl flex flex-col items-center text-center">
               <h3 className="text-2xl font-bold text-white mb-4">Join Our Mission</h3>
               <p className="text-gray-400 mb-8 max-w-md">
-                We're always looking for exceptional engineers who want to push the boundaries of what's possible in software.
+                We&apos;re always looking for exceptional engineers who want to push the boundaries of what&apos;s possible in software.
               </p>
               <AnimatedButton href="mailto:careers@reuben.inc" variant="primary">
                 View Open Roles

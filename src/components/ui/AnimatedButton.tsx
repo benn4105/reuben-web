@@ -11,6 +11,7 @@ interface AnimatedButtonProps {
   onClick?: () => void;
   variant?: "primary" | "secondary";
   className?: string;
+  external?: boolean;
 }
 
 export default function AnimatedButton({
@@ -19,6 +20,7 @@ export default function AnimatedButton({
   onClick,
   variant = "primary",
   className,
+  external = false,
 }: AnimatedButtonProps) {
   const baseClasses = "relative inline-flex items-center justify-center px-8 py-3 font-semibold rounded-full overflow-hidden transition-all duration-300";
   
@@ -35,6 +37,8 @@ export default function AnimatedButton({
       <Component
         href={href || ""}
         onClick={onClick}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noreferrer" : undefined}
         className={cn(baseClasses, variants[variant], className)}
       >
         <span className="relative z-10">{children}</span>

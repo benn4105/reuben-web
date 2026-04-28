@@ -16,6 +16,16 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Reux Demo
+
+The Reux demo page is available at `/projects/reux/demo`. Set the hosted demo service URL before deploying the website:
+
+```bash
+NEXT_PUBLIC_REUX_DEMO_URL=https://your-reux-demo-host.example.com
+```
+
+When this variable is not set, the demo page shows a setup placeholder instead of embedding the app.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
