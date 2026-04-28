@@ -26,6 +26,12 @@ NEXT_PUBLIC_REUX_DEMO_URL=https://your-reux-demo-host.example.com
 
 When this variable is not set, the demo page shows a setup placeholder instead of embedding the app.
 
+Current production demo service:
+
+```bash
+NEXT_PUBLIC_REUX_DEMO_URL=https://reux-pilot-demo-production.up.railway.app
+```
+
 ## Railway
 
 This repo includes `railway.json` for Railway deployments. Create a Railway service from `benn4105/reuben-web`, then set:
