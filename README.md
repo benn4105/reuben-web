@@ -26,6 +26,16 @@ NEXT_PUBLIC_REUX_DEMO_URL=https://your-reux-demo-host.example.com
 
 When this variable is not set, the demo page shows a setup placeholder instead of embedding the app.
 
+## Railway
+
+This repo includes `railway.json` for Railway deployments. Create a Railway service from `benn4105/reuben-web`, then set:
+
+```bash
+NEXT_PUBLIC_REUX_DEMO_URL=https://your-reux-demo-service.up.railway.app
+```
+
+Railway will use `npm run build`, `npm run start`, and `/projects/reux/demo` as the deployment health check.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
