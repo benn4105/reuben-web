@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Terminal, Cpu, Database, Zap } from "lucide-react";
+import { Terminal, Cpu, Database, Zap, PackageCheck, Truck } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 
 const codeSnippet = `// Reux - High Performance HTTP Server Example
@@ -155,6 +155,59 @@ export default function ReuxPage() {
                 {feature.icon}
                 <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Active Pilots */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mt-24"
+        >
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Live Pilots</h2>
+            <p className="text-gray-400 text-lg leading-relaxed">
+              Reux is being shaped around real data workflows: transactional commerce first, logistics operations next.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {[
+              {
+                icon: <PackageCheck className="w-8 h-8 text-[#00F0FF]" />,
+                title: "Commerce Console",
+                status: "Public Demo",
+                description: "Run isolated checkout-style transactions, reset a personal demo session, and process generated outbox events.",
+                href: "/projects/reux/demo",
+                action: "Open Demo",
+              },
+              {
+                icon: <Truck className="w-8 h-8 text-[#8A2BE2]" />,
+                title: "Logistics Dispatch",
+                status: "Pilot Spec",
+                description: "Model shipments, vehicles, driver assignments, delivery checkpoints, and dispatch events from one Reux schema.",
+                href: "https://github.com/benn4105/Reux/blob/main/docs/technical/logistics-pilot.md",
+                action: "Read Pilot",
+                external: true,
+              },
+            ].map((pilot) => (
+              <div key={pilot.title} className="glass-card p-8 rounded-xl border border-white/10">
+                <div className="flex items-start justify-between gap-4 mb-6">
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    {pilot.icon}
+                  </div>
+                  <span className="text-xs font-semibold uppercase tracking-wide text-[#00F0FF] border border-[#00F0FF]/30 rounded-full px-3 py-1">
+                    {pilot.status}
+                  </span>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-3">{pilot.title}</h3>
+                <p className="text-gray-400 leading-relaxed mb-6">{pilot.description}</p>
+                <AnimatedButton href={pilot.href} variant="secondary" external={pilot.external}>
+                  {pilot.action}
+                </AnimatedButton>
               </div>
             ))}
           </div>
