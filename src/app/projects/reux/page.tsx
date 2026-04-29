@@ -181,17 +181,16 @@ export default function ReuxPage() {
                 title: "Commerce Console",
                 status: "Public Demo",
                 description: "Run isolated checkout-style transactions, reset a personal demo session, and process generated outbox events.",
-                href: "/projects/reux/demo",
+                href: "/projects/reux/demo?domain=commerce",
                 action: "Open Demo",
               },
               {
                 icon: <Truck className="w-8 h-8 text-[#8A2BE2]" />,
                 title: "Logistics Dispatch",
-                status: "Pilot Spec",
-                description: "Model shipments, vehicles, driver assignments, delivery checkpoints, and dispatch events from one Reux schema.",
-                href: "https://github.com/benn4105/Reux/blob/main/docs/technical/logistics-pilot.md",
-                action: "Read Pilot",
-                external: true,
+                status: "Public Demo",
+                description: "Start shipments, complete deliveries, credit drivers, reset an isolated dispatch session, and process logistics outbox events.",
+                href: "/projects/reux/demo?domain=logistics",
+                action: "Open Demo",
               },
             ].map((pilot) => (
               <div key={pilot.title} className="glass-card p-8 rounded-xl border border-white/10">
@@ -205,7 +204,7 @@ export default function ReuxPage() {
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-3">{pilot.title}</h3>
                 <p className="text-gray-400 leading-relaxed mb-6">{pilot.description}</p>
-                <AnimatedButton href={pilot.href} variant="secondary" external={pilot.external}>
+                <AnimatedButton href={pilot.href} variant="secondary">
                   {pilot.action}
                 </AnimatedButton>
               </div>

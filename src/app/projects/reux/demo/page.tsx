@@ -2,8 +2,20 @@ import { ExternalLink, Rocket } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import { reuxDemoUrl } from "@/lib/demo";
 
-export default function ReuxDemoPage() {
+interface ReuxDemoPageProps {
+  searchParams?: Promise<{ domain?: string }>;
+}
+
+export default async function ReuxDemoPage({ searchParams }: ReuxDemoPageProps) {
   const configured = reuxDemoUrl.length > 0;
+  const params = await searchParams;
+  const domain = params?.domain === "logistics" ? "logistics" : "commerce";
+  const demoTitle = domain === "logistics" ? "Try the Reux logistics dispatch console" : "Try the Reux commerce console";
+  const demoCopy =
+    domain === "logistics"
+      ? "A running dispatch slice of the language: generated schema, typed queries, guarded shipment transitions, PostgreSQL state, and outbox events."
+      : "A running commerce slice of the language: migrations, typed queries, transactions, PostgreSQL state, and outbox events.";
+  const demoSrc = configured ? `${reuxDemoUrl}${reuxDemoUrl.includes("?") ? "&" : "?"}domain=${domain}` : "";
 
   return (
     <div className="pt-28 pb-16 min-h-screen bg-[#0A0A0A]">
@@ -17,15 +29,15 @@ export default function ReuxDemoPage() {
               </span>
             </div>
             <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-6xl">
-              Try the Reux commerce console
+              {demoTitle}
             </h1>
             <p className="max-w-2xl text-lg leading-relaxed text-gray-400">
-              A running slice of the language: migrations, typed queries, transactions, PostgreSQL state, and outbox events.
+              {demoCopy}
             </p>
           </div>
 
           {configured && (
-            <AnimatedButton href={reuxDemoUrl} variant="secondary" external>
+            <AnimatedButton href={demoSrc} variant="secondary" external>
               <span className="inline-flex items-center gap-2">
                 Open Fullscreen
                 <ExternalLink className="h-4 w-4" />
@@ -37,7 +49,7 @@ export default function ReuxDemoPage() {
         {configured ? (
           <div className="overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl shadow-black/40">
             <iframe
-              src={reuxDemoUrl}
+              src={demoSrc}
               title="Reux pilot demo"
               className="h-[78vh] min-h-[680px] w-full bg-white"
             />
