@@ -133,63 +133,30 @@ function Shooters() {
     return Array.from({ length: count }).map((_, i) => ({
       x: (randomUnit(i + 400) - 0.5) * 40,
       y: (randomUnit(i + 500) - 0.5) * 20,
-      z: -3 + (randomUnit(i + 600) - 0.5) * 4,
+      z: -10 - randomUnit(i + 600) * 15,
       length: 0.06 + randomUnit(i + 700) * 0.1, // Doubled length
       speed: 0.5 + randomUnit(i + 800) * 1.5,
       direction: randomUnit(i + 900) > 0.5 ? 1 : -1,
       color: randomUnit(i + 1000) > 0.5 ? "#00F0FF" : "#8A2BE2",
-      thickness: 0.02 + randomUnit(i + 1100) * 0.04, // Doubled thickness
-      hit: false
+      thickness: 0.02 + randomUnit(i + 1100) * 0.04 // Doubled thickness
     }));
   }, []);
 
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame((state, delta) => {
-    const time = state.clock.elapsedTime;
-
     if (groupRef.current) {
       groupRef.current.children.forEach((child, i) => {
         const s = shooters[i];
-        
-        if (s.hit) {
-          child.scale.multiplyScalar(0.8);
-          if (child.scale.x < 0.05) {
-            s.hit = false;
-            child.scale.set(1, 1, 1);
-            s.direction = Math.random() > 0.5 ? 1 : -1;
-            child.position.x = s.direction === 1 ? -25 : 25;
-            child.position.y = (Math.random() - 0.5) * 20;
-          }
-          return;
-        }
-
-        const prevX = child.position.x;
         child.position.x += s.speed * s.direction * delta;
         
-        const crossedCenter = (prevX < 2.5 && child.position.x >= 2.5) || (prevX > 2.5 && child.position.x <= 2.5);
-        
-        if (crossedCenter) {
-          const frontColorIsCyan = Math.sin(child.position.y * 1.5 - time * 0.5) > 0;
-          const currentFrontColor = frontColorIsCyan ? "#00F0FF" : "#8A2BE2";
-          
-          if (s.color === currentFrontColor) {
-            s.hit = true;
-          } else {
-            s.direction *= -1;
-            child.position.x = 2.5 + s.direction * 0.1;
-          }
-        }
-
         // Wrap around bounds
-        if (!s.hit) {
-          if (s.direction === 1 && child.position.x > 25) {
-            child.position.x = -25;
-            child.position.y = (Math.random() - 0.5) * 20;
-          } else if (s.direction === -1 && child.position.x < -25) {
-            child.position.x = 25;
-            child.position.y = (Math.random() - 0.5) * 20;
-          }
+        if (s.direction === 1 && child.position.x > 25) {
+          child.position.x = -25;
+          child.position.y = (randomUnit(i + Math.floor(state.clock.elapsedTime * 10)) - 0.5) * 20;
+        } else if (s.direction === -1 && child.position.x < -25) {
+          child.position.x = 25;
+          child.position.y = (randomUnit(i + Math.floor(state.clock.elapsedTime * 10)) - 0.5) * 20;
         }
       });
     }
