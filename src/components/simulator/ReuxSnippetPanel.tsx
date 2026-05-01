@@ -1,0 +1,183 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import { Cpu, Code2 } from "lucide-react";
+
+// shadcn / Radix components
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "@/components/ui/collapsible";
+import { Badge } from "@/components/ui/badge";
+import { ChevronDown } from "lucide-react";
+
+interface ReuxSnippetPanelProps {
+  snippet: string;
+  collapsible?: boolean;
+  defaultOpen?: boolean;
+  className?: string;
+}
+
+// Token-based syntax highlighting — builds React elements directly
+function highlightSyntax(code: string): React.ReactNode[] {
+  function highlightLine(line: string, lineIdx: number): React.ReactNode {
+    const tokens: React.ReactNode[] = [];
+    const regex = /(\b(?:simulate|forecast|if|then|else|return|let|mut)\b)|(\b\d+\.?\d*\b)|(\w+)(?=\s*=)|("(?:[^"\\]|\\.)*")|(\S+|\s+)/g;
+    let match: RegExpExecArray | null;
+    let lastIndex = 0;
+
+    while ((match = regex.exec(line)) !== null) {
+      if (match.index > lastIndex) {
+        tokens.push(line.slice(lastIndex, match.index));
+      }
+      if (match[1]) {
+        tokens.push(
+          <span key={`${lineIdx}-${match.index}`} className="text-violet-400 font-semibold">
+            {match[1]}
+          </span>
+        );
+      } else if (match[2]) {
+        tokens.push(
+          <span key={`${lineIdx}-${match.index}`} className="text-cyan-400">
+            {match[2]}
+          </span>
+        );
+      } else if (match[3]) {
+        tokens.push(
+          <span key={`${lineIdx}-${match.index}`} className="text-amber-300">
+            {match[3]}
+          </span>
+        );
+      } else if (match[4]) {
+        tokens.push(
+          <span key={`${lineIdx}-${match.index}`} className="text-emerald-400">
+            {match[4]}
+          </span>
+        );
+      } else if (match[5]) {
+        tokens.push(match[5]);
+      }
+      lastIndex = match.index + match[0].length;
+    }
+
+    if (lastIndex < line.length) {
+      tokens.push(line.slice(lastIndex));
+    }
+
+    return tokens.length > 0 ? tokens : line;
+  }
+
+  return code.split("\n").map((line, i) => (
+    <div key={i} className="flex">
+      <span className="text-muted-foreground/40 select-none w-8 text-right mr-4 text-xs leading-6">
+        {i + 1}
+      </span>
+      <span className="leading-6">
+        {highlightLine(line, i)}
+      </span>
+    </div>
+  ));
+}
+
+export default function ReuxSnippetPanel({
+  snippet,
+  collapsible = true,
+  defaultOpen = false,
+  className,
+}: ReuxSnippetPanelProps) {
+  const content = (
+    <>
+      {/* Header */}
+      <div className="flex items-center gap-3 px-5 py-3">
+        <div className="p-1.5 rounded-lg bg-violet-500/10">
+          <Cpu size={16} className="text-violet-400" />
+        </div>
+        <div className="flex-1 text-left">
+          <div className="text-sm font-semibold text-foreground/80">
+            Powered by Reux
+          </div>
+          <div className="text-xs text-muted-foreground mt-1 leading-relaxed">
+            Reux evaluates these parameters on the backend, calculating cascading impacts on cost, risk, and productivity over the forecast period to determine the optimal scenario.
+          </div>
+        </div>
+        <Badge variant="outline" className="text-[10px]">
+          DSL
+        </Badge>
+      </div>
+
+      {/* Code Block */}
+      <div className="border-t border-border/30">
+        <div className="flex items-center gap-2 px-5 py-2 border-b border-border/20 bg-muted/20">
+          <Code2 size={12} className="text-muted-foreground" />
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
+            Reux Simulation Definition (read-only)
+          </span>
+        </div>
+        <div className="px-5 py-3 font-mono text-xs text-muted-foreground overflow-x-auto">
+          {highlightSyntax(snippet)}
+        </div>
+      </div>
+    </>
+  );
+
+  if (!collapsible) {
+    return (
+      <div
+        className={cn(
+          "rounded-xl border border-border/30 bg-card/30 overflow-hidden",
+          className
+        )}
+      >
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <Collapsible defaultOpen={defaultOpen}>
+      <div
+        className={cn(
+          "rounded-xl border border-border/30 bg-card/30 overflow-hidden",
+          className
+        )}
+      >
+        <CollapsibleTrigger className="w-full flex items-center justify-between px-5 py-3 cursor-pointer hover:bg-muted/10 transition-colors">
+          <div className="flex items-center gap-3">
+            <div className="p-1.5 rounded-lg bg-violet-500/10">
+              <Cpu size={16} className="text-violet-400" />
+            </div>
+            <div className="text-left">
+              <div className="text-sm font-semibold text-foreground/80">
+                Powered by Reux
+              </div>
+              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                Reux evaluates these parameters on the backend, calculating cascading impacts on cost, risk, and productivity over the forecast period to determine the optimal scenario.
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-[10px]">
+              DSL
+            </Badge>
+            <ChevronDown size={16} className="text-muted-foreground transition-transform duration-200 data-[state=open]:rotate-180" />
+          </div>
+        </CollapsibleTrigger>
+
+        <CollapsibleContent>
+          <div className="border-t border-border/30">
+            <div className="flex items-center gap-2 px-5 py-2 border-b border-border/20 bg-muted/20">
+              <Code2 size={12} className="text-muted-foreground" />
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
+                Reux Simulation Definition (read-only)
+              </span>
+            </div>
+            <div className="px-5 py-3 font-mono text-xs text-muted-foreground overflow-x-auto">
+              {highlightSyntax(snippet)}
+            </div>
+          </div>
+        </CollapsibleContent>
+      </div>
+    </Collapsible>
+  );
+}

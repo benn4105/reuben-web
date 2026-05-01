@@ -58,7 +58,7 @@ export default function Home() {
             className="text-lg md:text-xl text-gray-400 max-w-2xl mb-12"
           >
             Reuben builds powerful, structurally sound tools for modern computing. 
-            We believe in minimalist design, high performance, and zero compromises.
+            See our newest product—the Reux-powered Business Simulation Engine.
           </motion.p>
 
           <motion.div 
@@ -67,14 +67,11 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.8 }}
             className="flex flex-col sm:flex-row items-center gap-6"
           >
-            <AnimatedButton href="/projects/reux/demo" variant="primary">
-              Try Reux Demo
-            </AnimatedButton>
-            <AnimatedButton href="/projects" variant="primary">
-              Explore Projects
+            <AnimatedButton href="/simulator" variant="primary">
+              Launch Simulator
             </AnimatedButton>
             <AnimatedButton href="/projects/reux" variant="secondary">
-              View Reux
+              Explore Reux Language
             </AnimatedButton>
           </motion.div>
         </motion.div>
@@ -97,10 +94,10 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-end mb-16">
             <div>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-                Featured Project
+                Featured Products
               </h2>
               <p className="text-gray-400 max-w-md">
-                Discover our flagship programming language, designed for modern, high-performance systems.
+                Discover our flagship simulation engine and the programming language that powers it.
               </p>
             </div>
             <AnimatedButton href="/projects" variant="secondary" className="mt-8 md:mt-0 hidden md:inline-flex">
@@ -108,13 +105,20 @@ export default function Home() {
             </AnimatedButton>
           </div>
 
-          <div className="grid grid-cols-1 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <ProjectCard
+              title="Business Simulator"
+              description="A powerful decision engine for operators. Model workforce planning, productivity gains, and risk factors to forecast margin impacts weeks into the future. Compare scenarios and find the optimal path."
+              tags={["Product", "Simulation", "Analytics"]}
+              href="/simulator"
+              featured={true}
+            />
             <ProjectCard
               title="Reux"
-              description="A new paradigm for structured computing. Reux offers uncompromising performance with a syntax designed for humans and systems alike. Built-in database integration and zero-cost abstractions make it the perfect tool for next-generation infrastructure."
+              description="A new paradigm for structured computing. Reux offers uncompromising performance with a syntax designed for humans and systems alike. Built-in database integration and zero-cost abstractions."
               tags={["Programming Language", "Compilers", "Systems"]}
               href="/projects/reux"
-              featured={true}
+              featured={false}
             />
           </div>
           

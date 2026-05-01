@@ -117,14 +117,17 @@ export default function ReuxPage() {
             A data-aware backend language for transactions, simulations, and decision logic.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <AnimatedButton href="/projects/reux/demo" variant="primary">
-              Try Live Demo
+            <AnimatedButton href="/simulator" variant="primary">
+              Launch Business Simulator
             </AnimatedButton>
-            <AnimatedButton href="/projects/reux/roadmap" variant="secondary">
-              View Roadmap
+            <AnimatedButton href="/projects/reux/demo" variant="secondary">
+              Try Terminal Demo
+            </AnimatedButton>
+            <AnimatedButton href="/docs" variant="secondary">
+              Read the Docs
             </AnimatedButton>
             <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
-              View on GitHub
+              GitHub
             </AnimatedButton>
           </div>
         </motion.div>
@@ -317,7 +320,7 @@ export default function ReuxPage() {
           <div className="max-w-3xl mx-auto text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Live Pilots</h2>
             <p className="text-gray-400 text-lg leading-relaxed">
-              Reux is being shaped around real data workflows: transactional commerce first, logistics operations next.
+              Reux is already powering interactive products. Our flagship Business Simulation Engine uses Reux to evaluate scenarios and recommend operational decisions in real time.
             </p>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

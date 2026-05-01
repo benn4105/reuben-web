@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import { cn } from "@/lib/utils";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const geistSans = Geist({ subsets: ["latin"], variable: "--font-sans" });
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
 export const metadata: Metadata = {
   title: "Reuben | Engineering the Future of Systems",
@@ -17,13 +18,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark h-full antialiased">
-      <body className={`${inter.variable} font-sans min-h-full flex flex-col bg-[#0A0A0A] text-[#ededed]`}>
-        <Navbar />
-        <main className="flex-grow flex flex-col relative z-0">
+    <html lang="en" className={cn("dark h-full antialiased", geistSans.variable, geistMono.variable)}>
+      <body className="font-sans min-h-full flex flex-col bg-background text-foreground">
+        <TooltipProvider>
           {children}
-        </main>
-        <Footer />
+        </TooltipProvider>
       </body>
     </html>
   );

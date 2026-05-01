@@ -1,0 +1,121 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import { Award, TrendingUp, TrendingDown, Calendar } from "lucide-react";
+
+// shadcn / Radix components
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+
+interface RecommendationPanelProps {
+  scenarioName: string;
+  marginImprovement: number;
+  riskChange: number;
+  firstDivergenceWeek: number;
+  reason: string;
+  className?: string;
+}
+
+export default function RecommendationPanel({
+  scenarioName,
+  marginImprovement,
+  riskChange,
+  firstDivergenceWeek,
+  reason,
+  className,
+}: RecommendationPanelProps) {
+  const marginPositive = marginImprovement >= 0;
+  const riskPositive = riskChange <= 0;
+
+  return (
+    <Card
+      className={cn(
+        "border-none ring-amber-500/20 bg-amber-500/[0.03]",
+        className
+      )}
+    >
+      <CardContent className="p-5">
+        <div className="flex items-start gap-4">
+          {/* Icon */}
+          <div className="shrink-0 p-2.5 rounded-xl bg-amber-500/10">
+            <Award size={22} className="text-amber-400" />
+          </div>
+
+          <div className="flex-1 min-w-0">
+            {/* Header */}
+            <div className="flex items-center gap-2 mb-1">
+              <h3 className="text-sm font-semibold text-foreground">
+                Recommended Scenario
+              </h3>
+              <Badge className="bg-amber-500/20 text-amber-400 text-[10px] border-none">
+                BEST OUTCOME
+              </Badge>
+            </div>
+
+            {/* Scenario Name */}
+            <div className="text-lg font-bold text-amber-400 mb-3">
+              {scenarioName}
+            </div>
+
+            {/* Metrics Row */}
+            <div className="flex flex-wrap items-center gap-4 mb-3">
+              <div className="flex items-center gap-1.5">
+                {marginPositive ? (
+                  <TrendingUp size={14} className="text-emerald-400" />
+                ) : (
+                  <TrendingDown size={14} className="text-rose-400" />
+                )}
+                <span className="text-xs text-muted-foreground">Margin:</span>
+                <Badge
+                  variant={marginPositive ? "secondary" : "destructive"}
+                  className={cn(
+                    "text-[10px] font-mono",
+                    marginPositive && "bg-emerald-500/10 text-emerald-400"
+                  )}
+                >
+                  {marginPositive ? "+" : ""}${marginImprovement.toLocaleString()}/week
+                </Badge>
+              </div>
+
+              <Separator orientation="vertical" className="h-4 bg-border/30" />
+
+              <div className="flex items-center gap-1.5">
+                {riskPositive ? (
+                  <TrendingDown size={14} className="text-emerald-400" />
+                ) : (
+                  <TrendingUp size={14} className="text-rose-400" />
+                )}
+                <span className="text-xs text-muted-foreground">Risk:</span>
+                <Badge
+                  variant={riskPositive ? "secondary" : "destructive"}
+                  className={cn(
+                    "text-[10px] font-mono",
+                    riskPositive && "bg-emerald-500/10 text-emerald-400"
+                  )}
+                >
+                  {riskChange > 0 ? "+" : ""}{riskChange.toFixed(1)} pts
+                </Badge>
+              </div>
+
+              <Separator orientation="vertical" className="h-4 bg-border/30" />
+
+              <div className="flex items-center gap-1.5">
+                <Calendar size={14} className="text-muted-foreground" />
+                <span className="text-xs text-muted-foreground">Divergence:</span>
+                <Badge variant="outline" className="text-[10px] font-mono">
+                  Week {firstDivergenceWeek}
+                </Badge>
+              </div>
+            </div>
+
+            {/* Reason */}
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {reason}
+            </p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

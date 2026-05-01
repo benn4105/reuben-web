@@ -43,8 +43,11 @@ export default function AboutPage() {
             <p className="text-gray-300 text-lg leading-relaxed mb-6">
               We believe that the software infrastructure of the future should not be built on the fragile abstractions of the past. The exponential growth of data and compute demands a paradigm shift in how we write, compile, and execute code.
             </p>
-            <p className="text-gray-300 text-lg leading-relaxed">
+            <p className="text-gray-300 text-lg leading-relaxed mb-6">
               At Reuben, we are redesigning the computing stack from first principles. By bridging the gap between low-level performance and high-level ergonomics, we empower engineers to build systems that are safe, scalable, and blazingly fast.
+            </p>
+            <p className="text-gray-300 text-lg leading-relaxed">
+              We aren't just building abstract research. We prove our technology by building real, high-leverage products—like our Business Simulation Engine—which demonstrates the raw power of our Reux programming language in production environments.
             </p>
           </motion.div>
 
