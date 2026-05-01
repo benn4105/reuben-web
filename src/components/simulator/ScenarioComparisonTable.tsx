@@ -91,8 +91,8 @@ export default function ScenarioComparisonTable({
   const allScenarios = [baseline, ...scenarios];
 
   return (
-    <div className={cn("", className)}>
-      <Table>
+    <div className={cn("overflow-x-auto w-full", className)}>
+      <Table className="min-w-[600px]">
         <TableHeader>
           <TableRow className="border-white/[0.06] hover:bg-transparent">
             <TableHead className="w-40 text-xs uppercase tracking-wider text-muted-foreground">

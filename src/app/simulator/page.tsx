@@ -7,7 +7,7 @@ import SimulationCard from "@/components/simulator/SimulationCard";
 import { EmptyState } from "@/components/simulator/EmptyState";
 import { LoadingCards, LoadingMetrics } from "@/components/simulator/LoadingState";
 import { SimulatorOnboarding } from "@/components/simulator/SimulatorOnboarding";
-import { listSimulations } from "@/lib/simulation/mock-service";
+import { listSimulations } from "@/lib/simulation/api-client";
 import type { SimulationSummary } from "@/lib/simulation/types";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -128,8 +128,8 @@ export default function SimulatorDashboard() {
           </div>
         ) : simulations.length === 0 ? (
           <EmptyState
-            title="No simulations yet"
-            description="Create your first simulation to model business scenarios and compare outcomes."
+            title="Ready to forecast your first decision?"
+            description="The Business Simulator uses Reux to test operational assumptions—like hiring or process optimization—and predicts the safest path forward."
             action={
               <Button asChild className="gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 border-none hover:shadow-[0_0_20px_rgba(0,200,255,0.25)]">
                 <Link href="/simulator/new">

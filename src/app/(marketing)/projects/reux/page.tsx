@@ -54,9 +54,9 @@ const roadmapMilestones = [
     items: ["Commerce and logistics pilots", "PostgreSQL-backed transactions", "Simulation examples", "Release preflight checks"],
   },
   {
-    phase: "Next",
+    phase: "Beta",
     title: "Business Simulator MVP",
-    status: "In design",
+    status: "Completed",
     description:
       "A serious operator-facing app where users compare cost, productivity, risk, and margin scenarios while Reux powers the backend logic.",
     items: ["Scenario builder", "Forecast charts", "Recommendation panel", "Reux transparency view"],
@@ -323,10 +323,18 @@ export default function ReuxPage() {
               Reux is already powering interactive products. Our flagship Business Simulation Engine uses Reux to evaluate scenarios and recommend operational decisions in real time.
             </p>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {[
               {
-                icon: <PackageCheck className="w-8 h-8 text-[#00F0FF]" />,
+                icon: <LineChart className="w-8 h-8 text-[#00F0FF]" />,
+                title: "Business Simulator",
+                status: "Flagship MVP",
+                description: "Model operational decisions, simulate scenarios, and compare forecasts using Reux backend evaluation.",
+                href: "/simulator",
+                action: "Launch Simulator",
+              },
+              {
+                icon: <PackageCheck className="w-8 h-8 text-[#8A2BE2]" />,
                 title: "Commerce Console",
                 status: "Public Demo",
                 description: "Run isolated checkout-style transactions, reset a personal demo session, and process generated outbox events.",
@@ -334,7 +342,7 @@ export default function ReuxPage() {
                 action: "Open Demo",
               },
               {
-                icon: <Truck className="w-8 h-8 text-[#8A2BE2]" />,
+                icon: <Truck className="w-8 h-8 text-[#00F0FF]" />,
                 title: "Logistics Dispatch",
                 status: "Public Demo",
                 description: "Start shipments, complete deliveries, credit drivers, reset an isolated dispatch session, and process logistics outbox events.",

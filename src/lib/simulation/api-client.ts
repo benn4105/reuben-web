@@ -1,3 +1,4 @@
+import * as mockService from './mock-service';
 import { generateReuxSnippet } from "./engine";
 import type {
   CompareRequest,
@@ -415,4 +416,15 @@ function slugify(value: string): string {
     .replace(/(^-|-$)/g, "");
 
   return slug || `scenario-${Date.now()}`;
+}
+
+export async function getOperationsDecision(): Promise<{ baseline: ScenarioInputs; scenarios: ScenarioInputs[] }> {
+  if (hasLiveApi()) {
+    try {
+      return await fetchWithRetry<{ baseline: ScenarioInputs; scenarios: ScenarioInputs[] }>("/api/simulations/operations-decision");
+    } catch (error) {
+      console.warn("Failed to fetch default operations decision from API, falling back to mock", error);
+    }
+  }
+  return mockService.getOperationsDecision();
 }

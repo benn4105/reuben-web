@@ -17,11 +17,11 @@ export default function RoadmapPage() {
     "Early VS Code support with syntax highlighting, formatting, diagnostics, completions, hovers, and go-to-definition.",
     "Demo health checks, outbox status summaries, and worker observability counters.",
     "Release preflight checks for package entrypoints, release docs, roadmap sync, and clean-tree readiness.",
-    "Public release plan and package dry-run workflow."
+    "Public release plan and package dry-run workflow.",
+    "Business Simulation Engine frontend MVP with a serious scenario-builder and comparison console."
   ];
 
   const inProgressItems = [
-    "Business Simulation Engine frontend MVP with a serious scenario-builder and comparison console.",
     "Public-safe demo polish for repeat visitors and non-technical testers.",
     "Package-name decision and public beta publishing path.",
     "Stronger editor intelligence and eventually a true language-server process.",
@@ -30,10 +30,6 @@ export default function RoadmapPage() {
   ];
 
   const nextMilestones = [
-    {
-      title: "Business Simulator MVP",
-      description: "Build the operator-facing app for comparing cost, productivity, risk, margin, staffing, and process-improvement scenarios while Reux powers the backend logic."
-    },
     {
       title: "Public Beta Polish",
       description: "Make the public demos easier to understand, add stronger visitor-safe reset flows, refine walkthrough copy, and keep hosted smoke checks running."

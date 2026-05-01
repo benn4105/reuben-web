@@ -7,6 +7,7 @@ import type {
   RunSimulationResponse,
   Simulation,
   SimulationSummary,
+  ScenarioInputs,
 } from "./types";
 import { runScenario, findRecommendation } from "./engine";
 import { MOCK_SIMULATIONS } from "./mock-data";
@@ -216,4 +217,13 @@ export async function compareScenarios(request: CompareRequest): Promise<Compare
   }
 
   return mockCompareScenarios(request);
+}
+
+export async function getOperationsDecision(): Promise<{ baseline: ScenarioInputs; scenarios: ScenarioInputs[] }> {
+  await delay(300);
+  const { BASELINE_INPUTS, SCENARIO_PRESETS } = await import("./mock-data");
+  return {
+    baseline: { ...BASELINE_INPUTS, name: "Current Operations" },
+    scenarios: SCENARIO_PRESETS.map((p) => ({ ...BASELINE_INPUTS, ...p })),
+  };
 }

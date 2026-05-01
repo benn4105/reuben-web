@@ -22,6 +22,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
+import { BackendStatusIndicator } from "@/components/simulator/BackendStatusIndicator";
 
 const navItems = [
   { href: "/simulator", label: "Dashboard", icon: LayoutDashboard },
@@ -164,6 +165,7 @@ export default function SimulatorShell({ children }: SimulatorShellProps) {
           </div>
 
           <div className="flex items-center gap-3">
+            <BackendStatusIndicator />
             <Button asChild size="sm" className="gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white border-none hover:shadow-[0_0_20px_rgba(0,200,255,0.25)] transition-shadow">
               <Link href="/simulator/new">
                 <PlusCircle size={14} />
