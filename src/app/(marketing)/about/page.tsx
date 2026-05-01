@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 
 export default function AboutPage() {
@@ -69,14 +70,14 @@ export default function AboutPage() {
               <div className="relative z-10 flex flex-col items-center gap-4">
                 {/* Application Layer */}
                 <div className="w-full flex flex-col md:flex-row gap-4 justify-center">
-                  <div className="flex-1 max-w-sm glass border border-white/10 p-6 rounded-2xl text-center hover:border-[#00F0FF]/40 transition-colors">
-                    <h4 className="text-lg text-white font-bold mb-2">Business Simulator</h4>
+                  <Link href="/simulator" className="flex-1 max-w-sm glass border border-white/10 p-6 rounded-2xl text-center hover:border-[#00F0FF]/40 transition-colors cursor-pointer group">
+                    <h4 className="text-lg text-white font-bold mb-2 group-hover:text-[#00F0FF] transition-colors">Business Simulator</h4>
                     <p className="text-sm text-gray-400">Live operational scenario modeling</p>
-                  </div>
-                  <div className="flex-1 max-w-sm glass border border-white/10 p-6 rounded-2xl text-center hover:border-[#8A2BE2]/40 transition-colors">
-                    <h4 className="text-lg text-white font-bold mb-2">PLOS</h4>
+                  </Link>
+                  <Link href="/projects/plos" className="flex-1 max-w-sm glass border border-white/10 p-6 rounded-2xl text-center hover:border-[#8A2BE2]/40 transition-colors cursor-pointer group">
+                    <h4 className="text-lg text-white font-bold mb-2 group-hover:text-[#8A2BE2] transition-colors">PLOS</h4>
                     <p className="text-sm text-gray-400">Personal Life Operating System</p>
-                  </div>
+                  </Link>
                 </div>
                 
                 {/* Connector */}

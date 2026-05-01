@@ -29,7 +29,7 @@ const projects = [
     title: "PLOS",
     description: "Personal Life Operating System. A planned personal simulation platform for finances, habits, goals, and career decisions, with Reux as the simulation layer.",
     tags: ["Planned", "Personal Simulation", "Reux"],
-    href: "#",
+    href: "/projects/plos",
     featured: false,
   },
 ];
