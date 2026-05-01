@@ -7,6 +7,7 @@ import MetricCard from "@/components/simulator/MetricCard";
 import ReuxSnippetPanel from "@/components/simulator/ReuxSnippetPanel";
 import { calculateMetrics, generateReuxSnippet } from "@/lib/simulation/engine";
 import { runSimulation, getOperationsDecision } from "@/lib/simulation/mock-service";
+import { SimulationApiError, type ValidationErrorIssue } from "@/lib/simulation/api-client";
 import type { ScenarioInputs, MetricSnapshot } from "@/lib/simulation/types";
 import { Plus, Trash2, Wand2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -111,7 +112,19 @@ export default function NewSimulationPage() {
   const [liveMetrics, setLiveMetrics] = useState<MetricSnapshot | null>(null);
   const [liveSnippet, setLiveSnippet] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [validationIssues, setValidationIssues] = useState<ValidationErrorIssue[] | null>(null);
   const [selectedPreset, setSelectedPreset] = useState<"expansion" | "optimization" | "surge" | null>(null);
+
+  function loadPreset(presetKey: PresetKey) {
+    const preset = buildGuidedPreset(presetKey);
+    setSimulationName(preset.name);
+    setBaseline(preset.baseline);
+    setScenarios(preset.scenarios);
+    setSelectedPreset(presetKey);
+    setActiveTab("baseline");
+    setLiveMetrics(calculateMetrics(preset.baseline));
+    setLiveSnippet(generateReuxSnippet(preset.baseline));
+  }
 
   useEffect(() => {
     async function fetchDefaults() {
@@ -201,28 +214,30 @@ export default function NewSimulationPage() {
     if (!baseline) return;
     try {
       setIsRunning(true);
+      setError(null);
+      setValidationIssues(null);
       const response = await runSimulation({
         name: simulationName,
         baseline,
         scenarios,
       });
       router.push(`/simulator/${response.simulation.id}`);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Simulation failed:", err);
       setIsRunning(false);
+      
+      if (err instanceof SimulationApiError) {
+        setError(err.message);
+        setValidationIssues(err.issues || []);
+      } else {
+        const errorMsg = err instanceof Error ? err.message : "An unexpected error occurred";
+        setError(errorMsg);
+        setValidationIssues(null);
+      }
     }
   };
 
-  const loadPreset = useCallback((presetKey: PresetKey) => {
-    const preset = buildGuidedPreset(presetKey);
-    setSimulationName(preset.name);
-    setBaseline(preset.baseline);
-    setScenarios(preset.scenarios);
-    setSelectedPreset(presetKey);
-    setActiveTab("baseline");
-    setLiveMetrics(calculateMetrics(preset.baseline));
-    setLiveSnippet(generateReuxSnippet(preset.baseline));
-  }, []);
+
 
   const handleTabChange = (tab: "baseline" | number) => {
     setActiveTab(tab);
@@ -328,7 +343,7 @@ export default function NewSimulationPage() {
             <p className="text-sm font-medium">Loading default assumptions...</p>
           </div>
         </div>
-      ) : error ? (
+      ) : error && validationIssues === null ? (
         <div className="flex h-64 items-center justify-center rounded-xl border border-rose-500/20 bg-rose-500/5 p-6 text-center">
           <div className="max-w-md space-y-4">
             <p className="text-sm text-rose-400">{error}</p>
@@ -345,6 +360,42 @@ export default function NewSimulationPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left: Input Panel */}
           <div className="lg:col-span-5 xl:col-span-4 space-y-4">
+            
+            {/* Inline Error Panel for Validation Errors */}
+            {validationIssues !== null && error && (
+              <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 mb-4">
+                <h3 className="text-sm font-semibold text-amber-500 mb-2">Please fix the following issues:</h3>
+                {validationIssues.length > 0 ? (
+                  <ul className="space-y-2">
+                    {validationIssues.map((issue, idx) => {
+                      // Map common backend paths to readable labels
+                      const friendlyPath = issue.path
+                        .replace('$.baseline.grossMarginRate', 'Baseline Gross Margin Rate')
+                        .replace('$.baseline.productivityGainRate', 'Baseline Productivity Gain')
+                        .replace('$.baseline.averageHourlyCost', 'Baseline Hourly Cost')
+                        .replace('$.baseline.overtimeReductionRate', 'Baseline Overtime Reduction')
+                        .replace('$.baseline.', 'Baseline ')
+                        .replace('$.scenarios[0].', 'Scenario A ')
+                        .replace('$.scenarios[1].', 'Scenario B ')
+                        .replace('$.scenarios[2].', 'Scenario C ')
+                        .replace('.assumptions.forecastPeriods', ' Forecast Weeks')
+                        .replace('.assumptions.', ' ');
+
+                      return (
+                        <li key={idx} className="text-xs text-amber-400/90 flex gap-2">
+                          <span className="shrink-0">•</span>
+                          <span>
+                            <strong className="text-amber-500">{friendlyPath}:</strong> {issue.message}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-amber-400">{error}</p>
+                )}
+              </div>
+            )}
             {/* Scenario Tabs */}
             <div className="flex items-center gap-2 overflow-x-auto pb-1">
               <button

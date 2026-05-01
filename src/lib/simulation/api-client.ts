@@ -25,6 +25,25 @@ export function hasLiveApi(): boolean {
   return Boolean(API_BASE_URL);
 }
 
+export interface ValidationErrorIssue {
+  path: string;
+  message: string;
+}
+
+export class SimulationApiError extends Error {
+  public code?: string;
+  public issues?: ValidationErrorIssue[];
+  public status?: number;
+
+  constructor(message: string, code?: string, issues?: ValidationErrorIssue[], status?: number) {
+    super(message);
+    this.name = "SimulationApiError";
+    this.code = code;
+    this.issues = issues;
+    this.status = status;
+  }
+}
+
 interface FetchOptions extends RequestInit {
   retries?: number;
 }
@@ -163,12 +182,27 @@ async function fetchWithRetry<T>(path: string, options: FetchOptions = {}): Prom
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        
+        if (errorData.code || errorData.issues || errorData.error) {
+          throw new SimulationApiError(
+            errorData.message || errorData.error || `API error: ${response.status} ${response.statusText}`,
+            errorData.code,
+            errorData.issues,
+            response.status
+          );
+        }
+
         throw new Error(errorData.message || `API error: ${response.status} ${response.statusText}`);
       }
 
       return await response.json();
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
+      
+      if (lastError instanceof SimulationApiError && lastError.status && lastError.status >= 400 && lastError.status < 500) {
+        throw lastError; // Do not retry validation errors
+      }
+
       attempt += 1;
 
       if (attempt <= retries) {

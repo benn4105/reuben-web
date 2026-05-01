@@ -176,6 +176,9 @@ export async function runSimulation(request: RunSimulationRequest): Promise<RunS
     try {
       return await liveApi.runSimulation(request);
     } catch (error) {
+      if (error instanceof liveApi.SimulationApiError && error.status && error.status >= 400 && error.status < 500) {
+        throw error;
+      }
       console.warn("Live Reux simulation failed; falling back to mock service.", error);
     }
   }
@@ -212,6 +215,9 @@ export async function compareScenarios(request: CompareRequest): Promise<Compare
     try {
       return await liveApi.compareScenarios(request);
     } catch (error) {
+      if (error instanceof liveApi.SimulationApiError && error.status && error.status >= 400 && error.status < 500) {
+        throw error;
+      }
       console.warn("Live Reux scenario comparison failed; falling back to mock service.", error);
     }
   }
