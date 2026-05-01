@@ -90,16 +90,16 @@ export default function ForecastChart({
 
   return (
     <div className={cn("space-y-3", className)}>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <h4 className="text-sm font-semibold text-gray-300">{title}</h4>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           {datasets.map(ds => (
             <div key={ds.label} className="flex items-center gap-2">
               <div
-                className="w-3 h-[2px] rounded-full"
+                className="w-3 h-[2px] rounded-full shrink-0"
                 style={{ backgroundColor: ds.color }}
               />
-              <span className="text-xs text-gray-500">{ds.label}</span>
+              <span className="text-xs text-gray-500 whitespace-nowrap">{ds.label}</span>
             </div>
           ))}
         </div>

@@ -209,13 +209,15 @@ export default function SimulationResultsPage({
       {/* Forecast Chart */}
       <div className="space-y-3">
         <Tabs value={activeMetric} onValueChange={(v) => setActiveMetric(v as typeof activeMetric)}>
-          <TabsList variant="line" className="h-auto p-0">
-            {METRIC_TABS.map(tab => (
-              <TabsTrigger key={tab.key} value={tab.key} className="text-xs">
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          <div className="overflow-x-auto -mx-1 px-1">
+            <TabsList variant="line" className="h-auto p-0 min-w-max">
+              {METRIC_TABS.map(tab => (
+                <TabsTrigger key={tab.key} value={tab.key} className="text-xs">
+                  {tab.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
         </Tabs>
 
         <ForecastChart

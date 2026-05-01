@@ -97,7 +97,7 @@ export default function SimulatorDashboard() {
             </div>
             <div>
               <h4 className="text-sm font-semibold text-white mb-1">3. Evaluate Results</h4>
-              <p className="text-xs text-gray-500">Reux compiles the data to recommend the most profitable, least risky path.</p>
+              <p className="text-xs text-gray-500">The Reux engine evaluates each scenario to surface the strongest margin with the lowest risk.</p>
             </div>
           </div>
         </div>

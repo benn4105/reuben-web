@@ -156,7 +156,7 @@ export default function NewSimulationPage() {
         }
       } catch (err) {
         console.error("Failed to load defaults", err);
-        setError("Failed to load the baseline model from the engine. The Reux backend might be unreachable.");
+        setError("Could not load the simulation model. The backend may be temporarily unavailable — try refreshing the page.");
       } finally {
         setIsLoadingDefaults(false);
       }
@@ -249,7 +249,7 @@ export default function NewSimulationPage() {
           Build Simulation
         </h1>
         <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-          Set up your current operations as the <strong>Baseline</strong>, then create alternative <strong>Scenarios</strong> such as Aggressive Hiring or Lean Ops by adjusting the assumptions. The Reux engine will compare them and recommend the safest path.
+          Define a <strong>Baseline</strong>, create alternative <strong>Scenarios</strong>, and let the Reux engine compare them to recommend the safest path.
         </p>
       </div>
 
@@ -333,7 +333,7 @@ export default function NewSimulationPage() {
         <div className="flex h-64 items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.02]">
           <div className="flex flex-col items-center gap-4 text-gray-500">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-500 border-t-transparent" />
-            <p className="text-sm font-medium">Loading default assumptions...</p>
+            <p className="text-sm font-medium">Preparing simulation model…</p>
           </div>
         </div>
       ) : error && validationIssues === null ? (

@@ -31,7 +31,7 @@ export function SimulatorOnboarding() {
           </div>
           <DialogTitle className="text-xl text-center text-white">Welcome to the Business Simulator</DialogTitle>
           <DialogDescription className="text-center text-gray-400 pt-2">
-            This interactive demo showcases the power of the <strong>Reux</strong> programming language in a real-world scenario.
+            This interactive demo uses the <strong>Reux</strong> backend engine to model operational decisions and surface risk before you commit to them.
           </DialogDescription>
         </DialogHeader>
         
@@ -67,7 +67,7 @@ export function SimulatorOnboarding() {
             <div>
               <h4 className="text-sm font-semibold text-white">Powered by Reux</h4>
               <p className="text-xs text-gray-500 mt-1">
-                Behind the scenes, the Reux language handles the complex forecasting algorithms and decision logic seamlessly.
+                Reux handles the simulation logic in the backend—defining scenarios, running forecasts, and evaluating trade-offs.
               </p>
             </div>
           </div>

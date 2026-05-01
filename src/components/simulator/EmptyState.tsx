@@ -32,7 +32,7 @@ interface ErrorStateProps {
 }
 
 export function ErrorState({
-  title = "Unable to connect",
+  title = "Something went wrong",
   message,
   onRetry,
   secondaryAction,
