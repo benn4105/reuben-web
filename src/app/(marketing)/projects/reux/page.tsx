@@ -18,6 +18,7 @@ import {
   User,
 } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
+import CodeComparison from "@/components/ui/CodeComparison";
 import { cn } from "@/lib/utils";
 
 const codeSnippet = `module operations
@@ -235,6 +236,22 @@ export default function ReuxPage() {
           </div>
         </motion.div>
 
+        {/* Code Comparison */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mt-32"
+        >
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Reux?</h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              See how Reux compares to the messy reality of modeling complex business logic in traditional web stacks.
+            </p>
+          </div>
+          <CodeComparison />
+        </motion.div>
         {/* Use Cases Grid */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
