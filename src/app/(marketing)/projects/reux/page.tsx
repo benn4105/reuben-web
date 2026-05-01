@@ -13,6 +13,7 @@ import {
   Truck,
   Workflow,
   Zap,
+  Activity,
 } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import { cn } from "@/lib/utils";
@@ -358,13 +359,13 @@ export default function ReuxPage() {
               Reux is already powering interactive products. The Business Simulator uses Reux to evaluate scenarios and recommend operational decisions.
             </p>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
                 icon: <LineChart className="w-8 h-8 text-[#00F0FF]" />,
                 title: "Business Simulator",
                 status: "Flagship MVP",
-                description: "Model operational decisions, simulate scenarios, and compare forecasts using Reux backend evaluation.",
+                description: "Models complex operational decisions. For example, Reux evaluates how hiring 15 employees affects productivity and costs over a 12-week forecast.",
                 href: "/simulator",
                 action: "Try the Business Simulator",
               },
@@ -372,7 +373,7 @@ export default function ReuxPage() {
                 icon: <PackageCheck className="w-8 h-8 text-[#8A2BE2]" />,
                 title: "Commerce Console",
                 status: "Public Demo",
-                description: "Run isolated checkout-style transactions, reset a personal demo session, and process generated outbox events.",
+                description: "Models checkout transactions and event emission. For example, Reux ensures a cart checkout atomically updates inventory and emits an 'order_placed' event.",
                 href: "/projects/reux/demo?domain=commerce",
                 action: "Open Demo",
               },
@@ -380,8 +381,16 @@ export default function ReuxPage() {
                 icon: <Truck className="w-8 h-8 text-[#00F0FF]" />,
                 title: "Logistics Dispatch",
                 status: "Public Demo",
-                description: "Start shipments, complete deliveries, credit drivers, reset an isolated dispatch session, and process logistics outbox events.",
+                description: "Models state transitions in a fleet network. For example, Reux enforces rules so a shipment can only transition from 'assigned' to 'in_transit'.",
                 href: "/projects/reux/demo?domain=logistics",
+                action: "Open Demo",
+              },
+              {
+                icon: <Activity className="w-8 h-8 text-rose-400" />,
+                title: "Clinic Operations",
+                status: "Public Demo",
+                description: "Models patient check-in workflows and clinic capacity. For example, Reux handles the transactional transition of a patient from 'waiting' to 'in_room'.",
+                href: "/projects/reux/demo?domain=clinic",
                 action: "Open Demo",
               },
             ].map((pilot) => (
@@ -390,7 +399,12 @@ export default function ReuxPage() {
                   <div className="p-3 rounded-xl bg-white/5 border border-white/10">
                     {pilot.icon}
                   </div>
-                  <span className="text-xs font-semibold uppercase tracking-wide text-[#00F0FF] border border-[#00F0FF]/30 rounded-full px-3 py-1">
+                  <span className={cn(
+                    "text-xs font-semibold uppercase tracking-wide border rounded-full px-3 py-1",
+                    pilot.status === "Flagship MVP" 
+                      ? "text-[#00F0FF] border-[#00F0FF]/30" 
+                      : "text-[#8A2BE2] border-[#8A2BE2]/30"
+                  )}>
                     {pilot.status}
                   </span>
                 </div>
