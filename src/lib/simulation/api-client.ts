@@ -25,6 +25,55 @@ export function hasLiveApi(): boolean {
   return Boolean(API_BASE_URL);
 }
 
+export interface LiveApiStatus {
+  configured: boolean;
+  ok: boolean;
+  url?: string;
+  message: string;
+}
+
+export async function checkLiveApiStatus(): Promise<LiveApiStatus> {
+  if (!API_BASE_URL) {
+    return {
+      configured: false,
+      ok: false,
+      message: "No live backend is configured. The simulator will use local mock data.",
+    };
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/simulations`, {
+      headers: { Accept: "application/json" },
+      signal: AbortSignal.timeout(5000),
+    });
+
+    if (!response.ok) {
+      return {
+        configured: true,
+        ok: false,
+        url: API_BASE_URL,
+        message: `The live backend responded with ${response.status}. The simulator can fall back to local mock data.`,
+      };
+    }
+
+    return {
+      configured: true,
+      ok: true,
+      url: API_BASE_URL,
+      message: "Connected to the live Reux backend.",
+    };
+  } catch (error) {
+    return {
+      configured: true,
+      ok: false,
+      url: API_BASE_URL,
+      message: error instanceof Error
+        ? `Live backend check failed: ${error.message}`
+        : "Live backend check failed. The simulator can fall back to local mock data.",
+    };
+  }
+}
+
 export interface ValidationErrorIssue {
   path: string;
   message: string;

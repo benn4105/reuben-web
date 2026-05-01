@@ -113,7 +113,7 @@ export default function NewSimulationPage() {
   const [liveSnippet, setLiveSnippet] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [validationIssues, setValidationIssues] = useState<ValidationErrorIssue[] | null>(null);
-  const [selectedPreset, setSelectedPreset] = useState<"expansion" | "optimization" | "surge" | null>(null);
+  const [selectedPreset, setSelectedPreset] = useState<PresetKey | null>(null);
 
   function loadPreset(presetKey: PresetKey) {
     const preset = buildGuidedPreset(presetKey);
@@ -121,6 +121,8 @@ export default function NewSimulationPage() {
     setBaseline(preset.baseline);
     setScenarios(preset.scenarios);
     setSelectedPreset(presetKey);
+    setError(null);
+    setValidationIssues(null);
     setActiveTab("baseline");
     setLiveMetrics(calculateMetrics(preset.baseline));
     setLiveSnippet(generateReuxSnippet(preset.baseline));
@@ -139,6 +141,7 @@ export default function NewSimulationPage() {
           setSimulationName(preset.name);
           setBaseline(preset.baseline);
           setScenarios(preset.scenarios);
+          setSelectedPreset(guidedPreset);
           setLiveMetrics(calculateMetrics(preset.baseline));
           setLiveSnippet(generateReuxSnippet(preset.baseline));
         } else {
@@ -158,18 +161,7 @@ export default function NewSimulationPage() {
         setIsLoadingDefaults(false);
       }
     }
-    fetchDefaults().then(() => {
-      if (typeof window !== "undefined") {
-        const params = new URLSearchParams(window.location.search);
-        const preset = params.get("preset");
-        const demo = params.get("demo");
-        if (preset === "expansion" || preset === "optimization" || preset === "surge") {
-          loadPreset(preset);
-        } else if (demo === "true") {
-          loadPreset("expansion");
-        }
-      }
-    });
+    fetchDefaults();
   }, []);
 
   const activeInputs = activeTab === "baseline" ? baseline : scenarios[activeTab];
@@ -185,6 +177,9 @@ export default function NewSimulationPage() {
           return next;
         });
       }
+      setSelectedPreset(null);
+      setError(null);
+      setValidationIssues(null);
       setLiveMetrics(calculateMetrics(values));
       setLiveSnippet(generateReuxSnippet(values));
     },
@@ -383,7 +378,7 @@ export default function NewSimulationPage() {
 
                       return (
                         <li key={idx} className="text-xs text-amber-400/90 flex gap-2">
-                          <span className="shrink-0">•</span>
+                          <span className="shrink-0">-</span>
                           <span>
                             <strong className="text-amber-500">{friendlyPath}:</strong> {issue.message}
                           </span>
