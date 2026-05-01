@@ -1,32 +1,94 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Terminal, Cpu, Database, Zap, PackageCheck, Truck } from "lucide-react";
+import {
+  Code2,
+  Database,
+  Gauge,
+  LineChart,
+  PackageCheck,
+  Rocket,
+  ShieldCheck,
+  Terminal,
+  Truck,
+  Workflow,
+  Zap,
+} from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 
-const codeSnippet = `// Reux - High Performance HTTP Server Example
-import std::net::http
-import std::db::postgres
+const codeSnippet = `module operations
 
-fn main() -> Result<(), Error> {
-    let db = postgres::connect("postgresql://localhost/reux_db")?
-    
-    let server = http::Server::new("0.0.0.0:8080")
-    
-    // Zero-cost routing with pattern matching
-    server.route("GET", "/users/:id", |req, res| {
-        let id: u64 = req.params["id"].parse()?
-        
-        // Native database integration
-        let user = db.query("SELECT * FROM users WHERE id = ?", id).first()?
-        
-        res.json(user)
-    })
-    
-    println!("Server running on port 8080")
-    server.start()
+simulate operations_throughput {
+  dimension product = business_simulation
+  dimension domain = operations
+  dimension audience = enterprise
+
+  employees = 50 count
+  weekly_demand = 1200 orders
+  productivity_gain = 0.08 percent
+  overtime_reduction = 0.10 percent
+
+  formula throughput = weekly_demand / employees
+  formula operating_cost = employees * 950
+  formula margin_delta = throughput * 18
+
+  objective maximize margin_delta
+  objective minimize operating_cost
+
+  scenario process_improvement {
+    productivity_gain = 0.12 percent
+    overtime_reduction = 0.18 percent
+  }
+
+  forecast 12 weeks
 }
 `;
+
+const roadmapMilestones = [
+  {
+    phase: "Now",
+    title: "Public Prototype Complete",
+    status: "100% prototype",
+    description:
+      "Reux has a working compiler, CLI, migrations, TypeScript generation, VS Code support, simulations, and hosted commerce/logistics demos.",
+    items: ["Commerce and logistics pilots", "PostgreSQL-backed transactions", "Simulation examples", "Release preflight checks"],
+  },
+  {
+    phase: "Next",
+    title: "Business Simulator MVP",
+    status: "In design",
+    description:
+      "A serious operator-facing app where users compare cost, productivity, risk, and margin scenarios while Reux powers the backend logic.",
+    items: ["Scenario builder", "Forecast charts", "Recommendation panel", "Reux transparency view"],
+  },
+  {
+    phase: "Beta",
+    title: "Public Developer Access",
+    status: "Planned",
+    description:
+      "Turn the local package and editor tooling into a cleaner beta path for technical users who want to try Reux in their own projects.",
+    items: ["Package-name decision", "npm beta publish", "VS Code installer", "Getting-started docs"],
+  },
+  {
+    phase: "Scale",
+    title: "Simulation Ecosystem",
+    status: "Planned",
+    description:
+      "Expand beyond commerce into PLOS and enterprise simulation packs so Reux is validated by real decision workflows.",
+    items: ["PLOS models", "Operations packs", "Workforce packs", "Explainable decision reports"],
+  },
+];
+
+const liveCapabilities = [
+  "Schema declarations and typed queries",
+  "Transaction functions and durable events",
+  "Conservative migrations with rollback notes",
+  "Generated TypeScript integration",
+  "Simulation declarations and scenario comparisons",
+  "Hosted public demos for commerce and logistics",
+  "VS Code syntax, diagnostics, formatting, and completions",
+  "Release checks for packaging and roadmap sync",
+];
 
 export default function ReuxPage() {
   return (
@@ -45,14 +107,14 @@ export default function ReuxPage() {
         >
           <div className="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-8">
             <span className="text-sm font-medium tracking-wide text-[#00F0FF] uppercase">
-              v1.0.0 Release Candidate
+              Prototype complete - public beta next
             </span>
           </div>
           <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6">
             Reux Programming Language
           </h1>
           <p className="text-2xl md:text-3xl text-gray-400 font-light mb-10">
-            A new paradigm for structured computing.
+            A data-aware backend language for transactions, simulations, and decision logic.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <AnimatedButton href="/projects/reux/demo" variant="primary">
@@ -63,9 +125,6 @@ export default function ReuxPage() {
             </AnimatedButton>
             <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
               View on GitHub
-            </AnimatedButton>
-            <AnimatedButton href="#" variant="secondary">
-              Read the Docs
             </AnimatedButton>
           </div>
         </motion.div>
@@ -78,12 +137,12 @@ export default function ReuxPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-3xl font-bold mb-6">Built for the Modern Web</h2>
+            <h2 className="text-3xl font-bold mb-6">Built for Data-Aware Products</h2>
             <p className="text-gray-400 text-lg leading-relaxed mb-6">
-              Reux was designed from the ground up to address the complexities of modern backend engineering. It combines the safety and performance of systems languages with the developer ergonomics of high-level scripting languages.
+              Reux is being built for the parts of applications where normal web stacks get messy: data models, state changes, workflows, forecasts, and decision rules.
             </p>
             <p className="text-gray-400 text-lg leading-relaxed">
-              With built-in native constructs for concurrent execution, database operations, and state management, Reux eliminates entire categories of boilerplate code.
+              The near-term strategy is practical: build the UI with TypeScript and React, then let Reux own the backend logic that needs to be reliable, auditable, and explainable.
             </p>
           </motion.div>
 
@@ -101,7 +160,7 @@ export default function ReuxPage() {
                 <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                 <div className="w-3 h-3 rounded-full bg-green-500/80" />
               </div>
-              <div className="ml-4 text-xs text-gray-500 font-mono">main.rx</div>
+              <div className="ml-4 text-xs text-gray-500 font-mono">operations.reux</div>
             </div>
             <div className="p-6 bg-[#0A0A0A]/80 overflow-x-auto relative">
               {/* Optional glowing effect behind code */}
@@ -109,14 +168,10 @@ export default function ReuxPage() {
               <pre className="font-mono text-sm leading-relaxed text-gray-300 relative z-10">
                 <code dangerouslySetInnerHTML={{
                   __html: codeSnippet
-                    .replace(/import/g, '<span class="text-pink-400">import</span>')
-                    .replace(/fn /g, '<span class="text-blue-400">fn </span>')
-                    .replace(/let /g, '<span class="text-blue-400">let </span>')
-                    .replace(/Result/g, '<span class="text-yellow-300">Result</span>')
-                    .replace(/Error/g, '<span class="text-yellow-300">Error</span>')
-                    .replace(/main/g, '<span class="text-green-400">main</span>')
-                    .replace(/"(.*?)"/g, '<span class="text-yellow-200">"$1"</span>')
-                    .replace(/\/\/(.*)/g, '<span class="text-gray-500">//$1</span>')
+                    .replace(/module|simulate|dimension|formula|objective|scenario|forecast/g, '<span class="text-pink-400">$&</span>')
+                    .replace(/maximize|minimize/g, '<span class="text-blue-400">$&</span>')
+                    .replace(/operations_throughput|process_improvement/g, '<span class="text-green-400">$&</span>')
+                    .replace(/\b(count|orders|percent|weeks)\b/g, '<span class="text-yellow-300">$&</span>')
                 }} />
               </pre>
             </div>
@@ -135,23 +190,23 @@ export default function ReuxPage() {
             {[
               {
                 icon: <Zap className="w-8 h-8 text-[#00F0FF] mb-4" />,
-                title: "Zero-Cost Abstractions",
-                description: "High-level abstractions compile down to heavily optimized machine code.",
+                title: "Simulation Syntax",
+                description: "Model assumptions, scenarios, forecasts, objectives, and comparison reports in one readable source file.",
               },
               {
                 icon: <Database className="w-8 h-8 text-[#8A2BE2] mb-4" />,
-                title: "Native SQL Integration",
-                description: "Write type-safe queries directly within your application code.",
+                title: "Data-Native Backend",
+                description: "Define schemas, typed queries, migrations, transactions, and durable events close to the data model.",
               },
               {
-                icon: <Cpu className="w-8 h-8 text-[#00F0FF] mb-4" />,
-                title: "Fearless Concurrency",
-                description: "Actor-based concurrency model prevents data races at compile time.",
+                icon: <Workflow className="w-8 h-8 text-[#00F0FF] mb-4" />,
+                title: "Workflow Safety",
+                description: "Guard state changes, generate integration code, and keep operational logic easier to review.",
               },
               {
                 icon: <Terminal className="w-8 h-8 text-[#8A2BE2] mb-4" />,
-                title: "Incredible Tooling",
-                description: "Formatter, linter, and language server built directly into the compiler.",
+                title: "Developer Tooling",
+                description: "Use the CLI, formatter, diagnostics, VS Code support, release checks, and generated TypeScript artifacts.",
               },
             ].map((feature, i) => (
               <div key={i} className="glass-card p-6 rounded-xl hover:-translate-y-2 transition-transform duration-300">
@@ -160,6 +215,94 @@ export default function ReuxPage() {
                 <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>
               </div>
             ))}
+          </div>
+        </motion.div>
+
+        {/* Roadmap */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mt-24"
+        >
+          <div className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl">
+              <h2 className="text-3xl font-bold mb-4">Roadmap</h2>
+              <p className="text-gray-400 text-lg leading-relaxed">
+                Reux has crossed the prototype-complete line. The next chapter is public beta polish, a serious business simulator, and broader validation through Reuben ecosystem products.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-3 sm:min-w-[360px]">
+              {[
+                { label: "Demo readiness", value: "99%" },
+                { label: "Prototype completion", value: "100%" },
+              ].map((metric) => (
+                <div key={metric.label} className="glass-card rounded-xl p-5">
+                  <div className="text-3xl font-black text-white">{metric.value}</div>
+                  <div className="mt-1 text-xs uppercase tracking-wide text-gray-500">{metric.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+            {roadmapMilestones.map((milestone) => (
+              <div key={milestone.title} className="glass-card rounded-xl p-6">
+                <div className="mb-5 flex items-center justify-between gap-3">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-[#00F0FF]">
+                    {milestone.phase}
+                  </span>
+                  <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-gray-400">
+                    {milestone.status}
+                  </span>
+                </div>
+                <h3 className="mb-3 text-xl font-bold text-white">{milestone.title}</h3>
+                <p className="mb-5 text-sm leading-relaxed text-gray-400">{milestone.description}</p>
+                <ul className="space-y-2">
+                  {milestone.items.map((item) => (
+                    <li key={item} className="flex gap-2 text-sm text-gray-300">
+                      <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#00F0FF]" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Current Capabilities */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mt-24 grid grid-cols-1 gap-8 lg:grid-cols-[0.8fr_1.2fr]"
+        >
+          <div>
+            <div className="mb-4 inline-flex items-center gap-2 glass px-4 py-2 rounded-full">
+              <Rocket className="h-4 w-4 text-[#00F0FF]" />
+              <span className="text-sm font-medium tracking-wide text-gray-300 uppercase">
+                Live today
+              </span>
+            </div>
+            <h2 className="mb-4 text-3xl font-bold">What Reux Can Do Now</h2>
+            <p className="text-gray-400 text-lg leading-relaxed">
+              The current release is a working prototype foundation, not a finished universal language. It is already strong enough to power demos, generate backend artifacts, and validate the product thesis.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {liveCapabilities.map((capability, index) => {
+              const icons = [Code2, Database, ShieldCheck, Terminal, LineChart, Gauge, Truck, PackageCheck];
+              const Icon = icons[index] ?? ShieldCheck;
+              return (
+                <div key={capability} className="glass-card flex items-start gap-3 rounded-xl p-4">
+                  <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#00F0FF]" />
+                  <span className="text-sm leading-relaxed text-gray-300">{capability}</span>
+                </div>
+              );
+            })}
           </div>
         </motion.div>
 

@@ -15,42 +15,44 @@ export default function RoadmapPage() {
     "Early simulation syntax with assumptions, formulas, scenarios, objectives, dimensions, rankings, and TypeScript contracts.",
     "CLI tooling for diagnosis, formatting, checking, generation, migrations, seeds, workers, and simulations.",
     "Early VS Code support with syntax highlighting, formatting, diagnostics, completions, hovers, and go-to-definition.",
-    "Demo health checks, outbox status summaries, and worker observability counters."
+    "Demo health checks, outbox status summaries, and worker observability counters.",
+    "Release preflight checks for package entrypoints, release docs, roadmap sync, and clean-tree readiness.",
+    "Public release plan and package dry-run workflow."
   ];
 
   const inProgressItems = [
-    "Richer simulation semantics for PLOS and business decision modeling.",
+    "Business Simulation Engine frontend MVP with a serious scenario-builder and comparison console.",
+    "Public-safe demo polish for repeat visitors and non-technical testers.",
+    "Package-name decision and public beta publishing path.",
     "Stronger editor intelligence and eventually a true language-server process.",
-    "Deeper transaction control flow and expression typing.",
-    "More production-grade worker observability.",
-    "Public package/publishing workflow.",
+    "Richer simulation semantics for PLOS and business decision modeling.",
     "Additional domain pilots beyond commerce and logistics."
   ];
 
   const nextMilestones = [
     {
-      title: "Public Demo Polish",
-      description: "Improve the hosted demo walkthrough, add clearer examples, validate deployment flows, and continue tightening public testing."
+      title: "Business Simulator MVP",
+      description: "Build the operator-facing app for comparing cost, productivity, risk, margin, staffing, and process-improvement scenarios while Reux powers the backend logic."
+    },
+    {
+      title: "Public Beta Polish",
+      description: "Make the public demos easier to understand, add stronger visitor-safe reset flows, refine walkthrough copy, and keep hosted smoke checks running."
+    },
+    {
+      title: "Developer Access",
+      description: "Choose the final package name, publish a beta package when the owning account is ready, and provide a clean VS Code installation path."
     },
     {
       title: "Simulation Engine Depth",
       description: "Expand Reux simulations beyond prototype formulas into richer domain models for personal finance, workforce planning, operational decisions, and scenario comparison."
     },
     {
-      title: "Developer Experience",
-      description: "Improve CLI ergonomics, editor completions, diagnostic ranges, generated contracts, and documentation for early technical users."
-    },
-    {
-      title: "Runtime Hardening",
-      description: "Strengthen outbox operations, worker monitoring, rollback tooling, migration workflows, and production safety checks."
-    },
-    {
       title: "Ecosystem Integration",
       description: "Connect Reux more directly to PLOS and the Real-Time Business Simulation Engine so those projects validate the language through real use cases."
     },
     {
-      title: "Public Release Preparation",
-      description: "Prepare package naming, install flow, versioning, release notes, examples, and onboarding docs for early adopters."
+      title: "Language Runtime Depth",
+      description: "Broaden transaction control flow, deepen expression typing, improve generated worker contracts, and keep compiler diagnostics tightening."
     }
   ];
 
@@ -89,7 +91,7 @@ export default function RoadmapPage() {
           Reux <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00F0FF] to-[#8A2BE2]">Roadmap</span>
         </h1>
         <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-          Reux is an early data-native programming language for building reliable backend systems, workflow-heavy applications, and simulation-driven decision tools. The current prototype already supports real data modeling, PostgreSQL-backed execution, transactions, migrations, events, demos, and early simulation syntax.
+          Reux is a data-native programming language for reliable backend systems, workflow-heavy applications, and simulation-driven decision tools. The prototype foundation is now complete: the next phase is public beta polish, business-simulator validation, and stronger developer access.
         </p>
       </motion.div>
 
@@ -103,27 +105,27 @@ export default function RoadmapPage() {
           <div className="absolute inset-0 bg-gradient-to-br from-[#00F0FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <h3 className="text-sm font-semibold text-[#00F0FF] uppercase tracking-wider mb-2">Demo Readiness</h3>
           <div className="flex items-end gap-3">
-            <span className="text-5xl font-bold text-white">~95%</span>
+            <span className="text-5xl font-bold text-white">~99%</span>
           </div>
           <div className="mt-4 w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
-            <div className="bg-[#00F0FF] h-1.5 rounded-full" style={{ width: '95%' }}></div>
+            <div className="bg-[#00F0FF] h-1.5 rounded-full" style={{ width: '99%' }}></div>
           </div>
         </div>
         
         <div className="glass p-6 rounded-2xl border border-[#8A2BE2]/20 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-[#8A2BE2]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <h3 className="text-sm font-semibold text-[#8A2BE2] uppercase tracking-wider mb-2">Full Platform Completion</h3>
+          <h3 className="text-sm font-semibold text-[#8A2BE2] uppercase tracking-wider mb-2">Prototype Completion</h3>
           <div className="flex items-end gap-3">
-            <span className="text-5xl font-bold text-white">~86%</span>
+            <span className="text-5xl font-bold text-white">100%</span>
           </div>
           <div className="mt-4 w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
-            <div className="bg-[#8A2BE2] h-1.5 rounded-full" style={{ width: '86%' }}></div>
+            <div className="bg-[#8A2BE2] h-1.5 rounded-full" style={{ width: '100%' }}></div>
           </div>
         </div>
 
         <div className="col-span-1 md:col-span-2 glass p-6 rounded-2xl border border-white/5 bg-white/5">
           <p className="text-gray-300 text-center text-sm md:text-base">
-            Reux is not being positioned as a complete full-stack language yet. Today, it is best described as a backend/domain language with simulation capabilities and generated TypeScript integration points.
+            Reux is not being positioned as a complete full-stack language yet. Today, it is best described as a backend, data, workflow, and simulation language with generated TypeScript integration points.
           </p>
         </div>
       </motion.div>

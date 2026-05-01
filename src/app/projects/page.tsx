@@ -6,30 +6,30 @@ import ProjectCard from "@/components/ui/ProjectCard";
 const projects = [
   {
     title: "Reux",
-    description: "A new paradigm for structured computing. Reux offers uncompromising performance with a syntax designed for humans and systems alike. Built-in database integration and zero-cost abstractions make it the perfect tool for next-generation infrastructure.",
-    tags: ["Programming Language", "Compilers", "Systems"],
+    description: "A data-aware backend language for schemas, transactions, migrations, simulations, forecasts, and decision logic. Reux is prototype-complete and moving toward public beta.",
+    tags: ["Programming Language", "Simulation", "Backend"],
     href: "/projects/reux",
     featured: true,
   },
   {
-    title: "Aura",
-    description: "A lightweight, distributed key-value store optimized for ultra-low latency reads. Built entirely in Reux, Aura demonstrates the language's capabilities in high-concurrency environments.",
-    tags: ["Database", "Distributed Systems", "Reux"],
+    title: "PLOS",
+    description: "Personal Life Operating System. A future personal simulation platform for finances, habits, goals, health, career, and time decisions, with Reux planned as the simulation layer underneath.",
+    tags: ["Personal Simulation", "Planning", "Reux"],
     href: "#",
     featured: false,
   },
   {
-    title: "Nexus",
-    description: "A modern build system and package manager for the Reux ecosystem. Nexus handles dependency resolution, reproducible builds, and artifact caching with minimal overhead.",
-    tags: ["Tooling", "Build System", "CLI"],
+    title: "Business Simulation Engine",
+    description: "A real-time decision console for modeling operational, workforce, productivity, cost, margin, and risk scenarios before a business commits to a change.",
+    tags: ["Operations", "Forecasting", "Enterprise"],
     href: "#",
     featured: false,
   },
   {
-    title: "Prism",
-    description: "A highly-optimized graphics rendering engine designed for scientific visualization and data analysis. Leverages GPU compute shaders for real-time rendering of massive datasets.",
-    tags: ["Graphics", "Compute", "C++"],
-    href: "#",
+    title: "Reux Live Demo",
+    description: "Hosted commerce and logistics pilots showing Reux-generated database workflows, transactions, state changes, and outbox processing through a public browser demo.",
+    tags: ["Public Demo", "PostgreSQL", "Transactions"],
+    href: "/projects/reux/demo",
     featured: false,
   },
 ];
@@ -47,7 +47,7 @@ export default function ProjectsPage() {
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">Our Work</h1>
           <p className="text-xl text-gray-400">
             Explore the foundational technologies and tools we build at Reuben. 
-            From languages to distributed systems, our projects define the bleeding edge.
+            The current ecosystem centers on Reux, simulation-driven products, and practical demos that prove the language in real workflows.
           </p>
         </motion.div>
 
