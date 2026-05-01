@@ -12,8 +12,9 @@ import {
   Terminal,
   Truck,
   Workflow,
-  Zap,
   Activity,
+  Search,
+  Send,
 } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import { cn } from "@/lib/utils";
@@ -190,31 +191,41 @@ export default function ReuxPage() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-3xl font-bold mb-12 text-center">Key Features</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <h2 className="text-3xl font-bold mb-12 text-center">What Reux Can Model Today</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                icon: <Zap className="w-8 h-8 text-[#00F0FF] mb-4" />,
-                title: "Simulation Syntax",
-                description: "Model assumptions, scenarios, forecasts, objectives, and comparison reports in one readable source file.",
+                icon: <Database className="w-8 h-8 text-[#00F0FF] mb-4" />,
+                title: "Entities & Data Models",
+                description: "Define strongly-typed schemas with constraints, relations, and unique indexes.",
               },
               {
-                icon: <Database className="w-8 h-8 text-[#8A2BE2] mb-4" />,
-                title: "Data-Native Backend",
-                description: "Define schemas, typed queries, migrations, transactions, and durable events close to the data model.",
+                icon: <Search className="w-8 h-8 text-[#8A2BE2] mb-4" />,
+                title: "Queries",
+                description: "Declare typed, composable queries that compile securely down to raw PostgreSQL.",
               },
               {
                 icon: <Workflow className="w-8 h-8 text-[#00F0FF] mb-4" />,
-                title: "Workflow Safety",
-                description: "Guard state changes, generate integration code, and keep operational logic easier to review.",
+                title: "Lifecycle Transitions",
+                description: "Enforce strict state machine rules, guaranteeing records only move through approved paths.",
               },
               {
-                icon: <Terminal className="w-8 h-8 text-[#8A2BE2] mb-4" />,
-                title: "Developer Tooling",
-                description: "Use the CLI, formatter, diagnostics, VS Code support, release checks, and generated TypeScript artifacts.",
+                icon: <ShieldCheck className="w-8 h-8 text-[#8A2BE2] mb-4" />,
+                title: "Transactions",
+                description: "Write transactional functions with row locking, atomic mutations, and rollback guarantees.",
+              },
+              {
+                icon: <Send className="w-8 h-8 text-[#00F0FF] mb-4" />,
+                title: "Outbox & Events",
+                description: "Emit durable, transactional events to safely decouple services and trigger side-effects.",
+              },
+              {
+                icon: <LineChart className="w-8 h-8 text-[#8A2BE2] mb-4" />,
+                title: "Simulations",
+                description: "Model operational assumptions, run branching scenarios, and compare forecasted outcomes.",
               },
             ].map((feature, i) => (
-              <div key={i} className="glass-card p-6 rounded-xl hover:-translate-y-2 transition-transform duration-300">
+              <div key={i} className="glass-card p-6 rounded-xl border border-white/5 hover:border-white/15 transition-all duration-300">
                 {feature.icon}
                 <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>

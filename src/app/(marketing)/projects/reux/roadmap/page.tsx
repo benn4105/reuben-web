@@ -23,27 +23,31 @@ export default function RoadmapPage() {
 
   const nextMilestones = [
     {
-      title: "Public Developer Access",
-      description: "Choose the final package name, publish a beta package, and provide a clean VS Code installation path for external developers."
+      title: "Package & Release Polish",
+      description: "Finalize package distribution, publish the public beta, and improve developer onboarding paths."
     },
     {
-      title: "Simulation Engine Depth",
-      description: "Expand Reux simulations into richer domain models for personal finance and operational decisions."
+      title: "Richer Simulation Semantics",
+      description: "Expand Reux syntax with deeper assumption modeling and forecasting capabilities."
+    },
+    {
+      title: "More Product Pilots",
+      description: "Build additional domain-specific pilots to stress-test Reux in new environments."
     }
   ];
 
   const laterMilestones = [
     {
-      title: "Ecosystem Integration",
-      description: "Connect Reux more directly to the Personal Life Operating System (PLOS) and external simulation environments."
-    },
-    {
       title: "Full IDE Language Server",
       description: "Stronger editor intelligence, semantic tokens, and a true language-server process."
     },
     {
-      title: "Language Runtime Depth",
-      description: "Broaden transaction control flow and deepen expression typing."
+      title: "Deeper Runtime",
+      description: "Broaden transaction control flow and deepen expression typing at the runtime level."
+    },
+    {
+      title: "PLOS & Ecosystem Integration",
+      description: "Connect Reux directly to the Personal Life Operating System (PLOS) and Business Simulator environments."
     }
   ];
 
