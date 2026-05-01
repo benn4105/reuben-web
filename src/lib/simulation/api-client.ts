@@ -148,6 +148,11 @@ interface BackendRunResponse {
   generatedAt: string;
 }
 
+interface BackendCompareResponse {
+  comparison: BackendComparison;
+  generatedAt: string;
+}
+
 interface BackendTemplateResponse {
   simulation: {
     id: string;
@@ -242,15 +247,32 @@ export async function compareScenarios(request: CompareRequest): Promise<Compare
     item.scenarios.some(scenario => scenario.id === request.baselineId)
   );
   const comparison = simulation?.comparison;
+  const baseline = simulation?.scenarios.find(scenario => scenario.id === request.baselineId);
+  const selectedScenarios = simulation?.scenarios.filter(scenario => request.scenarioIds.includes(scenario.id)) ?? [];
 
-  if (!comparison) {
+  if (!comparison || !baseline) {
     throw new Error("Comparison data not found.");
+  }
+
+  if (API_BASE_URL) {
+    const backendResponse = await fetchWithRetry<BackendCompareResponse>("/api/scenarios/compare", {
+      method: "POST",
+      body: JSON.stringify({
+        baseline: toBackendScenarioResult(baseline),
+        scenarios: selectedScenarios.map(toBackendScenarioResult),
+      }),
+      retries: 2,
+    });
+
+    return {
+      comparison: toComparisonResult(backendResponse.comparison, baseline, selectedScenarios),
+    };
   }
 
   return {
     comparison: {
       ...comparison,
-      scenarios: comparison.scenarios.filter(scenario => request.scenarioIds.includes(scenario.id)),
+      scenarios: selectedScenarios,
     },
   };
 }
@@ -303,6 +325,42 @@ function toBackendAssumptions(inputs: ScenarioInputs): BackendAssumptions {
     defectRate: inputs.errorDefectRatePct / 100,
     forecastPeriods: inputs.forecastWeeks,
     forecastUnit: "week",
+  };
+}
+
+function toBackendScenarioResult(result: ScenarioResult): BackendScenarioResult {
+  return {
+    id: result.id,
+    name: result.inputs.name,
+    assumptions: toBackendAssumptions(result.inputs),
+    finalMetrics: toBackendMetricSnapshot(result.inputs, result.summary),
+    timeline: result.forecast.map(point => ({
+      period: point.week,
+      label: point.label,
+      metrics: toBackendMetricSnapshot(result.inputs, {
+        ...result.summary,
+        revenue: point.revenue,
+        operatingCost: point.operatingCost,
+        margin: point.margin,
+        productivity: point.productivity,
+        riskScore: point.riskScore,
+        workforceLoad: point.workforceLoad,
+      }),
+    })),
+  };
+}
+
+function toBackendMetricSnapshot(inputs: ScenarioInputs, metrics: MetricSnapshot): BackendMetricSnapshot {
+  return {
+    revenue: metrics.revenue,
+    operatingCost: metrics.operatingCost,
+    laborCost: inputs.employees * inputs.avgHourlyCost,
+    productivity: metrics.productivity,
+    workforceLoad: metrics.workforceLoad,
+    margin: metrics.margin,
+    marginDelta: metrics.margin,
+    riskScore: metrics.riskScore,
+    defectCost: metrics.defectCost,
   };
 }
 
