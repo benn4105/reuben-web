@@ -1,0 +1,33 @@
+"use client";
+
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+
+interface DemoIframeProps {
+  src: string;
+}
+
+export default function DemoIframe({ src }: DemoIframeProps) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl shadow-black/40 h-[78vh] min-h-[680px] w-full">
+      {isLoading && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#0A0A0A]">
+          <Loader2 className="h-10 w-10 text-[#00F0FF] animate-spin mb-4" />
+          <h3 className="text-xl font-bold text-white mb-2">Warming up backend...</h3>
+          <p className="text-gray-400 text-sm max-w-sm text-center">
+            The demo service might take a few seconds to spin up from sleep. Hang tight.
+          </p>
+        </div>
+      )}
+      
+      <iframe
+        src={src}
+        title="Reux pilot demo"
+        className="absolute inset-0 h-full w-full bg-white z-0"
+        onLoad={() => setIsLoading(false)}
+      />
+    </div>
+  );
+}

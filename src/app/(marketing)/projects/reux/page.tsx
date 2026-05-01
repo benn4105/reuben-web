@@ -15,6 +15,7 @@ import {
   Activity,
   Search,
   Send,
+  User,
 } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import { cn } from "@/lib/utils";
@@ -234,24 +235,55 @@ export default function ReuxPage() {
           </div>
         </motion.div>
 
-        {/* Why this matters */}
+        {/* Use Cases Grid */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="mt-24 max-w-4xl mx-auto text-center"
+          className="mt-24"
         >
-          <h2 className="text-3xl font-bold mb-6">Why This Matters</h2>
-          <p className="text-gray-400 text-lg leading-relaxed mb-6">
-            When business rules are scattered across frontend state, backend controllers, and database triggers, no one can confidently answer &quot;why did the system do this?&quot;
-          </p>
-          <p className="text-gray-400 text-lg leading-relaxed mb-8">
-            Reux keeps data structures, scenarios, and decision objectives in a single readable source file — so the logic that powers a dashboard can actually be reviewed and understood.
-          </p>
-          <AnimatedButton href="/simulator" variant="secondary">
-            See it working in the Simulator
-          </AnimatedButton>
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Domain Use Cases</h2>
+            <p className="text-gray-400 text-lg leading-relaxed">
+              Reux is designed to capture the unique rules and workflows of specific industries.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                icon: <LineChart className="w-8 h-8 text-[#00F0FF] mb-4" />,
+                title: "Business Operations",
+                description: "Models hiring plans, productivity gains, and cost-cutting scenarios to determine their impact on future operating margins.",
+              },
+              {
+                icon: <PackageCheck className="w-8 h-8 text-[#8A2BE2] mb-4" />,
+                title: "Commerce Workflows",
+                description: "Models checkout state, atomic inventory reservations, payment failures, and cart fulfillment workflows.",
+              },
+              {
+                icon: <Truck className="w-8 h-8 text-[#00F0FF] mb-4" />,
+                title: "Logistics & Dispatch",
+                description: "Models vehicle routing decisions, state transitions from 'assigned' to 'delivered', and dynamic driver compensation rules.",
+              },
+              {
+                icon: <Activity className="w-8 h-8 text-[#8A2BE2] mb-4" />,
+                title: "Clinic Operations",
+                description: "Models patient check-in bottlenecks, room capacity constraints, and throughput scenarios for hospital wings.",
+              },
+              {
+                icon: <User className="w-8 h-8 text-[#00F0FF] mb-4" />,
+                title: "Personal Life (PLOS)",
+                description: "Models habit compounding, budget forecasting, and major career decision scenarios over decades.",
+              },
+            ].map((useCase) => (
+              <div key={useCase.title} className="glass-card p-6 rounded-xl border border-white/5 hover:border-white/15 transition-all duration-300">
+                {useCase.icon}
+                <h3 className="text-xl font-bold text-white mb-2">{useCase.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{useCase.description}</p>
+              </div>
+            ))}
+          </div>
         </motion.div>
 
         {/* Roadmap */}

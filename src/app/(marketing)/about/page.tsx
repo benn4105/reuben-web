@@ -51,6 +51,59 @@ export default function AboutPage() {
             </p>
           </motion.div>
 
+          {/* Ecosystem Map */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-4">
+              <span className="w-8 h-[1px] bg-[#00F0FF]" />
+              The Ecosystem
+            </h2>
+            
+            <div className="glass-card p-8 md:p-12 rounded-3xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00F0FF]/5 to-transparent opacity-50" />
+              
+              <div className="relative z-10 flex flex-col items-center gap-4">
+                {/* Application Layer */}
+                <div className="w-full flex flex-col md:flex-row gap-4 justify-center">
+                  <div className="flex-1 max-w-sm glass border border-white/10 p-6 rounded-2xl text-center hover:border-[#00F0FF]/40 transition-colors">
+                    <h4 className="text-lg text-white font-bold mb-2">Business Simulator</h4>
+                    <p className="text-sm text-gray-400">Live operational scenario modeling</p>
+                  </div>
+                  <div className="flex-1 max-w-sm glass border border-white/10 p-6 rounded-2xl text-center hover:border-[#8A2BE2]/40 transition-colors">
+                    <h4 className="text-lg text-white font-bold mb-2">PLOS</h4>
+                    <p className="text-sm text-gray-400">Personal Life Operating System</p>
+                  </div>
+                </div>
+                
+                {/* Connector */}
+                <div className="flex items-center justify-center w-full">
+                  <div className="h-8 w-px bg-gradient-to-b from-white/20 to-[#00F0FF]/50" />
+                </div>
+
+                {/* Engine Layer */}
+                <div className="w-full max-w-2xl glass border border-[#00F0FF]/30 bg-[#00F0FF]/10 p-8 rounded-2xl text-center">
+                  <h4 className="text-2xl font-black text-white tracking-tight mb-2">Reux</h4>
+                  <p className="text-base text-[#00F0FF]/80">Data-aware workflow & simulation language</p>
+                </div>
+
+                {/* Connector */}
+                <div className="flex items-center justify-center w-full">
+                  <div className="h-8 w-px bg-gradient-to-b from-[#00F0FF]/50 to-white/20" />
+                </div>
+
+                {/* Foundation */}
+                <div className="w-full max-w-xs glass border border-white/10 p-5 rounded-2xl text-center">
+                  <h4 className="text-white font-bold tracking-wide uppercase">Reuben</h4>
+                  <p className="text-xs text-gray-500 mt-1">Ecosystem & Parent Brand</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

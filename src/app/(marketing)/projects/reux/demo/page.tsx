@@ -1,5 +1,6 @@
 import { ExternalLink, Rocket } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
+import DemoIframe from "@/components/ui/DemoIframe";
 import { reuxDemoUrl } from "@/lib/demo";
 
 interface ReuxDemoPageProps {
@@ -47,13 +48,7 @@ export default async function ReuxDemoPage({ searchParams }: ReuxDemoPageProps) 
         </div>
 
         {configured ? (
-          <div className="overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl shadow-black/40">
-            <iframe
-              src={demoSrc}
-              title="Reux pilot demo"
-              className="h-[78vh] min-h-[680px] w-full bg-white"
-            />
-          </div>
+          <DemoIframe src={demoSrc} />
         ) : (
           <div className="glass-card max-w-3xl rounded-xl p-8">
             <h2 className="mb-4 text-2xl font-bold text-white">Demo host not connected yet</h2>
