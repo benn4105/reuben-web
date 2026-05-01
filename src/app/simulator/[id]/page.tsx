@@ -2,6 +2,7 @@
 
 import { useState, useEffect, use, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import MetricCard from "@/components/simulator/MetricCard";
 import ForecastChart from "@/components/simulator/ForecastChart";
 import RecommendationPanel from "@/components/simulator/RecommendationPanel";
@@ -82,8 +83,13 @@ export default function SimulationResultsPage({
   if (error || !simulation) {
     return (
       <ErrorState
-        message={error || "Simulation not found"}
+        message={error || "Simulation not found or backend unavailable. Check your connection."}
         onRetry={loadSimulation}
+        secondaryAction={
+          <Button asChild variant="outline" className="border-white/[0.08] text-gray-300 hover:text-white">
+            <Link href="/simulator">Back to Dashboard</Link>
+          </Button>
+        }
       />
     );
   }
@@ -250,7 +256,7 @@ export default function SimulationResultsPage({
             Model Transparency Layer
           </h2>
           <p className="text-xs text-gray-500 mt-1 max-w-3xl">
-            Reux powers the simulation model behind this workflow. The panel below shows the compiled simulation logic that the engine used to forecast your scenarios and make its recommendation.
+            Reux powers the simulation model. While the UI remains TypeScript and React, the panel below shows the actual compiled Reux logic that the engine used in the backend to forecast your scenarios and make its recommendation.
           </p>
         </div>
         <ReuxSnippetPanel

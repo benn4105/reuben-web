@@ -111,6 +111,7 @@ export default function NewSimulationPage() {
   const [liveMetrics, setLiveMetrics] = useState<MetricSnapshot | null>(null);
   const [liveSnippet, setLiveSnippet] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [selectedPreset, setSelectedPreset] = useState<"expansion" | "optimization" | "surge" | null>(null);
 
   useEffect(() => {
     async function fetchDefaults() {
@@ -144,7 +145,18 @@ export default function NewSimulationPage() {
         setIsLoadingDefaults(false);
       }
     }
-    fetchDefaults();
+    fetchDefaults().then(() => {
+      if (typeof window !== "undefined") {
+        const params = new URLSearchParams(window.location.search);
+        const preset = params.get("preset");
+        const demo = params.get("demo");
+        if (preset === "expansion" || preset === "optimization" || preset === "surge") {
+          loadPreset(preset);
+        } else if (demo === "true") {
+          loadPreset("expansion");
+        }
+      }
+    });
   }, []);
 
   const activeInputs = activeTab === "baseline" ? baseline : scenarios[activeTab];
@@ -206,6 +218,7 @@ export default function NewSimulationPage() {
     setSimulationName(preset.name);
     setBaseline(preset.baseline);
     setScenarios(preset.scenarios);
+    setSelectedPreset(presetKey);
     setActiveTab("baseline");
     setLiveMetrics(calculateMetrics(preset.baseline));
     setLiveSnippet(generateReuxSnippet(preset.baseline));
@@ -241,33 +254,51 @@ export default function NewSimulationPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button
               onClick={() => loadPreset("expansion")}
-              className="text-left p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] hover:border-cyan-500/30 transition-all group"
+              className={cn(
+                "text-left p-4 rounded-xl border transition-all group",
+                selectedPreset === "expansion"
+                  ? "bg-cyan-500/10 border-cyan-500/50 shadow-[0_0_15px_rgba(0,200,255,0.15)] ring-1 ring-cyan-500/20"
+                  : "border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] hover:border-cyan-500/30"
+              )}
             >
               <div className="flex items-center gap-2 mb-2">
                 <Wand2 size={16} className="text-cyan-400" />
                 <h3 className="text-sm font-medium text-white">Workforce Expansion</h3>
               </div>
               <p className="text-xs text-gray-500 line-clamp-2">Adds 15 employees to meet higher demand, but increases cost and defect rates temporarily.</p>
+              <div className="mt-3 text-[10px] font-semibold text-cyan-400/80 uppercase tracking-wider">Best for: Scaling Ops</div>
             </button>
             <button
               onClick={() => loadPreset("optimization")}
-              className="text-left p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] hover:border-violet-500/30 transition-all group"
+              className={cn(
+                "text-left p-4 rounded-xl border transition-all group",
+                selectedPreset === "optimization"
+                  ? "bg-violet-500/10 border-violet-500/50 shadow-[0_0_15px_rgba(138,43,226,0.15)] ring-1 ring-violet-500/20"
+                  : "border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] hover:border-violet-500/30"
+              )}
             >
               <div className="flex items-center gap-2 mb-2">
                 <Wand2 size={16} className="text-violet-400" />
                 <h3 className="text-sm font-medium text-white">Process Optimization</h3>
               </div>
               <p className="text-xs text-gray-500 line-clamp-2">Focuses on productivity gains (+18%) to handle more demand without hiring new staff.</p>
+              <div className="mt-3 text-[10px] font-semibold text-violet-400/80 uppercase tracking-wider">Best for: Lean Ops</div>
             </button>
             <button
               onClick={() => loadPreset("surge")}
-              className="text-left p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] hover:border-rose-500/30 transition-all group"
+              className={cn(
+                "text-left p-4 rounded-xl border transition-all group",
+                selectedPreset === "surge"
+                  ? "bg-rose-500/10 border-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.15)] ring-1 ring-rose-500/20"
+                  : "border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] hover:border-rose-500/30"
+              )}
             >
               <div className="flex items-center gap-2 mb-2">
                 <Wand2 size={16} className="text-rose-400" />
                 <h3 className="text-sm font-medium text-white">Demand Surge</h3>
               </div>
               <p className="text-xs text-gray-500 line-clamp-2">Models a 50% demand spike with higher labor cost, supplier risk, and defect pressure.</p>
+              <div className="mt-3 text-[10px] font-semibold text-rose-400/80 uppercase tracking-wider">Best for: Stress Testing</div>
             </button>
           </div>
         </div>

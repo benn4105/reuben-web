@@ -27,13 +27,15 @@ interface ErrorStateProps {
   title?: string;
   message: string;
   onRetry?: () => void;
+  secondaryAction?: React.ReactNode;
   className?: string;
 }
 
 export function ErrorState({
-  title = "Something went wrong",
+  title = "Unable to connect",
   message,
   onRetry,
+  secondaryAction,
   className,
 }: ErrorStateProps) {
   return (
@@ -43,14 +45,17 @@ export function ErrorState({
       </div>
       <h3 className="text-lg font-semibold text-gray-300 mb-2">{title}</h3>
       <p className="text-sm text-gray-500 max-w-sm mb-6">{message}</p>
-      {onRetry && (
-        <button
-          onClick={onRetry}
-          className="px-5 py-2 text-sm font-medium rounded-lg border border-white/[0.08] text-gray-300 hover:text-white hover:border-white/[0.16] transition-colors"
-        >
-          Try Again
-        </button>
-      )}
+      <div className="flex justify-center gap-3">
+        {onRetry && (
+          <button
+            onClick={onRetry}
+            className="px-5 py-2 text-sm font-medium rounded-lg border border-white/[0.08] text-gray-300 hover:text-white hover:border-white/[0.16] transition-colors"
+          >
+            Try Again
+          </button>
+        )}
+        {secondaryAction}
+      </div>
     </div>
   );
 }

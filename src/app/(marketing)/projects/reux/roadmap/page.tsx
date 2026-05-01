@@ -34,7 +34,7 @@ export default function RoadmapPage() {
   const laterMilestones = [
     {
       title: "Ecosystem Integration",
-      description: "Connect Reux more directly to PLOS and external simulation environments."
+      description: "Connect Reux more directly to the Personal Life Operating System (PLOS) and external simulation environments."
     },
     {
       title: "Full IDE Language Server",

@@ -68,7 +68,7 @@ export default function SimulatorDashboard() {
             Under the hood, this simulator uses <strong className="text-white">Reux</strong> to evaluate complex business logic, forecast margins, and calculate risk dynamically. It proves that Reux is more than just syntax; it&apos;s a powerful engine for real-world modeling.
           </p>
           
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3 mb-8">
             <Button asChild className="gap-2 bg-white text-black hover:bg-gray-200">
               <Link href="/simulator/new">
                 Start Simulator <PlusCircle size={16} />
@@ -81,9 +81,24 @@ export default function SimulatorDashboard() {
             </Button>
             <Button asChild variant="ghost" className="gap-2 text-gray-400 hover:text-white">
               <Link href="/docs">
-                See How It Works
+                See Documentation
               </Link>
             </Button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-white/[0.08] pt-6">
+            <div>
+              <h4 className="text-sm font-semibold text-white mb-1">1. Model Assumptions</h4>
+              <p className="text-xs text-gray-500">Define your current baseline: employees, demand, and costs.</p>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-white mb-1">2. Build Scenarios</h4>
+              <p className="text-xs text-gray-500">Propose changes like hiring spikes or efficiency gains.</p>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-white mb-1">3. Evaluate Results</h4>
+              <p className="text-xs text-gray-500">Reux compiles the data to recommend the most profitable, least risky path.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -128,12 +143,17 @@ export default function SimulatorDashboard() {
 
       {/* Simulations List */}
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
-            Saved Simulations
-          </h2>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <div>
+            <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
+              Saved Simulation History
+            </h2>
+            <p className="text-xs text-gray-500 mt-1">
+              Previous scenarios compiled and evaluated by Reux.
+            </p>
+          </div>
           {simulations.length > 0 && (
-            <span className="text-xs text-gray-600">
+            <span className="text-xs text-gray-600 bg-white/[0.05] px-2 py-1 rounded-md">
               {simulations.length} simulation{simulations.length !== 1 ? "s" : ""}
             </span>
           )}
