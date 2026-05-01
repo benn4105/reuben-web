@@ -58,6 +58,9 @@ export default function ReuxPage() {
             <AnimatedButton href="/projects/reux/demo" variant="primary">
               Try Live Demo
             </AnimatedButton>
+            <AnimatedButton href="/projects/reux/roadmap" variant="secondary">
+              View Roadmap
+            </AnimatedButton>
             <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
               View on GitHub
             </AnimatedButton>
