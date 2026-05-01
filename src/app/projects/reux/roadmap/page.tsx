@@ -147,7 +147,7 @@ export default function RoadmapPage() {
               className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors group"
             >
               <CheckCircle2 className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
-              <p className="text-gray-400 line-through decoration-white/40 decoration-2 text-sm leading-relaxed">{item}</p>
+              <p className="text-gray-400 text-sm leading-relaxed">{item}</p>
             </motion.div>
           ))}
         </div>
