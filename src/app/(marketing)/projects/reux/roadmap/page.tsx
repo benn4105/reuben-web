@@ -4,51 +4,45 @@ import { motion, Variants } from "framer-motion";
 import { CheckCircle2, CircleDashed, ArrowRightCircle } from "lucide-react";
 
 export default function RoadmapPage() {
-  const completedItems = [
-    "Schema declarations for entities, enums, references, indexes, constraints, generated IDs, and typed events.",
-    "Query declarations compiled to PostgreSQL SQL.",
-    "Transaction functions with row locking, inserts, mutations, retry metadata, idempotency keys, guards, outbox events, and after-commit hooks.",
-    "Migration planning, safety checks, review notes, rollback guidance, and schema manifests.",
-    "Runtime support for PostgreSQL queries, transactions, migrations, seeds, and outbox processing.",
-    "Commerce and logistics pilot demos with public session isolation.",
-    "Hosted Railway demo embedded into the Reuben website.",
-    "Early simulation syntax with assumptions, formulas, scenarios, objectives, dimensions, rankings, and TypeScript contracts.",
-    "CLI tooling for diagnosis, formatting, checking, generation, migrations, seeds, workers, and simulations.",
-    "Early VS Code support with syntax highlighting, formatting, diagnostics, completions, hovers, and go-to-definition.",
-    "Demo health checks, outbox status summaries, and worker observability counters.",
-    "Release preflight checks for package entrypoints, release docs, roadmap sync, and clean-tree readiness.",
-    "Public release plan and package dry-run workflow.",
-    "Business Simulation Engine frontend MVP with a serious scenario-builder and comparison console."
+  const availableNow = [
+    "Schema declarations for entities, enums, references, indexes, and constraints.",
+    "Query declarations compiled to secure PostgreSQL SQL.",
+    "Transaction functions with row locking, mutations, and after-commit hooks.",
+    "Migration planning, safety checks, and schema manifests.",
+    "Runtime support for PostgreSQL queries, transactions, and outbox processing.",
+    "CLI tooling for formatting, checking, generation, and migrations."
   ];
 
-  const inProgressItems = [
-    "Public-safe demo polish for repeat visitors and non-technical testers.",
-    "Package-name decision and public beta publishing path.",
-    "Stronger editor intelligence and eventually a true language-server process.",
-    "Richer simulation semantics for PLOS and business decision modeling.",
-    "Additional domain pilots beyond commerce and logistics."
+  const inActiveBeta = [
+    "Business Simulation Engine (Frontend MVP with Reux backend)",
+    "Hosted commerce and logistics pilots",
+    "Early VS Code support with syntax highlighting and diagnostics",
+    "Simulation syntax with assumptions, scenarios, and forecasts"
   ];
 
   const nextMilestones = [
     {
-      title: "Public Beta Polish",
-      description: "Make the public demos easier to understand, add stronger visitor-safe reset flows, refine walkthrough copy, and keep hosted smoke checks running."
-    },
-    {
-      title: "Developer Access",
-      description: "Choose the final package name, publish a beta package when the owning account is ready, and provide a clean VS Code installation path."
+      title: "Public Developer Access",
+      description: "Choose the final package name, publish a beta package, and provide a clean VS Code installation path for external developers."
     },
     {
       title: "Simulation Engine Depth",
-      description: "Expand Reux simulations beyond prototype formulas into richer domain models for personal finance, workforce planning, operational decisions, and scenario comparison."
-    },
+      description: "Expand Reux simulations into richer domain models for personal finance and operational decisions."
+    }
+  ];
+
+  const laterMilestones = [
     {
       title: "Ecosystem Integration",
-      description: "Connect Reux more directly to PLOS and the Real-Time Business Simulation Engine so those projects validate the language through real use cases."
+      description: "Connect Reux more directly to PLOS and external simulation environments."
+    },
+    {
+      title: "Full IDE Language Server",
+      description: "Stronger editor intelligence, semantic tokens, and a true language-server process."
     },
     {
       title: "Language Runtime Depth",
-      description: "Broaden transaction control flow, deepen expression typing, improve generated worker contracts, and keep compiler diagnostics tightening."
+      description: "Broaden transaction control flow and deepen expression typing."
     }
   ];
 
@@ -135,10 +129,11 @@ export default function RoadmapPage() {
       >
         <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
           <CheckCircle2 className="text-[#00F0FF] w-8 h-8" />
-          <h2 className="text-3xl font-bold text-white">Completed</h2>
+          <h2 className="text-3xl font-bold text-white">Available Now</h2>
+          <span className="ml-3 rounded-full bg-[#00F0FF]/10 px-3 py-1 text-xs font-medium text-[#00F0FF] border border-[#00F0FF]/20">Prototype Core</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {completedItems.map((item, idx) => (
+          {availableNow.map((item, idx) => (
             <motion.div 
               key={idx} 
               variants={itemVariants}
@@ -160,10 +155,11 @@ export default function RoadmapPage() {
       >
         <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
           <CircleDashed className="text-[#8A2BE2] w-8 h-8 animate-spin-slow" style={{ animationDuration: '4s' }} />
-          <h2 className="text-3xl font-bold text-white">In Progress</h2>
+          <h2 className="text-3xl font-bold text-white">In Active Beta</h2>
+          <span className="ml-3 rounded-full bg-[#8A2BE2]/10 px-3 py-1 text-xs font-medium text-[#8A2BE2] border border-[#8A2BE2]/20">Live Pilots</span>
         </div>
         <div className="grid grid-cols-1 gap-4">
-          {inProgressItems.map((item, idx) => (
+          {inActiveBeta.map((item, idx) => (
             <motion.div 
               key={idx} 
               variants={itemVariants}
@@ -182,11 +178,11 @@ export default function RoadmapPage() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        className="mb-24"
+        className="mb-20"
       >
         <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
           <ArrowRightCircle className="text-orange-400 w-8 h-8" />
-          <h2 className="text-3xl font-bold text-white">Next Milestones</h2>
+          <h2 className="text-3xl font-bold text-white">Next</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {nextMilestones.map((milestone, idx) => (
@@ -197,6 +193,31 @@ export default function RoadmapPage() {
             >
               <h3 className="text-xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors">{milestone.title}</h3>
               <p className="text-gray-400 text-sm leading-relaxed">{milestone.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="mb-24"
+      >
+        <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
+          <CircleDashed className="text-gray-500 w-8 h-8" />
+          <h2 className="text-3xl font-bold text-white text-gray-400">Later</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {laterMilestones.map((milestone, idx) => (
+            <motion.div 
+              key={idx} 
+              variants={itemVariants}
+              className="p-6 rounded-2xl border border-white/[0.05] bg-white/[0.02]"
+            >
+              <h3 className="text-sm font-bold text-gray-300 mb-2">{milestone.title}</h3>
+              <p className="text-gray-500 text-xs leading-relaxed">{milestone.description}</p>
             </motion.div>
           ))}
         </div>

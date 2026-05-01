@@ -22,11 +22,13 @@ export default function NewSimulationPage() {
   const [isLoadingDefaults, setIsLoadingDefaults] = useState(true);
   const [liveMetrics, setLiveMetrics] = useState<MetricSnapshot | null>(null);
   const [liveSnippet, setLiveSnippet] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchDefaults() {
       try {
         setIsLoadingDefaults(true);
+        setError(null);
         const { baseline: defaultBaseline, scenarios: defaultScenarios } = await getOperationsDecision();
         setBaseline(defaultBaseline);
         if (defaultScenarios && defaultScenarios.length > 0) {
@@ -38,6 +40,7 @@ export default function NewSimulationPage() {
         setLiveSnippet(generateReuxSnippet(defaultBaseline));
       } catch (err) {
         console.error("Failed to load defaults", err);
+        setError("Failed to load the baseline model from the engine. The Reux backend might be unreachable.");
       } finally {
         setIsLoadingDefaults(false);
       }
@@ -99,21 +102,24 @@ export default function NewSimulationPage() {
     }
   };
 
-  const loadDemoData = () => {
-    setSimulationName("Q3 Expansion Strategy");
-    if (baseline) {
-      const demoBaseline = {
-        name: "Current Operations",
-        employees: 50,
-        avgHourlyCost: 28,
-        weeklyDemand: 1200,
-        productivityGainPct: 0,
-        overtimeReductionPct: 0,
-        supplierDelayRiskPct: 15,
-        errorDefectRatePct: 4,
-        forecastWeeks: 12,
-      };
-      setBaseline(demoBaseline);
+  const loadPreset = (presetKey: "expansion" | "optimization" | "surge") => {
+    if (!baseline) return;
+    
+    const demoBaseline = {
+      name: "Current Operations",
+      employees: 50,
+      avgHourlyCost: 28,
+      weeklyDemand: 1200,
+      productivityGainPct: 0,
+      overtimeReductionPct: 0,
+      supplierDelayRiskPct: 15,
+      errorDefectRatePct: 4,
+      forecastWeeks: 12,
+    };
+    setBaseline(demoBaseline);
+
+    if (presetKey === "expansion") {
+      setSimulationName("Workforce Expansion");
       setScenarios([
         {
           name: "Aggressive Hiring",
@@ -125,9 +131,13 @@ export default function NewSimulationPage() {
           supplierDelayRiskPct: 15,
           errorDefectRatePct: 5,
           forecastWeeks: 12,
-        },
+        }
+      ]);
+    } else if (presetKey === "optimization") {
+      setSimulationName("Process Optimization");
+      setScenarios([
         {
-          name: "Process Optimization",
+          name: "Lean Ops",
           employees: 50,
           avgHourlyCost: 28,
           weeklyDemand: 1350,
@@ -138,10 +148,26 @@ export default function NewSimulationPage() {
           forecastWeeks: 12,
         }
       ]);
-      setActiveTab("baseline");
-      setLiveMetrics(calculateMetrics(demoBaseline));
-      setLiveSnippet(generateReuxSnippet(demoBaseline));
+    } else if (presetKey === "surge") {
+      setSimulationName("Demand Surge");
+      setScenarios([
+        {
+          name: "Overtime Max",
+          employees: 50,
+          avgHourlyCost: 35,
+          weeklyDemand: 1800,
+          productivityGainPct: -5,
+          overtimeReductionPct: -40,
+          supplierDelayRiskPct: 25,
+          errorDefectRatePct: 8,
+          forecastWeeks: 12,
+        }
+      ]);
     }
+    
+    setActiveTab("baseline");
+    setLiveMetrics(calculateMetrics(demoBaseline));
+    setLiveSnippet(generateReuxSnippet(demoBaseline));
   };
 
   const handleTabChange = (tab: "baseline" | number) => {
@@ -165,9 +191,47 @@ export default function NewSimulationPage() {
         </p>
       </div>
 
-      {/* Simulation Name & Demo Button */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4">
-        <div className="space-y-2 flex-1 max-w-md">
+      {/* Presets and Simulation Name */}
+      <div className="flex flex-col gap-6">
+        <div className="space-y-3">
+          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            Guided Demo Presets
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <button
+              onClick={() => loadPreset("expansion")}
+              className="text-left p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] hover:border-cyan-500/30 transition-all group"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Wand2 size={16} className="text-cyan-400" />
+                <h3 className="text-sm font-medium text-white">Workforce Expansion</h3>
+              </div>
+              <p className="text-xs text-gray-500 line-clamp-2">Adds 15 employees to meet higher demand, but increases cost and defect rates temporarily.</p>
+            </button>
+            <button
+              onClick={() => loadPreset("optimization")}
+              className="text-left p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] hover:border-violet-500/30 transition-all group"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Wand2 size={16} className="text-violet-400" />
+                <h3 className="text-sm font-medium text-white">Process Optimization</h3>
+              </div>
+              <p className="text-xs text-gray-500 line-clamp-2">Focuses on productivity gains (+18%) to handle more demand without hiring new staff.</p>
+            </button>
+            <button
+              onClick={() => loadPreset("surge")}
+              className="text-left p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] hover:border-rose-500/30 transition-all group"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Wand2 size={16} className="text-rose-400" />
+                <h3 className="text-sm font-medium text-white">Demand Surge</h3>
+              </div>
+              <p className="text-xs text-gray-500 line-clamp-2">Models a 50% spike in demand handled entirely by overtime, raising costs and risk significantly.</p>
+            </button>
+          </div>
+        </div>
+
+        <div className="space-y-2 max-w-md">
           <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
             Simulation Name
           </label>
@@ -183,24 +247,29 @@ export default function NewSimulationPage() {
             placeholder="e.g. Q2 Workforce Planning"
           />
         </div>
-        <Button 
-          variant="outline" 
-          onClick={loadDemoData}
-          className="gap-2 shrink-0 border-dashed hover:border-cyan-500/50 hover:text-cyan-400 transition-colors"
-        >
-          <Wand2 size={16} className="text-cyan-400" />
-          Load Demo Data
-        </Button>
       </div>
 
-      {isLoadingDefaults || !baseline || !activeInputs || !liveMetrics ? (
+      {isLoadingDefaults ? (
         <div className="flex h-64 items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.02]">
           <div className="flex flex-col items-center gap-4 text-gray-500">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-500 border-t-transparent" />
             <p className="text-sm font-medium">Loading default assumptions...</p>
           </div>
         </div>
-      ) : (
+      ) : error ? (
+        <div className="flex h-64 items-center justify-center rounded-xl border border-rose-500/20 bg-rose-500/5 p-6 text-center">
+          <div className="max-w-md space-y-4">
+            <p className="text-sm text-rose-400">{error}</p>
+            <Button
+              onClick={() => window.location.reload()}
+              variant="outline"
+              className="border-rose-500/30 text-rose-400 hover:bg-rose-500/10"
+            >
+              Retry Connection
+            </Button>
+          </div>
+        </div>
+      ) : !baseline || !activeInputs || !liveMetrics ? null : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left: Input Panel */}
           <div className="lg:col-span-5 xl:col-span-4 space-y-4">

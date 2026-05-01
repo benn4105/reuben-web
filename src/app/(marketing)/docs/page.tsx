@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 import AnimatedButton from "@/components/ui/AnimatedButton";
-import { Terminal, Download, Code2, Copy } from "lucide-react";
-import { useState } from "react";
+import { Terminal, Download, Code2 } from "lucide-react";
 
 const INSTALL_CMD = "npm install @reux/cli -g";
 
@@ -32,14 +31,6 @@ println("Recommended path: {recommendation.best_margin}")`
 ];
 
 export default function DocsPage() {
-  const [copied, setCopied] = useState(false);
-
-  const copyInstall = () => {
-    navigator.clipboard.writeText(INSTALL_CMD);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <div className="pt-32 pb-24 min-h-screen relative overflow-hidden">
       {/* Background Effects */}
@@ -59,11 +50,28 @@ export default function DocsPage() {
           </div>
           
           <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6">
-            Reux Quickstart
+            Developer Access & Docs
           </h1>
           <p className="text-xl text-gray-400 font-light mb-12 leading-relaxed">
-            Get up and running with the Reux compiler and Business Simulation Engine in minutes.
+            Learn how to inspect Reux examples, try the web demo, and what to expect from our upcoming developer tooling.
           </p>
+
+          {/* Try the Web Demo */}
+          <section className="mb-16">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-lg bg-emerald-500/10">
+                <Code2 className="text-emerald-400" size={24} />
+              </div>
+              <h2 className="text-2xl font-bold">1. Try the Web Demo</h2>
+            </div>
+            
+            <p className="text-gray-400 mb-6 leading-relaxed">
+              The easiest way to experience Reux today is through the <strong className="text-white">Business Simulator</strong>. You do not need to install anything. The simulator provides a graphical scenario builder that automatically compiles and runs Reux code in the background, allowing you to inspect the generated snippets in the &quot;Model Transparency Layer.&quot;
+            </p>
+            <AnimatedButton href="/simulator" variant="secondary">
+              Launch Business Simulator
+            </AnimatedButton>
+          </section>
 
           {/* Installation */}
           <section className="mb-16">
@@ -71,30 +79,26 @@ export default function DocsPage() {
               <div className="p-2 rounded-lg bg-violet-500/10">
                 <Download className="text-violet-400" size={24} />
               </div>
-              <h2 className="text-2xl font-bold">1. Installation</h2>
+              <h2 className="text-2xl font-bold">2. Local Installation (Coming Soon)</h2>
             </div>
             
-            <p className="text-gray-400 mb-6">
-              The Reux compiler and CLI are available via npm. Note: this is a beta release.
+            <p className="text-gray-400 mb-6 leading-relaxed">
+              Public package distribution is planned, but not finalized. Once the beta is officially published, the Reux compiler and CLI will be available via npm.
             </p>
 
-            <div className="relative group">
+            <div className="relative group mb-4">
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-violet-500/10 rounded-xl blur-sm transition-opacity opacity-0 group-hover:opacity-100" />
-              <div className="relative glass border border-white/10 rounded-xl p-4 flex items-center justify-between">
+              <div className="relative glass border border-white/10 rounded-xl p-4 flex items-center justify-between opacity-50 cursor-not-allowed">
                 <code className="text-cyan-400 font-mono text-sm sm:text-base">
                   {INSTALL_CMD}
                 </code>
-                <button 
-                  onClick={copyInstall}
-                  className="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
-                >
-                  {copied ? <span className="text-xs text-emerald-400">Copied!</span> : <Copy size={16} />}
-                </button>
+                <span className="text-xs text-gray-500 uppercase tracking-wide">Planned</span>
               </div>
             </div>
 
-            <p className="text-sm text-gray-500 mt-4">
-              We also offer a VS Code extension via VSIX (coming soon to the marketplace).
+            <p className="text-sm text-gray-500 mt-4 bg-white/5 border border-white/10 p-4 rounded-lg">
+              <strong className="text-white block mb-1">Current IDE Support Status</strong>
+              We have an internal VS Code extension (via VSIX) that supports syntax highlighting, diagnostics, and formatting. We plan to distribute this on the VS Code Marketplace alongside the npm package.
             </p>
           </section>
 
@@ -104,11 +108,11 @@ export default function DocsPage() {
               <div className="p-2 rounded-lg bg-cyan-500/10">
                 <Code2 className="text-cyan-400" size={24} />
               </div>
-              <h2 className="text-2xl font-bold">2. Writing Simulations</h2>
+              <h2 className="text-2xl font-bold">3. Inspecting Reux Examples</h2>
             </div>
             
             <p className="text-gray-400 mb-6">
-              Reux uses a declarative syntax for defining simulation bounds, risk factors, and scenarios.
+              Reux uses a declarative syntax for defining simulation bounds, risk factors, and scenarios. While you can&apos;t run these locally yet, you can inspect the syntax below to understand how the simulator engine works.
             </p>
 
             <div className="space-y-8">
@@ -127,15 +131,14 @@ export default function DocsPage() {
             </div>
           </section>
 
-          {/* Next Steps */}
-          <section className="p-8 rounded-2xl glass border border-white/10 text-center">
-            <h2 className="text-2xl font-bold mb-4">Want to see it in action?</h2>
-            <p className="text-gray-400 mb-8 max-w-lg mx-auto">
-              You do not need to write code to experience the power of Reux. We have built a full Business Simulation Engine powered by the language.
-            </p>
-            <AnimatedButton href="/simulator" variant="primary">
-              Launch Business Simulator
-            </AnimatedButton>
+          {/* Current Limitations */}
+          <section className="p-8 rounded-2xl bg-amber-500/5 border border-amber-500/20 text-left">
+            <h2 className="text-xl font-bold mb-4 text-amber-500">Current Limitations</h2>
+            <ul className="space-y-3 text-sm text-amber-500/80 list-disc pl-5">
+              <li>Reux is currently focused entirely on simulation and data modeling. It does not generate UI or HTTP controllers.</li>
+              <li>There is no public package registry or module import system for sharing Reux libraries externally yet.</li>
+              <li>Developer access is restricted to internal team pilots and interactive web demos like the Business Simulator.</li>
+            </ul>
           </section>
 
         </motion.div>

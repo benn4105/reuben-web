@@ -11,13 +11,8 @@ import { LoadingMetrics, LoadingChart } from "@/components/simulator/LoadingStat
 import { ErrorState } from "@/components/simulator/EmptyState";
 import { getSimulation } from "@/lib/simulation/api-client";
 import type { Simulation } from "@/lib/simulation/types";
-import { cn } from "@/lib/utils";
-
-// shadcn / Radix components
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 const CHART_COLORS = [
   "#64748b", // slate (baseline)
@@ -189,15 +184,20 @@ export default function SimulationResultsPage({
         </div>
       </div>
 
-      {/* Recommendation */}
+      {/* Decision Readout */}
       {comparison && recommended && (
-        <RecommendationPanel
-          scenarioName={recommended.inputs.name}
-          marginImprovement={recommended.summary.margin - baseline.summary.margin}
-          riskChange={recommended.summary.riskScore - baseline.summary.riskScore}
-          firstDivergenceWeek={comparison.firstDivergenceWeek}
-          reason={comparison.recommendationReason}
-        />
+        <div className="space-y-3">
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            Reux Decision Readout
+          </h2>
+          <RecommendationPanel
+            scenarioName={recommended.inputs.name}
+            marginImprovement={recommended.summary.margin - baseline.summary.margin}
+            riskChange={recommended.summary.riskScore - baseline.summary.riskScore}
+            firstDivergenceWeek={comparison.firstDivergenceWeek}
+            reason={comparison.recommendationReason}
+          />
+        </div>
       )}
 
       {/* Forecast Chart */}
@@ -241,62 +241,23 @@ export default function SimulationResultsPage({
         </div>
       )}
 
-      {/* Decision Summary */}
-      {comparison && recommended && (
-        <Card className="border-none ring-white/[0.06] bg-card/30">
-          <CardContent className="p-6">
-            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-              Decision Summary
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div>
-                <div className="text-xs text-muted-foreground mb-1">Recommended</div>
-                <div className="text-sm font-semibold text-amber-400">
-                  {recommended.inputs.name}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground mb-1">Expected Margin Impact</div>
-                <Badge
-                  variant={recommended.summary.margin >= baseline.summary.margin ? "secondary" : "destructive"}
-                  className={cn(
-                    "font-mono text-xs",
-                    recommended.summary.margin >= baseline.summary.margin && "bg-emerald-500/10 text-emerald-400"
-                  )}
-                >
-                  {recommended.summary.margin >= baseline.summary.margin ? "+" : ""}
-                  ${(recommended.summary.margin - baseline.summary.margin).toLocaleString()}/week
-                </Badge>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground mb-1">Risk Change</div>
-                <Badge
-                  variant={recommended.summary.riskScore <= baseline.summary.riskScore ? "secondary" : "destructive"}
-                  className={cn(
-                    "font-mono text-xs",
-                    recommended.summary.riskScore <= baseline.summary.riskScore && "bg-emerald-500/10 text-emerald-400"
-                  )}
-                >
-                  {recommended.summary.riskScore > baseline.summary.riskScore ? "+" : ""}
-                  {(recommended.summary.riskScore - baseline.summary.riskScore).toFixed(1)} pts
-                </Badge>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground mb-1">First Meaningful Divergence</div>
-                <Badge variant="outline" className="font-mono text-xs">
-                  Week {comparison.firstDivergenceWeek}
-                </Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
-      {/* Reux Snippet */}
-      <ReuxSnippetPanel
-        snippet={recommended?.reuxSnippet || baseline.reuxSnippet}
-        defaultOpen={false}
-      />
+
+      {/* Reux Snippet Transparency Layer */}
+      <div className="pt-6 border-t border-white/[0.06]">
+        <div className="mb-4">
+          <h2 className="text-sm font-semibold text-white tracking-wide">
+            Model Transparency Layer
+          </h2>
+          <p className="text-xs text-gray-500 mt-1 max-w-3xl">
+            This simulator runs entirely on Reux. The panel below shows the actual compiled simulation logic that the engine used to forecast your scenarios and make its recommendation.
+          </p>
+        </div>
+        <ReuxSnippetPanel
+          snippet={recommended?.reuxSnippet || baseline.reuxSnippet}
+          defaultOpen={false}
+        />
+      </div>
     </div>
   );
 }

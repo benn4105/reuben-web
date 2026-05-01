@@ -144,8 +144,11 @@ export default function ReuxPage() {
             <p className="text-gray-400 text-lg leading-relaxed mb-6">
               Reux is being built for the parts of applications where normal web stacks get messy: data models, state changes, workflows, forecasts, and decision rules.
             </p>
+            <p className="text-gray-400 text-lg leading-relaxed mb-6">
+              The strategy is practical: build the UI with TypeScript and React, then let Reux own the backend logic that needs to be reliable, auditable, and explainable. The <strong className="text-white">Business Simulator</strong> is our first major proof-of-use, demonstrating Reux&apos;s ability to run complex, dynamic scenario modeling in real-time.
+            </p>
             <p className="text-gray-400 text-lg leading-relaxed">
-              The near-term strategy is practical: build the UI with TypeScript and React, then let Reux own the backend logic that needs to be reliable, auditable, and explainable.
+              In the future, we plan to validate the language against rigorous environments like PLOS (Product Lifecycle Operations Systems) and enterprise simulation workflows.
             </p>
           </motion.div>
 
@@ -221,6 +224,23 @@ export default function ReuxPage() {
           </div>
         </motion.div>
 
+        {/* Why this matters */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mt-24 max-w-4xl mx-auto text-center"
+        >
+          <h2 className="text-3xl font-bold mb-6">Why This Matters</h2>
+          <p className="text-gray-400 text-lg leading-relaxed mb-6">
+            When business rules are scattered across frontend state, backend controllers, and database triggers, no one can confidently answer &quot;why did the system do this?&quot;
+          </p>
+          <p className="text-gray-400 text-lg leading-relaxed">
+            By keeping data structures, scenarios, and decision objectives in a single readable Reux file, operations teams can actually audit the logic that powers their dashboards.
+          </p>
+        </motion.div>
+
         {/* Roadmap */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -290,9 +310,12 @@ export default function ReuxPage() {
                 Live today
               </span>
             </div>
-            <h2 className="mb-4 text-3xl font-bold">What Reux Can Do Now</h2>
+            <h2 className="mb-4 text-3xl font-bold">What is Real Today</h2>
+            <p className="text-gray-400 text-lg leading-relaxed mb-4">
+              Reux is an active prototype. It is not yet production-ready for external teams to build their entire company on. 
+            </p>
             <p className="text-gray-400 text-lg leading-relaxed">
-              The current release is a working prototype foundation, not a finished universal language. It is already strong enough to power demos, generate backend artifacts, and validate the product thesis.
+              However, the core language is already strong enough to power our Business Simulator, generate reliable backend artifacts, and validate the product thesis internally. Here is what is functioning right now:
             </p>
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

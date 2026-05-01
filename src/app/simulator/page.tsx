@@ -50,15 +50,41 @@ export default function SimulatorDashboard() {
   return (
     <div className="space-y-6">
       <SimulatorOnboarding />
-      {/* Page Header */}
-      <div className="flex items-end justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
-            Simulation Dashboard
+      {/* Page Header / Demo Intro */}
+      <div className="rounded-2xl border border-white/[0.08] bg-[#0A0A0C] p-6 lg:p-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-cyan-500/10 via-violet-500/5 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        
+        <div className="max-w-3xl relative z-10">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+            Live Demo
+          </div>
+          
+          <h1 className="text-3xl lg:text-4xl font-bold text-white tracking-tight mb-3">
+            Business Simulation Engine
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Model operational decisions before making them.
+          <p className="text-base text-gray-400 mb-6 leading-relaxed">
+            Test operational decisions—like workforce expansion or process optimization—before making them in the real world. 
+            Under the hood, this simulator uses <strong className="text-white">Reux</strong> to evaluate complex business logic, forecast margins, and calculate risk dynamically. It proves that Reux is more than just syntax; it&apos;s a powerful engine for real-world modeling.
           </p>
+          
+          <div className="flex flex-wrap gap-3">
+            <Button asChild className="gap-2 bg-white text-black hover:bg-gray-200">
+              <Link href="/simulator/new">
+                Start Simulator <PlusCircle size={16} />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="gap-2 bg-transparent border-white/[0.1] text-white hover:bg-white/[0.05]">
+              <Link href="/simulator/new?demo=true">
+                Load Guided Demo
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" className="gap-2 text-gray-400 hover:text-white">
+              <Link href="/docs">
+                See How It Works
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
 

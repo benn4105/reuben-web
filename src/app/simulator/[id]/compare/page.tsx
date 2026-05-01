@@ -97,15 +97,20 @@ export default function ComparisonPage({
         </div>
       </div>
 
-      {/* Recommendation */}
+      {/* Decision Readout */}
       {recommended && (
-        <RecommendationPanel
-          scenarioName={recommended.inputs.name}
-          marginImprovement={recommended.summary.margin - baseline.summary.margin}
-          riskChange={recommended.summary.riskScore - baseline.summary.riskScore}
-          firstDivergenceWeek={comparison.firstDivergenceWeek}
-          reason={comparison.recommendationReason}
-        />
+        <div className="space-y-3">
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            Reux Decision Readout
+          </h2>
+          <RecommendationPanel
+            scenarioName={recommended.inputs.name}
+            marginImprovement={recommended.summary.margin - baseline.summary.margin}
+            riskChange={recommended.summary.riskScore - baseline.summary.riskScore}
+            firstDivergenceWeek={comparison.firstDivergenceWeek}
+            reason={comparison.recommendationReason}
+          />
+        </div>
       )}
 
       {/* Comparison Table */}
@@ -174,25 +179,33 @@ export default function ComparisonPage({
       </div>
 
       {/* Scenario Reux Snippets */}
-      <div className="space-y-3">
-        <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-          Reux Definitions
-        </h2>
-        {simulation.scenarios.map(s => (
-          <div key={s.id}>
-            <div className="text-xs text-gray-600 mb-1.5 font-medium">
-              {s.inputs.name}
-              {s.id === comparison.recommendedId && (
-                <span className="ml-2 text-amber-400">★ Recommended</span>
-              )}
+      <div className="pt-6 border-t border-white/[0.06] space-y-4">
+        <div>
+          <h2 className="text-sm font-semibold text-white tracking-wide">
+            Model Transparency Layer
+          </h2>
+          <p className="text-xs text-gray-500 mt-1 max-w-3xl">
+            Each scenario generates distinct Reux logic. Below is the compiled source for every scenario evaluated in this simulation.
+          </p>
+        </div>
+        
+        <div className="space-y-3">
+          {simulation.scenarios.map(s => (
+            <div key={s.id}>
+              <div className="text-xs text-gray-600 mb-1.5 font-medium flex items-center gap-2">
+                <span className="text-gray-300">{s.inputs.name}</span>
+                {s.id === comparison.recommendedId && (
+                  <span className="text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded uppercase text-[10px] tracking-wide">Recommended</span>
+                )}
+              </div>
+              <ReuxSnippetPanel
+                snippet={s.reuxSnippet}
+                collapsible={true}
+                defaultOpen={s.id === comparison.recommendedId}
+              />
             </div>
-            <ReuxSnippetPanel
-              snippet={s.reuxSnippet}
-              collapsible={true}
-              defaultOpen={s.id === comparison.recommendedId}
-            />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
