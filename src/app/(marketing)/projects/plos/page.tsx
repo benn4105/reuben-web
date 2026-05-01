@@ -90,7 +90,7 @@ export default function PlosPage() {
               <div>
                 <h3 className="text-3xl font-bold text-white mb-6">Dynamic Life Simulation</h3>
                 <p className="text-gray-400 text-lg leading-relaxed">
-                  PLOS replaces spreadsheets with a dynamic engine. By combining your real-world data with the Reux runtime, PLOS lets you run branching simulations to visualize the exact trajectory of your decisions.
+                  PLOS is designed to replace spreadsheets with a dynamic engine. By combining real-world inputs with Reux-backed simulation models, PLOS will let you compare branching scenarios before making major life decisions.
                 </p>
               </div>
             </div>
@@ -140,10 +140,10 @@ export default function PlosPage() {
                 <h3 className="text-2xl font-bold text-white">Powered by Reux</h3>
               </div>
               <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                PLOS is the first consumer-facing product built entirely on the Reux backend engine. 
+                PLOS is planned as the first consumer-facing product that validates Reux-backed personal simulation workflows.
               </p>
               <p className="text-gray-400 text-lg leading-relaxed">
-                Every career choice, budget change, and habit tweak in the PLOS UI translates into a secure, transactional Reux simulation declaration executed in the cloud.
+                The intended architecture is for career choices, budget changes, and habit tweaks in the PLOS UI to become Reux simulation declarations or model inputs as the runtime matures.
               </p>
             </div>
             <div className="flex-1 w-full">

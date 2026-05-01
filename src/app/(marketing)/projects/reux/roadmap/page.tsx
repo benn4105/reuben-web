@@ -27,17 +27,17 @@ export default function RoadmapPage() {
     {
       title: "Package & Release Polish",
       description: "Finalize package distribution, publish the public beta, and improve developer onboarding paths.",
-      completed: true
+      completed: false
     },
     {
       title: "Richer Simulation Semantics",
       description: "Expand Reux syntax with deeper assumption modeling and forecasting capabilities.",
-      completed: true
+      completed: false
     },
     {
       title: "More Product Pilots",
       description: "Build additional domain-specific pilots to stress-test Reux in new environments.",
-      completed: true
+      completed: false
     }
   ];
 
@@ -45,17 +45,17 @@ export default function RoadmapPage() {
     {
       title: "Full IDE Language Server",
       description: "Stronger editor intelligence, semantic tokens, and a true language-server process.",
-      completed: true
+      completed: false
     },
     {
       title: "Deeper Runtime",
       description: "Broaden transaction control flow and deepen expression typing at the runtime level.",
-      completed: true
+      completed: false
     },
     {
       title: "PLOS & Ecosystem Integration",
       description: "Connect Reux directly to the Personal Life Operating System (PLOS) and Business Simulator environments.",
-      completed: true
+      completed: false
     }
   ];
 
@@ -209,8 +209,8 @@ export default function RoadmapPage() {
         className="mb-20"
       >
         <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
-          <CheckCircle2 className="text-green-500 w-8 h-8" />
-          <h2 className="text-3xl font-bold text-white">Next <span className="text-sm font-normal text-green-500 ml-2">(Completed)</span></h2>
+          <CircleDashed className="text-orange-400 w-8 h-8" />
+          <h2 className="text-3xl font-bold text-white">Next <span className="text-sm font-normal text-orange-400 ml-2">(Planned)</span></h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {nextMilestones.map((milestone, idx) => (
@@ -244,8 +244,8 @@ export default function RoadmapPage() {
         className="mb-24"
       >
         <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
-          <CheckCircle2 className="text-green-500 w-8 h-8" />
-          <h2 className="text-3xl font-bold text-gray-400">Later <span className="text-sm font-normal text-green-500 ml-2">(Completed)</span></h2>
+          <Map className="text-gray-400 w-8 h-8" />
+          <h2 className="text-3xl font-bold text-gray-400">Later <span className="text-sm font-normal text-gray-500 ml-2">(Future)</span></h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {laterMilestones.map((milestone, idx) => (

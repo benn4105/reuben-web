@@ -96,19 +96,32 @@ async function shipOrder(orderId) {
   });
 }`,
     reuxCode: `// Reux: Strict transitions
+enum OrderStatus {
+  Created
+  Processing
+  Shipped
+  Delivered
+}
+
 entity Order {
-  // ...fields
-  state status {
-    Created
-    Processing
-    Shipped
-    Delivered
-  }
-  
-  transition ship from Processing to Shipped {
-    require payment != null
-    set shipped_at = now()
-  }
+  id: Id<Order> primary generated
+  payment: Payment?
+  status: OrderStatus default Created
+}
+
+transition Order.status {
+  Created -> Processing
+  Processing -> Shipped
+  Shipped -> Delivered
+}
+
+transaction function shipOrder(
+  orderRef: Order
+) writes Order retry 3 {
+  let order = load orderRef for update
+  require order.payment != null else abort PaymentRequired
+  order.status = Shipped
+  save order
 }`
   },
   {
@@ -132,19 +145,21 @@ async function getActiveCustomers(db, region) {
   return result.rows;
 }`,
     reuxCode: `// Reux: Typed query declaration
-query ActiveCustomersByRegion(region: String) {
-  find Customer {
-    id
-    email
-    created_at
-  }
-  where status == Active and region == region
-  order by created_at desc
+query activeCustomersByRegion(
+  region: String
+): Query<{ id: Id<Customer>, email: String, createdAt: Instant }> =
+  from customer in Customer
+  where customer.status == Active and customer.region == region
+  order by customer.createdAt desc
   limit 50
-}
+  select {
+    id: customer.id,
+    email: customer.email,
+    createdAt: customer.createdAt
+  }
 
-// Automatically generates fully-typed TypeScript
-// functions with guaranteed schema alignment.`
+// Generates typed TypeScript helpers
+// aligned with the compiled schema.`
   },
   {
     id: "simulations",
