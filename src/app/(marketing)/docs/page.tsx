@@ -35,35 +35,42 @@ const EXAMPLES = [
 }`
   },
   {
-    title: "Transaction & Outbox Concept",
-    filename: "checkout.reux",
-    code: `transaction process_order(cart_id: UUID) {
-  let cart = query(carts).find(cart_id)
-  
-  mut order = insert(orders, {
-    total: cart.total,
-    status: 'pending'
-  })
-
-  // Durable event emitted automatically
-  emit order_placed {
-    order_id: order.id,
-    amount: order.total
+    title: "Transaction and outbox event",
+    filename: "payments.dl",
+    code: `transaction function capturePayment(orderRef: Order, amount: Decimal<12,2>) writes Payment retry 3 {
+  let order = load orderRef for update
+  let payment = insert Payment {
+    order: orderRef,
+    amount: amount,
+    currency: order.currency,
+    status: Captured
   }
+
+  enqueue PaymentCaptured {
+    payment: payment.id,
+    order: orderRef,
+    amount: amount,
+    currency: order.currency
+  }
+
+  after commit sendReceipt(orderRef)
 }`
   },
   {
-    title: "Generated TypeScript Integration",
+    title: "Generated TypeScript integration",
     filename: "app.ts",
-    code: `import { reux } from './generated/reux-client';
+    code: `import { createPilotApi } from './generated/pilot-api';
+import { createPostgresDatabase } from './runtime';
 
-async function handleCheckout(cartId: string) {
-  // Fully typed transaction call
-  const result = await reux.tx.process_order({ cart_id: cartId });
+async function checkout(orderId: string, amount: string) {
+  const db = createPostgresDatabase(process.env.DATABASE_URL);
+  const api = createPilotApi(db);
+  const result = await api.transactions.capturePayment({
+    orderRef: orderId,
+    amount
+  });
   
-  if (result.ok) {
-    console.log(\`Order \${result.data.order.id} placed successfully\`);
-  }
+  console.log(result.bindings.payment.id);
 }`
   }
 ];
