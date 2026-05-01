@@ -12,6 +12,94 @@ import { Plus, Trash2, Wand2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
+type PresetKey = "expansion" | "optimization" | "surge";
+
+interface GuidedPreset {
+  name: string;
+  baseline: ScenarioInputs;
+  scenarios: ScenarioInputs[];
+}
+
+function guidedPresetFromSearch(): PresetKey | null {
+  if (typeof window === "undefined") return null;
+  const params = new URLSearchParams(window.location.search);
+  const preset = params.get("preset");
+  if (preset === "expansion" || preset === "optimization" || preset === "surge") return preset;
+  return params.get("demo") === "true" ? "optimization" : null;
+}
+
+function buildGuidedPreset(presetKey: PresetKey): GuidedPreset {
+  const baseline = {
+    name: "Current Operations",
+    employees: 50,
+    avgHourlyCost: 28,
+    weeklyDemand: 1200,
+    productivityGainPct: 0,
+    overtimeReductionPct: 0,
+    supplierDelayRiskPct: 15,
+    errorDefectRatePct: 4,
+    forecastWeeks: 12,
+  };
+
+  if (presetKey === "expansion") {
+    return {
+      name: "Workforce Expansion",
+      baseline,
+      scenarios: [
+        {
+          name: "Aggressive Hiring",
+          employees: 65,
+          avgHourlyCost: 28,
+          weeklyDemand: 1500,
+          productivityGainPct: 5,
+          overtimeReductionPct: 20,
+          supplierDelayRiskPct: 15,
+          errorDefectRatePct: 5,
+          forecastWeeks: 12,
+        },
+      ],
+    };
+  }
+
+  if (presetKey === "optimization") {
+    return {
+      name: "Process Optimization",
+      baseline,
+      scenarios: [
+        {
+          name: "Lean Ops",
+          employees: 50,
+          avgHourlyCost: 28,
+          weeklyDemand: 1350,
+          productivityGainPct: 18,
+          overtimeReductionPct: 50,
+          supplierDelayRiskPct: 10,
+          errorDefectRatePct: 2,
+          forecastWeeks: 12,
+        },
+      ],
+    };
+  }
+
+  return {
+    name: "Demand Surge",
+    baseline,
+    scenarios: [
+      {
+        name: "Overtime Max",
+        employees: 50,
+        avgHourlyCost: 35,
+        weeklyDemand: 1800,
+        productivityGainPct: 0,
+        overtimeReductionPct: 0,
+        supplierDelayRiskPct: 25,
+        errorDefectRatePct: 8,
+        forecastWeeks: 12,
+      },
+    ],
+  };
+}
+
 export default function NewSimulationPage() {
   const router = useRouter();
   const [simulationName, setSimulationName] = useState("New Simulation");
@@ -30,14 +118,25 @@ export default function NewSimulationPage() {
         setIsLoadingDefaults(true);
         setError(null);
         const { baseline: defaultBaseline, scenarios: defaultScenarios } = await getOperationsDecision();
-        setBaseline(defaultBaseline);
-        if (defaultScenarios && defaultScenarios.length > 0) {
-          setScenarios([{ ...defaultScenarios[0], name: "Scenario A" }]);
+
+        const guidedPreset = guidedPresetFromSearch();
+        if (guidedPreset) {
+          const preset = buildGuidedPreset(guidedPreset);
+          setSimulationName(preset.name);
+          setBaseline(preset.baseline);
+          setScenarios(preset.scenarios);
+          setLiveMetrics(calculateMetrics(preset.baseline));
+          setLiveSnippet(generateReuxSnippet(preset.baseline));
         } else {
-          setScenarios([{ ...defaultBaseline, name: "Scenario A" }]);
+          setBaseline(defaultBaseline);
+          if (defaultScenarios && defaultScenarios.length > 0) {
+            setScenarios([{ ...defaultScenarios[0], name: "Scenario A" }]);
+          } else {
+            setScenarios([{ ...defaultBaseline, name: "Scenario A" }]);
+          }
+          setLiveMetrics(calculateMetrics(defaultBaseline));
+          setLiveSnippet(generateReuxSnippet(defaultBaseline));
         }
-        setLiveMetrics(calculateMetrics(defaultBaseline));
-        setLiveSnippet(generateReuxSnippet(defaultBaseline));
       } catch (err) {
         console.error("Failed to load defaults", err);
         setError("Failed to load the baseline model from the engine. The Reux backend might be unreachable.");
@@ -102,73 +201,15 @@ export default function NewSimulationPage() {
     }
   };
 
-  const loadPreset = (presetKey: "expansion" | "optimization" | "surge") => {
-    if (!baseline) return;
-    
-    const demoBaseline = {
-      name: "Current Operations",
-      employees: 50,
-      avgHourlyCost: 28,
-      weeklyDemand: 1200,
-      productivityGainPct: 0,
-      overtimeReductionPct: 0,
-      supplierDelayRiskPct: 15,
-      errorDefectRatePct: 4,
-      forecastWeeks: 12,
-    };
-    setBaseline(demoBaseline);
-
-    if (presetKey === "expansion") {
-      setSimulationName("Workforce Expansion");
-      setScenarios([
-        {
-          name: "Aggressive Hiring",
-          employees: 65,
-          avgHourlyCost: 28,
-          weeklyDemand: 1500,
-          productivityGainPct: 5,
-          overtimeReductionPct: 20,
-          supplierDelayRiskPct: 15,
-          errorDefectRatePct: 5,
-          forecastWeeks: 12,
-        }
-      ]);
-    } else if (presetKey === "optimization") {
-      setSimulationName("Process Optimization");
-      setScenarios([
-        {
-          name: "Lean Ops",
-          employees: 50,
-          avgHourlyCost: 28,
-          weeklyDemand: 1350,
-          productivityGainPct: 18,
-          overtimeReductionPct: 50,
-          supplierDelayRiskPct: 10,
-          errorDefectRatePct: 2,
-          forecastWeeks: 12,
-        }
-      ]);
-    } else if (presetKey === "surge") {
-      setSimulationName("Demand Surge");
-      setScenarios([
-        {
-          name: "Overtime Max",
-          employees: 50,
-          avgHourlyCost: 35,
-          weeklyDemand: 1800,
-          productivityGainPct: -5,
-          overtimeReductionPct: -40,
-          supplierDelayRiskPct: 25,
-          errorDefectRatePct: 8,
-          forecastWeeks: 12,
-        }
-      ]);
-    }
-    
+  const loadPreset = useCallback((presetKey: PresetKey) => {
+    const preset = buildGuidedPreset(presetKey);
+    setSimulationName(preset.name);
+    setBaseline(preset.baseline);
+    setScenarios(preset.scenarios);
     setActiveTab("baseline");
-    setLiveMetrics(calculateMetrics(demoBaseline));
-    setLiveSnippet(generateReuxSnippet(demoBaseline));
-  };
+    setLiveMetrics(calculateMetrics(preset.baseline));
+    setLiveSnippet(generateReuxSnippet(preset.baseline));
+  }, []);
 
   const handleTabChange = (tab: "baseline" | number) => {
     setActiveTab(tab);
@@ -226,7 +267,7 @@ export default function NewSimulationPage() {
                 <Wand2 size={16} className="text-rose-400" />
                 <h3 className="text-sm font-medium text-white">Demand Surge</h3>
               </div>
-              <p className="text-xs text-gray-500 line-clamp-2">Models a 50% spike in demand handled entirely by overtime, raising costs and risk significantly.</p>
+              <p className="text-xs text-gray-500 line-clamp-2">Models a 50% demand spike with higher labor cost, supplier risk, and defect pressure.</p>
             </button>
           </div>
         </div>

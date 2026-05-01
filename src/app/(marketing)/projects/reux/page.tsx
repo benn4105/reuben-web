@@ -148,7 +148,7 @@ export default function ReuxPage() {
               The strategy is practical: build the UI with TypeScript and React, then let Reux own the backend logic that needs to be reliable, auditable, and explainable. The <strong className="text-white">Business Simulator</strong> is our first major proof-of-use, demonstrating Reux&apos;s ability to run complex, dynamic scenario modeling in real-time.
             </p>
             <p className="text-gray-400 text-lg leading-relaxed">
-              In the future, we plan to validate the language against rigorous environments like PLOS (Product Lifecycle Operations Systems) and enterprise simulation workflows.
+              In the future, we plan to validate the language against rigorous environments like PLOS (Personal Life Operating System) and enterprise simulation workflows.
             </p>
           </motion.div>
 

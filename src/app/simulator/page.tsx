@@ -75,7 +75,7 @@ export default function SimulatorDashboard() {
               </Link>
             </Button>
             <Button asChild variant="outline" className="gap-2 bg-transparent border-white/[0.1] text-white hover:bg-white/[0.05]">
-              <Link href="/simulator/new?demo=true">
+              <Link href="/simulator/new?preset=optimization">
                 Load Guided Demo
               </Link>
             </Button>

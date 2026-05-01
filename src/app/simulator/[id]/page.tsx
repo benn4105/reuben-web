@@ -250,7 +250,7 @@ export default function SimulationResultsPage({
             Model Transparency Layer
           </h2>
           <p className="text-xs text-gray-500 mt-1 max-w-3xl">
-            This simulator runs entirely on Reux. The panel below shows the actual compiled simulation logic that the engine used to forecast your scenarios and make its recommendation.
+            Reux powers the simulation model behind this workflow. The panel below shows the compiled simulation logic that the engine used to forecast your scenarios and make its recommendation.
           </p>
         </div>
         <ReuxSnippetPanel
