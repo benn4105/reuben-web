@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import { CheckCircle2, CircleDashed } from "lucide-react";
+import { CheckCircle2, CircleDashed, Map } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 
 import { cn } from "@/lib/utils";
@@ -56,6 +56,21 @@ export default function RoadmapPage() {
       title: "PLOS & Ecosystem Integration",
       description: "Connect Reux directly to the Personal Life Operating System (PLOS) and Business Simulator environments.",
       completed: true
+    }
+  ];
+
+  const futureMilestones = [
+    {
+      title: "Cloud Execution Environment",
+      description: "A managed cloud environment for deploying .reux modules without managing a Node.js runtime or PostgreSQL instance yourself."
+    },
+    {
+      title: "Visual Workflow Builder",
+      description: "A node-based GUI for non-technical domain experts to wire together Reux transactions and simulations visually."
+    },
+    {
+      title: "Enterprise Integration Hub",
+      description: "Native connectors for Salesforce, SAP, and Stripe so Reux state machines can listen and trigger external events natively."
     }
   ];
 
@@ -251,6 +266,31 @@ export default function RoadmapPage() {
               <p className={cn("text-xs leading-relaxed", milestone.completed ? "text-gray-600" : "text-gray-500")}>
                 {milestone.description}
               </p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="mb-24"
+      >
+        <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
+          <Map className="text-[#00F0FF] w-8 h-8" />
+          <h2 className="text-3xl font-bold text-white">Future Vision <span className="text-sm font-normal text-[#00F0FF] ml-2">(Horizon 3)</span></h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {futureMilestones.map((milestone, idx) => (
+            <motion.div 
+              key={idx} 
+              variants={itemVariants}
+              className="p-6 rounded-2xl glass border border-white/10 hover:border-[#00F0FF]/30 transition-all duration-300 hover:-translate-y-1 group"
+            >
+              <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#00F0FF] transition-colors">{milestone.title}</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">{milestone.description}</p>
             </motion.div>
           ))}
         </div>

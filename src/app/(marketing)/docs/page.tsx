@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import { Terminal, Download, Code2, Eye, Database, Search, Zap, Send, LineChart, FileCode, Code, Server, AlertTriangle } from "lucide-react";
+import IdeMockup from "@/components/ui/IdeMockup";
 
 const INSTALL_CMD = "npm install @reux/cli -g";
 
@@ -153,6 +154,22 @@ export default function DocsPage() {
                 </div>
                 <span className="text-xs text-gray-500 uppercase tracking-wide shrink-0 ml-4">Planned</span>
               </div>
+            </div>
+          </section>
+
+          {/* IDE Experience */}
+          <section className="mb-24" id="ide">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-lg bg-indigo-500/10">
+                <Code className="text-indigo-400" size={24} />
+              </div>
+              <h2 className="text-2xl font-bold">First-Class IDE Experience</h2>
+            </div>
+            <p className="text-gray-400 mb-8 leading-relaxed max-w-3xl">
+              The Reux Language Server (LSP) provides realtime type-checking, auto-completion, and inline diagnostics. It parses your schema, queries, and simulations to ensure total safety before you ever run a migration.
+            </p>
+            <div className="relative mb-16">
+              <IdeMockup />
             </div>
           </section>
 
