@@ -6,7 +6,7 @@ import ScenarioInputPanel from "@/components/simulator/ScenarioInputPanel";
 import MetricCard from "@/components/simulator/MetricCard";
 import ReuxSnippetPanel from "@/components/simulator/ReuxSnippetPanel";
 import { calculateMetrics, generateReuxSnippet } from "@/lib/simulation/engine";
-import { runSimulation, getOperationsDecision } from "@/lib/simulation/api-client";
+import { runSimulation, getOperationsDecision } from "@/lib/simulation/mock-service";
 import type { ScenarioInputs, MetricSnapshot } from "@/lib/simulation/types";
 import { Plus, Trash2, Wand2 } from "lucide-react";
 import { cn } from "@/lib/utils";

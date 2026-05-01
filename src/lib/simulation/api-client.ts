@@ -1,4 +1,3 @@
-import * as mockService from './mock-service';
 import { generateReuxSnippet } from "./engine";
 import type {
   CompareRequest,
@@ -130,6 +129,19 @@ interface BackendRunResponse {
   generatedAt: string;
 }
 
+interface BackendTemplateResponse {
+  simulation: {
+    id: string;
+    name: string;
+    description: string;
+    domain: "operations" | "workforce" | "finance" | "custom";
+    status: "draft" | "ready" | "archived";
+    updatedAt: string;
+  };
+  defaultAssumptions: BackendAssumptions;
+  exampleScenarios: BackendScenarioInput[];
+}
+
 async function fetchWithRetry<T>(path: string, options: FetchOptions = {}): Promise<T> {
   if (!API_BASE_URL) {
     throw new Error("NEXT_PUBLIC_REUX_DEMO_URL is not configured.");
@@ -206,6 +218,21 @@ export async function compareScenarios(request: CompareRequest): Promise<Compare
       ...comparison,
       scenarios: comparison.scenarios.filter(scenario => request.scenarioIds.includes(scenario.id)),
     },
+  };
+}
+
+export async function getOperationsDecision(): Promise<{ baseline: ScenarioInputs; scenarios: ScenarioInputs[] }> {
+  const template = await fetchWithRetry<BackendTemplateResponse>("/api/simulations/operations-decision");
+  const baseline = toFrontendInputs("Current Operations", template.defaultAssumptions);
+
+  return {
+    baseline,
+    scenarios: template.exampleScenarios.map(scenario =>
+      toFrontendInputs(scenario.name, {
+        ...template.defaultAssumptions,
+        ...scenario.assumptions,
+      })
+    ),
   };
 }
 
@@ -416,15 +443,4 @@ function slugify(value: string): string {
     .replace(/(^-|-$)/g, "");
 
   return slug || `scenario-${Date.now()}`;
-}
-
-export async function getOperationsDecision(): Promise<{ baseline: ScenarioInputs; scenarios: ScenarioInputs[] }> {
-  if (hasLiveApi()) {
-    try {
-      return await fetchWithRetry<{ baseline: ScenarioInputs; scenarios: ScenarioInputs[] }>("/api/simulations/operations-decision");
-    } catch (error) {
-      console.warn("Failed to fetch default operations decision from API, falling back to mock", error);
-    }
-  }
-  return mockService.getOperationsDecision();
 }

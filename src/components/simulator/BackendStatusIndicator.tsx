@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Server, WifiOff, HardDrive } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Server, HardDrive } from "lucide-react";
 import { hasLiveApi } from "@/lib/simulation/api-client";
 import {
   Tooltip,
@@ -10,14 +8,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export type BackendStatus = "live" | "mock" | "unavailable";
+export type BackendStatus = "live" | "mock";
 
 export function BackendStatusIndicator() {
-  const [status, setStatus] = useState<BackendStatus>("mock");
-
-  useEffect(() => {
-    setStatus(hasLiveApi() ? "live" : "mock");
-  }, []);
+  const status: BackendStatus = hasLiveApi() ? "live" : "mock";
 
   if (status === "live") {
     return (
@@ -35,23 +29,6 @@ export function BackendStatusIndicator() {
     );
   }
 
-  if (status === "unavailable") {
-    return (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-medium cursor-help transition-colors hover:bg-rose-500/20">
-            <WifiOff size={12} />
-            <span className="hidden sm:inline">Backend Offline</span>
-          </div>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p className="text-xs">Backend unavailable. Using local fallback.</p>
-        </TooltipContent>
-      </Tooltip>
-    );
-  }
-
-  // mock
   return (
     <Tooltip>
       <TooltipTrigger asChild>

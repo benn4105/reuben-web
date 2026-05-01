@@ -220,6 +220,14 @@ export async function compareScenarios(request: CompareRequest): Promise<Compare
 }
 
 export async function getOperationsDecision(): Promise<{ baseline: ScenarioInputs; scenarios: ScenarioInputs[] }> {
+  if (liveApi.hasLiveApi()) {
+    try {
+      return await liveApi.getOperationsDecision();
+    } catch (error) {
+      console.warn("Live Reux operations template failed; falling back to mock service.", error);
+    }
+  }
+
   await delay(300);
   const { BASELINE_INPUTS, SCENARIO_PRESETS } = await import("./mock-data");
   return {
