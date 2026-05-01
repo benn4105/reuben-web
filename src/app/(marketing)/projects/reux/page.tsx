@@ -461,6 +461,37 @@ export default function ReuxPage() {
           </div>
         </motion.div>
 
+        {/* FAQ Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mt-24 max-w-4xl mx-auto"
+        >
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="glass-card p-6 rounded-xl border border-white/5">
+              <h3 className="text-lg font-bold text-white mb-2">Is Reux full-stack?</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">No. Reux focuses strictly on backend data, workflows, and simulations. You still build your frontend with React, Vue, or your framework of choice.</p>
+            </div>
+            <div className="glass-card p-6 rounded-xl border border-white/5">
+              <h3 className="text-lg font-bold text-white mb-2">Is it production-ready?</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">Not yet. It is currently in an active prototype phase, being proven internally through the Business Simulator and domain-specific pilots.</p>
+            </div>
+            <div className="glass-card p-6 rounded-xl border border-white/5">
+              <h3 className="text-lg font-bold text-white mb-2">How is it different from SQL or TypeScript?</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">Reux compiles to SQL and generates TypeScript, but acts as a higher-level state and business rule modeler to prevent logic fragmentation.</p>
+            </div>
+            <div className="glass-card p-6 rounded-xl border border-white/5">
+              <h3 className="text-lg font-bold text-white mb-2">What powers the live demos?</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">The demos run the Reux runtime engine on Node.js, dynamically compiling queries and transactions to an underlying PostgreSQL database.</p>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Final CTA */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}

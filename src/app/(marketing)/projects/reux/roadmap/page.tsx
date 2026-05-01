@@ -247,6 +247,36 @@ export default function RoadmapPage() {
         </div>
       </motion.div>
 
+      {/* Changelog / Recent Progress */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="mb-20"
+      >
+        <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
+          <h2 className="text-3xl font-bold text-white">Recent Progress</h2>
+        </div>
+        <div className="space-y-6 border-l-2 border-white/10 pl-6 ml-4">
+          <div className="relative">
+            <div className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-[#00F0FF] shadow-[0_0_10px_rgba(0,240,255,0.8)]" />
+            <h3 className="text-lg font-bold text-white mb-1">Developer Preview Launch</h3>
+            <p className="text-gray-400 text-sm">Published detailed capability lists, syntax examples, and ecosystem documentation for the Reux engine.</p>
+          </div>
+          <div className="relative">
+            <div className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-white/30" />
+            <h3 className="text-lg font-bold text-white mb-1">Clinic Operations Pilot</h3>
+            <p className="text-gray-400 text-sm">Added a new public pilot demonstrating transactional state transitions for hospital patient check-in workflows.</p>
+          </div>
+          <div className="relative">
+            <div className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-white/30" />
+            <h3 className="text-lg font-bold text-white mb-1">Business Simulator MVP</h3>
+            <p className="text-gray-400 text-sm">Launched the flagship interactive demo proving Reux&apos;s simulation and forecasting capabilities in real-time.</p>
+          </div>
+        </div>
+      </motion.div>
+
       {/* Bottom CTA */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
