@@ -256,8 +256,8 @@ export default function RoadmapPage() {
           <AnimatedButton href="/simulator" variant="primary">
             Try the Business Simulator
           </AnimatedButton>
-          <AnimatedButton href="/projects/reux" variant="secondary">
-            Back to Reux Overview
+          <AnimatedButton href="/docs" variant="secondary">
+            View Developer Preview
           </AnimatedButton>
         </div>
       </motion.div>

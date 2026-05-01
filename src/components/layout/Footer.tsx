@@ -40,7 +40,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/docs" className="text-gray-400 hover:text-[#00F0FF] transition-colors text-sm">
-                  Docs
+                  Developer Preview
                 </Link>
               </li>
               <li>

@@ -2,17 +2,27 @@
 
 import { motion } from "framer-motion";
 import AnimatedButton from "@/components/ui/AnimatedButton";
-import { Terminal, Download, Code2, ArrowRight, BookOpen, Eye } from "lucide-react";
+import { Terminal, Download, Code2, Eye, Database, Search, Zap, Send, LineChart, FileCode, Code, Server, AlertTriangle } from "lucide-react";
 
 const INSTALL_CMD = "npm install @reux/cli -g";
 
+const CAPABILITIES = [
+  { icon: <Database size={20} className="text-emerald-400" />, title: "Schema + migration modeling" },
+  { icon: <Search size={20} className="text-blue-400" />, title: "Typed queries" },
+  { icon: <Zap size={20} className="text-yellow-400" />, title: "Transaction functions" },
+  { icon: <Send size={20} className="text-orange-400" />, title: "Durable outbox events" },
+  { icon: <LineChart size={20} className="text-cyan-400" />, title: "Simulation declarations" },
+  { icon: <FileCode size={20} className="text-violet-400" />, title: "Generated TypeScript integration" },
+  { icon: <Code size={20} className="text-indigo-400" />, title: "VS Code support" },
+  { icon: <Server size={20} className="text-pink-400" />, title: "Public demo API" }
+];
+
 const EXAMPLES = [
   {
-    title: "Define a Simulation",
+    title: "A simple simulate block",
     filename: "operations.reux",
     code: `simulate q3_operations {
   employees = 50
-  avg_hourly_cost = 28
   weekly_demand = 1200
   productivity_gain = 0.12
 
@@ -22,31 +32,40 @@ const EXAMPLES = [
   }
 
   forecast 12 weeks
-}`,
+}`
   },
   {
-    title: "Compare Scenarios",
-    filename: "compare.reux",
-    code: `simulate expansion_vs_optimization {
-  // Baseline assumptions
-  employees = 50
-  weekly_demand = 1200
+    title: "Transaction & Outbox Concept",
+    filename: "checkout.reux",
+    code: `transaction process_order(cart_id: UUID) {
+  let cart = query(carts).find(cart_id)
+  
+  mut order = insert(orders, {
+    total: cart.total,
+    status: 'pending'
+  })
 
-  scenario expand {
-    employees = 70
-    weekly_demand = 1800
+  // Durable event emitted automatically
+  emit order_placed {
+    order_id: order.id,
+    amount: order.total
   }
-
-  scenario optimize {
-    productivity_gain = 0.15
-    overtime_reduction = 0.20
-  }
-
-  objective maximize margin_delta
-  objective minimize operating_cost
-  forecast 12 weeks
-}`,
+}`
   },
+  {
+    title: "Generated TypeScript Integration",
+    filename: "app.ts",
+    code: `import { reux } from './generated/reux-client';
+
+async function handleCheckout(cartId: string) {
+  // Fully typed transaction call
+  const result = await reux.tx.process_order({ cart_id: cartId });
+  
+  if (result.ok) {
+    console.log(\`Order \${result.data.order.id} placed successfully\`);
+  }
+}`
+  }
 ];
 
 export default function DocsPage() {
@@ -64,114 +83,69 @@ export default function DocsPage() {
           <div className="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-8">
             <Terminal size={14} className="text-[#00F0FF]" />
             <span className="text-sm font-medium tracking-wide text-[#00F0FF] uppercase">
-              Developer Documentation
+              Developer Preview
             </span>
           </div>
           
           <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6">
             Getting Started with Reux
           </h1>
-          <p className="text-xl text-gray-400 font-light mb-12 leading-relaxed max-w-3xl">
-            Reux is a prototype backend language for data-aware workflows, simulations, and decision logic.
-            The fastest way to see it in action is the live Business Simulator demo.
+          <p className="text-xl text-gray-400 font-light mb-8 leading-relaxed max-w-3xl">
+            Reux is currently a prototype backend language and runtime. It supports schemas, queries, transactions, durable events, migrations, simulation declarations, generated TypeScript, and early VS Code tooling.
+          </p>
+          <p className="text-lg text-gray-500 mb-12">
+            Note: Local package publishing is not public yet.
           </p>
 
-          {/* Quickstart Overview */}
+          {/* Current Capabilities */}
           <section className="mb-16">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-              {[
-                {
-                  icon: <Eye size={20} className="text-emerald-400" />,
-                  label: "Try the demo",
-                  detail: "No install needed",
-                  href: "/simulator",
-                },
-                {
-                  icon: <BookOpen size={20} className="text-violet-400" />,
-                  label: "Read the syntax",
-                  detail: "Simulation examples below",
-                  href: "#examples",
-                },
-                {
-                  icon: <ArrowRight size={20} className="text-orange-400" />,
-                  label: "See the roadmap",
-                  detail: "What\u2019s live and what\u2019s next",
-                  href: "/projects/reux/roadmap",
-                },
-              ].map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="glass-card flex items-start gap-3 rounded-xl p-4 border border-white/5 hover:border-white/15 transition-colors group"
-                >
-                  <div className="mt-0.5 shrink-0">{item.icon}</div>
-                  <div>
-                    <div className="text-sm font-semibold text-white group-hover:text-[#00F0FF] transition-colors">
-                      {item.label}
-                    </div>
-                    <div className="text-xs text-gray-500">{item.detail}</div>
-                  </div>
-                </a>
+            <h2 className="text-2xl font-bold mb-6">Current Capabilities</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {CAPABILITIES.map((cap, i) => (
+                <div key={i} className="glass-card flex items-center gap-3 rounded-xl p-4 border border-white/5 hover:border-white/15 transition-colors">
+                  <div className="shrink-0 p-2 bg-white/5 rounded-lg">{cap.icon}</div>
+                  <div className="text-sm font-medium text-gray-300">{cap.title}</div>
+                </div>
               ))}
             </div>
           </section>
 
-          {/* Try the Web Demo */}
+          {/* Try It Today */}
           <section className="mb-16">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 rounded-lg bg-emerald-500/10">
                 <Eye className="text-emerald-400" size={24} />
               </div>
-              <h2 className="text-2xl font-bold">1. Try the Live Demo</h2>
-            </div>
-            
-            <p className="text-gray-400 mb-4 leading-relaxed">
-              The <strong className="text-white">Business Simulator</strong> is a graphical scenario builder that runs Reux code in the background.
-              You can model workforce, cost, and productivity scenarios, compare forecasted outcomes, and inspect the generated Reux code in the transparency panel.
-            </p>
-            <p className="text-gray-400 mb-6 leading-relaxed">
-              No installation required. Works in any modern browser.
-            </p>
-            <AnimatedButton href="/simulator" variant="primary">
-              Open the Simulator
-            </AnimatedButton>
-          </section>
-
-          {/* Installation */}
-          <section className="mb-16">
-            <div className="flex flex-wrap items-center gap-3 mb-6">
-              <div className="p-2 rounded-lg bg-violet-500/10">
-                <Download className="text-violet-400" size={24} />
-              </div>
-              <h2 className="text-2xl font-bold">2. Local Installation</h2>
-              <span className="text-xs font-medium uppercase tracking-wide text-gray-500 border border-white/10 rounded-full px-2.5 py-0.5">Coming Soon</span>
+              <h2 className="text-2xl font-bold">Try It Today</h2>
             </div>
             
             <p className="text-gray-400 mb-6 leading-relaxed">
-              Public package distribution is planned but not finalized. Once the beta CLI is published, you&apos;ll be able to install Reux via npm and run simulations locally.
+              While the <code className="text-cyan-400 font-mono">npm install</code> command is planned for the upcoming public beta, you can explore Reux right now through our live demos and projects.
             </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+              <AnimatedButton href="/simulator" variant="primary">
+                Try Business Simulator
+              </AnimatedButton>
+              <AnimatedButton href="/projects/reux" variant="secondary">
+                View Reux Project
+              </AnimatedButton>
+              <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
+                GitHub
+              </AnimatedButton>
+            </div>
 
-            <div className="relative group mb-6">
+            <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-violet-500/10 rounded-xl blur-sm transition-opacity opacity-0 group-hover:opacity-100" />
               <div className="relative glass border border-white/10 rounded-xl p-4 flex items-center justify-between opacity-50 cursor-not-allowed">
-                <code className="text-cyan-400 font-mono text-sm sm:text-base">
-                  {INSTALL_CMD}
-                </code>
+                <div className="flex items-center gap-3">
+                  <Download className="text-violet-400" size={20} />
+                  <code className="text-cyan-400 font-mono text-sm sm:text-base">
+                    {INSTALL_CMD}
+                  </code>
+                </div>
                 <span className="text-xs text-gray-500 uppercase tracking-wide shrink-0 ml-4">Planned</span>
               </div>
-            </div>
-
-            <div className="text-sm text-gray-500 bg-white/5 border border-white/10 p-4 rounded-lg space-y-2">
-              <p>
-                <strong className="text-white">VS Code Support:</strong>{" "}
-                An internal extension (VSIX) provides syntax highlighting, diagnostics, and formatting. 
-                It will be published to the VS Code Marketplace alongside the npm package.
-              </p>
-              <p>
-                <strong className="text-white">TypeScript Generation:</strong>{" "}
-                Reux generates typed TypeScript artifacts from your schema and simulation definitions, 
-                so your frontend code stays in sync with your backend models.
-              </p>
             </div>
           </section>
 
@@ -181,12 +155,11 @@ export default function DocsPage() {
               <div className="p-2 rounded-lg bg-cyan-500/10">
                 <Code2 className="text-cyan-400" size={24} />
               </div>
-              <h2 className="text-2xl font-bold">3. Reux Syntax Examples</h2>
+              <h2 className="text-2xl font-bold">Reux Syntax Preview</h2>
             </div>
             
             <p className="text-gray-400 mb-6 leading-relaxed">
-              Reux uses declarative syntax to define simulation parameters, scenarios, objectives, and forecast periods.
-              The Business Simulator builds these definitions automatically from your inputs — here&apos;s what the generated code looks like.
+              Reux uses a declarative, highly readable syntax. Here is a quick look at what writing and generating Reux code feels like.
             </p>
 
             <div className="space-y-8">
@@ -198,13 +171,7 @@ export default function DocsPage() {
                   </div>
                   <div className="p-6 bg-[#0A0A0A]/80 overflow-x-auto">
                     <pre className="font-mono text-sm leading-relaxed text-gray-300">
-                      <code dangerouslySetInnerHTML={{
-                        __html: example.code
-                          .replace(/\b(simulate|scenario|forecast|objective|let|mut)\b/g, '<span class="text-pink-400">$&</span>')
-                          .replace(/\b(maximize|minimize)\b/g, '<span class="text-blue-400">$&</span>')
-                          .replace(/\b(weeks)\b/g, '<span class="text-yellow-300">$&</span>')
-                          .replace(/\/\/.*/g, '<span class="text-gray-600">$&</span>')
-                      }} />
+                      <code>{example.code}</code>
                     </pre>
                   </div>
                 </div>
@@ -212,31 +179,31 @@ export default function DocsPage() {
             </div>
           </section>
 
-          {/* Current Limitations */}
+          {/* What is not ready yet */}
           <section className="p-8 rounded-2xl bg-amber-500/5 border border-amber-500/20 text-left mb-16">
-            <h2 className="text-xl font-bold mb-4 text-amber-400">Current Limitations</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <AlertTriangle className="text-amber-400" size={24} />
+              <h2 className="text-xl font-bold text-amber-400">What is not ready yet</h2>
+            </div>
             <ul className="space-y-3 text-sm text-amber-500/80 list-disc pl-5">
-              <li>Reux is a <strong className="text-amber-400">prototype</strong>. It powers internal products like the Business Simulator, but is not yet production-ready for external teams.</li>
-              <li>There is no public package registry or module import system for sharing Reux libraries externally yet.</li>
-              <li>Direct developer access is limited to web demos and code inspection. Local CLI access is coming in the next beta phase.</li>
+              <li><strong>Public npm package not finalized:</strong> The CLI and core runtime are still internal prototypes.</li>
+              <li><strong>API stability:</strong> Syntax and language features may change before the public beta.</li>
+              <li><strong>Not a full-stack language:</strong> Reux focuses purely on backend data modeling and decision logic. Product apps still use normal web frontend technologies.</li>
             </ul>
           </section>
 
           {/* What's Next */}
-          <section className="text-center">
-            <h2 className="text-2xl font-bold mb-4 text-white">What&apos;s Next</h2>
+          <section className="text-center pb-8 border-t border-white/5 pt-12">
+            <h2 className="text-2xl font-bold mb-4 text-white">Continue Exploring</h2>
             <p className="text-gray-400 mb-8 max-w-xl mx-auto">
-              Check the roadmap for upcoming milestones, or jump into the simulator to see Reux running live.
+              Ready to see more? Follow our progress on the roadmap or run live simulations directly in the browser.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <AnimatedButton href="/simulator" variant="primary">
-                Open the Simulator
+                Open Business Simulator
               </AnimatedButton>
               <AnimatedButton href="/projects/reux/roadmap" variant="secondary">
                 View Roadmap
-              </AnimatedButton>
-              <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
-                GitHub
               </AnimatedButton>
             </div>
           </section>

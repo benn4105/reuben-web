@@ -122,7 +122,7 @@ export default function ReuxPage() {
               Try the Business Simulator
             </AnimatedButton>
             <AnimatedButton href="/docs" variant="secondary">
-              Developer Docs
+              Developer Preview
             </AnimatedButton>
             <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
               GitHub
@@ -402,6 +402,29 @@ export default function ReuxPage() {
               </div>
             ))}
           </div>
+        </motion.div>
+
+        {/* Final CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mt-32 text-center pb-12"
+        >
+          <div className="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-6">
+            <Terminal size={14} className="text-[#00F0FF]" />
+            <span className="text-sm font-medium tracking-wide text-[#00F0FF] uppercase">
+              Start Exploring
+            </span>
+          </div>
+          <h2 className="text-3xl font-bold mb-4">Ready to see the code?</h2>
+          <p className="text-gray-400 text-lg leading-relaxed max-w-2xl mx-auto mb-8">
+            Check out the Developer Preview to see current capabilities, generated TypeScript integration, and syntax examples.
+          </p>
+          <AnimatedButton href="/docs" variant="primary">
+            View Developer Preview
+          </AnimatedButton>
         </motion.div>
       </div>
     </div>
