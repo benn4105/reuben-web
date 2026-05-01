@@ -44,10 +44,10 @@ export default function AboutPage() {
               We believe that backend software should be easier to audit, simulate, and reason about. Too much critical logic ends up scattered across frameworks, config files, and ad hoc scripts.
             </p>
             <p className="text-gray-300 text-lg leading-relaxed mb-6">
-              At Reuben, we are building Reux — a prototype backend language designed for schemas, transactions, simulations, and decision logic. Our approach is practical: prove the language by shipping real products on top of it.
+              At Reuben, we are building Reux - a prototype backend language designed for schemas, transactions, simulations, and decision logic. Our approach is practical: prove the language by shipping real products on top of it.
             </p>
             <p className="text-gray-300 text-lg leading-relaxed">
-              The <strong className="text-white">Business Simulator</strong> is our first public proof point — a live demo where Reux models operational decisions, forecasts outcomes, and surfaces risk across scenarios.
+              The <strong className="text-white">Business Simulator</strong> is our first public proof point - a live demo where Reux models operational decisions, forecasts outcomes, and surfaces risk across scenarios.
             </p>
           </motion.div>
 

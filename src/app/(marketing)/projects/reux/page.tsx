@@ -146,7 +146,7 @@ export default function ReuxPage() {
               Reux is being built for the parts of applications where normal web stacks get messy: data models, state changes, workflows, forecasts, and decision rules.
             </p>
             <p className="text-gray-400 text-lg leading-relaxed mb-6">
-              The strategy is practical: build the UI with TypeScript and React, then let Reux own the backend logic that needs to be reliable, auditable, and explainable. The <strong className="text-white">Business Simulator</strong> is the current public proof point — a live demo where Reux runs the scenario modeling behind the scenes.
+              The strategy is practical: build the UI with TypeScript and React, then let Reux own the backend logic that needs to be reliable, auditable, and explainable. The <strong className="text-white">Business Simulator</strong> is the current public proof point - a live demo where Reux runs the scenario modeling behind the scenes.
             </p>
             <p className="text-gray-400 text-lg leading-relaxed">
               In the future, we plan to validate the language against rigorous environments like PLOS (Personal Life Operating System) and enterprise simulation workflows.
@@ -431,10 +431,11 @@ export default function ReuxPage() {
               {
                 icon: <Activity className="w-8 h-8 text-rose-400" />,
                 title: "Clinic Operations",
-                status: "Public Demo",
-                description: "Models patient check-in workflows and clinic capacity. For example, Reux handles the transactional transition of a patient from 'waiting' to 'in_room'.",
-                href: "/projects/reux/demo?domain=clinic",
-                action: "Open Demo",
+                status: "Source Pilot",
+                description: "Models appointment workflows, visit status rules, clinician task load, and care-task events. For example, Reux can enforce a visit moving from scheduled to checked-in before completion.",
+                href: "https://github.com/benn4105/Reux/blob/main/examples/clinic_reux.dl",
+                action: "View Source",
+                external: true,
               },
             ].map((pilot) => (
               <div key={pilot.title} className="glass-card p-8 rounded-xl border border-white/10">
@@ -444,8 +445,8 @@ export default function ReuxPage() {
                   </div>
                   <span className={cn(
                     "text-xs font-semibold uppercase tracking-wide border rounded-full px-3 py-1",
-                    pilot.status === "Flagship MVP" 
-                      ? "text-[#00F0FF] border-[#00F0FF]/30" 
+                    pilot.status === "Flagship MVP"
+                      ? "text-[#00F0FF] border-[#00F0FF]/30"
                       : "text-[#8A2BE2] border-[#8A2BE2]/30"
                   )}>
                     {pilot.status}
@@ -453,7 +454,7 @@ export default function ReuxPage() {
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-3">{pilot.title}</h3>
                 <p className="text-gray-400 leading-relaxed mb-6">{pilot.description}</p>
-                <AnimatedButton href={pilot.href} variant="secondary">
+                <AnimatedButton href={pilot.href} variant="secondary" external={pilot.external}>
                   {pilot.action}
                 </AnimatedButton>
               </div>
