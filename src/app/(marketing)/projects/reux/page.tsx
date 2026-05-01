@@ -355,7 +355,7 @@ export default function ReuxPage() {
           <div className="max-w-3xl mx-auto text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Live Pilots</h2>
             <p className="text-gray-400 text-lg leading-relaxed">
-              Reux is already powering interactive products. Our flagship Business Simulation Engine uses Reux to evaluate scenarios and recommend operational decisions in real time.
+              Reux is already powering interactive products. The Business Simulator uses Reux to evaluate scenarios and recommend operational decisions.
             </p>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -366,7 +366,7 @@ export default function ReuxPage() {
                 status: "Flagship MVP",
                 description: "Model operational decisions, simulate scenarios, and compare forecasts using Reux backend evaluation.",
                 href: "/simulator",
-                action: "Launch Simulator",
+                action: "Try the Business Simulator",
               },
               {
                 icon: <PackageCheck className="w-8 h-8 text-[#8A2BE2]" />,

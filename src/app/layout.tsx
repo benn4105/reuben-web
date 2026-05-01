@@ -9,7 +9,7 @@ const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono"
 
 export const metadata: Metadata = {
   title: "Reuben | Engineering the Future of Systems",
-  description: "Reuben builds powerful, structurally sound tools for modern computing.",
+  description: "Reuben builds data-aware tools for backend systems, simulation products, and developer infrastructure. Powered by the Reux prototype engine.",
 };
 
 export default function RootLayout({

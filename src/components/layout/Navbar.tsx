@@ -67,7 +67,7 @@ export default function Navbar() {
           ))}
           <div className="w-px h-4 bg-gray-800" />
           <Link
-            href="https://github.com/reuben"
+            href="https://github.com/benn4105/Reux"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm font-medium"
@@ -105,7 +105,7 @@ export default function Navbar() {
             </Link>
           ))}
           <Link
-            href="https://github.com/reuben"
+            href="https://github.com/benn4105/Reux"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setIsOpen(false)}

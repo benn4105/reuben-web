@@ -25,7 +25,7 @@ export default function AboutPage() {
             Building the foundations of tomorrow.
           </h1>
           <p className="text-xl md:text-2xl text-gray-400 font-light leading-relaxed">
-            Reuben is a technology research and engineering company dedicated to solving the hardest problems in distributed systems, compiler design, and high-performance computing.
+            Reuben is a technology company building data-aware tools for backend systems, simulation-driven products, and developer infrastructure.
           </p>
         </motion.div>
 
@@ -41,13 +41,13 @@ export default function AboutPage() {
               Our Vision
             </h2>
             <p className="text-gray-300 text-lg leading-relaxed mb-6">
-              We believe that the software infrastructure of the future should not be built on the fragile abstractions of the past. The exponential growth of data and compute demands a paradigm shift in how we write, compile, and execute code.
+              We believe that backend software should be easier to audit, simulate, and reason about. Too much critical logic ends up scattered across frameworks, config files, and ad hoc scripts.
             </p>
             <p className="text-gray-300 text-lg leading-relaxed mb-6">
-              At Reuben, we are redesigning the computing stack from first principles. By bridging the gap between low-level performance and high-level ergonomics, we empower engineers to build systems that are safe, scalable, and blazingly fast.
+              At Reuben, we are building Reux — a prototype backend language designed for schemas, transactions, simulations, and decision logic. Our approach is practical: prove the language by shipping real products on top of it.
             </p>
             <p className="text-gray-300 text-lg leading-relaxed">
-              We are not just building abstract research. We prove our technology by building real, high-leverage products like our Business Simulation Engine, which demonstrates the raw power of our Reux programming language in production environments.
+              The <strong className="text-white">Business Simulator</strong> is our first public proof point — a live demo where Reux models operational decisions, forecasts outcomes, and surfaces risk across scenarios.
             </p>
           </motion.div>
 
@@ -62,7 +62,7 @@ export default function AboutPage() {
               The Team
             </h2>
             <p className="text-gray-300 text-lg leading-relaxed mb-12">
-              We are a small, elite team of compiler engineers, distributed systems researchers, and designers who believe in the power of focused, uncompromising execution.
+              We are a small team of engineers and designers focused on language design, simulation tooling, and developer experience.
             </p>
             
             <div className="glass-card p-8 rounded-2xl flex flex-col items-center text-center">

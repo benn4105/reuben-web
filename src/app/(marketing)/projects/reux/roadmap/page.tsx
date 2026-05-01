@@ -15,7 +15,7 @@ export default function RoadmapPage() {
   ];
 
   const inActiveBeta = [
-    "Business Simulation Engine (Frontend MVP with Reux backend)",
+    "Business Simulator (Frontend MVP with Reux backend)",
     "Hosted commerce and logistics pilots",
     "Early VS Code support with syntax highlighting and diagnostics",
     "Simulation syntax with assumptions, scenarios, and forecasts"
