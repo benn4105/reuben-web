@@ -1,7 +1,7 @@
 import SimulatorShell from "@/components/simulator/SimulatorShell";
 
 export const metadata = {
-  title: "Simulator | Reux Business Simulation Engine",
+  title: "Simulator | Reux Business Simulator",
   description: "Model operational decisions before making them. Powered by Reux.",
 };
 

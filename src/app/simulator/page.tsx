@@ -61,7 +61,7 @@ export default function SimulatorDashboard() {
           </div>
           
           <h1 className="text-3xl lg:text-4xl font-bold text-white tracking-tight mb-3">
-            Business Simulation Engine
+            Business Simulator
           </h1>
           <p className="text-base text-gray-400 mb-6 leading-relaxed">
             Test operational decisions—like workforce expansion or process optimization—before committing to them. 
@@ -149,7 +149,7 @@ export default function SimulatorDashboard() {
               Saved Simulation History
             </h2>
             <p className="text-xs text-gray-500 mt-1">
-              Previous scenarios compiled and evaluated by Reux.
+              Previous scenarios modeled and evaluated by Reux.
             </p>
           </div>
           {simulations.length > 0 && (

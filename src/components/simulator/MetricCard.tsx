@@ -110,7 +110,7 @@ export default function MetricCard({
                 </Tooltip>
               )}
             </div>
-            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mt-1.5">
+            <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mt-1.5">
               {label}
             </div>
           </div>

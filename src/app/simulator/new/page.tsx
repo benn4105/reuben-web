@@ -274,7 +274,7 @@ export default function NewSimulationPage() {
                 <h3 className="text-sm font-medium text-white">Workforce Expansion</h3>
               </div>
               <p className="text-xs text-gray-500 line-clamp-2">Adds 15 employees to meet higher demand, but increases cost and defect rates temporarily.</p>
-              <div className="mt-3 text-[10px] font-semibold text-cyan-400/80 uppercase tracking-wider">Best for: Scaling Ops</div>
+              <div className="mt-3 text-[11px] font-semibold text-cyan-400/80 uppercase tracking-wider">Best for: Scaling Ops</div>
             </button>
             <button
               onClick={() => loadPreset("optimization")}
@@ -290,7 +290,7 @@ export default function NewSimulationPage() {
                 <h3 className="text-sm font-medium text-white">Process Optimization</h3>
               </div>
               <p className="text-xs text-gray-500 line-clamp-2">Focuses on productivity gains (+18%) to handle more demand without hiring new staff.</p>
-              <div className="mt-3 text-[10px] font-semibold text-violet-400/80 uppercase tracking-wider">Best for: Lean Ops</div>
+              <div className="mt-3 text-[11px] font-semibold text-violet-400/80 uppercase tracking-wider">Best for: Lean Ops</div>
             </button>
             <button
               onClick={() => loadPreset("surge")}
@@ -306,7 +306,7 @@ export default function NewSimulationPage() {
                 <h3 className="text-sm font-medium text-white">Demand Surge</h3>
               </div>
               <p className="text-xs text-gray-500 line-clamp-2">Models a 50% demand spike with higher labor cost, supplier risk, and defect pressure.</p>
-              <div className="mt-3 text-[10px] font-semibold text-rose-400/80 uppercase tracking-wider">Best for: Stress Testing</div>
+              <div className="mt-3 text-[11px] font-semibold text-rose-400/80 uppercase tracking-wider">Best for: Stress Testing</div>
             </button>
           </div>
         </div>

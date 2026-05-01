@@ -139,7 +139,7 @@ export default function DocsPage() {
 
           {/* Installation */}
           <section className="mb-16">
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex flex-wrap items-center gap-3 mb-6">
               <div className="p-2 rounded-lg bg-violet-500/10">
                 <Download className="text-violet-400" size={24} />
               </div>

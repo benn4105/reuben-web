@@ -94,12 +94,12 @@ export default function RoadmapPage() {
       >
         <div className="glass p-6 rounded-2xl border border-[#00F0FF]/20 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-[#00F0FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <h3 className="text-sm font-semibold text-[#00F0FF] uppercase tracking-wider mb-2">Demo Readiness</h3>
+          <h3 className="text-sm font-semibold text-[#00F0FF] uppercase tracking-wider mb-2">Demo Status</h3>
           <div className="flex items-end gap-3">
-            <span className="text-5xl font-bold text-white">~99%</span>
+            <span className="text-5xl font-bold text-white">Live</span>
           </div>
           <div className="mt-4 w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
-            <div className="bg-[#00F0FF] h-1.5 rounded-full" style={{ width: '99%' }}></div>
+            <div className="bg-[#00F0FF] h-1.5 rounded-full" style={{ width: '100%' }}></div>
           </div>
         </div>
         

@@ -119,10 +119,13 @@ export default function ReuxPage() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <AnimatedButton href="/simulator" variant="primary">
-              Try the Live Demo
+              Try the Business Simulator
             </AnimatedButton>
             <AnimatedButton href="/docs" variant="secondary">
               Developer Docs
+            </AnimatedButton>
+            <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
+              GitHub
             </AnimatedButton>
           </div>
         </motion.div>
@@ -251,12 +254,12 @@ export default function ReuxPage() {
             <div className="max-w-3xl">
               <h2 className="text-3xl font-bold mb-4">Roadmap</h2>
               <p className="text-gray-400 text-lg leading-relaxed">
-                Reux has crossed the prototype-complete line. The next chapter is public beta polish, a serious business simulator, and broader validation through Reuben ecosystem products.
+                Reux has crossed the prototype-complete line. The next chapter is public beta polish, the Business Simulator, and broader validation through Reuben ecosystem products.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:min-w-[360px]">
               {[
-                { label: "Demo readiness", value: "99%" },
+                { label: "Demo status", value: "Live" },
                 { label: "Prototype completion", value: "100%" },
               ].map((metric) => (
                 <div key={metric.label} className="glass-card rounded-xl p-5">
@@ -295,6 +298,12 @@ export default function ReuxPage() {
                 </ul>
               </div>
             ))}
+          </div>
+
+          <div className="mt-8 text-center">
+            <AnimatedButton href="/projects/reux/roadmap" variant="secondary">
+              View Full Roadmap
+            </AnimatedButton>
           </div>
         </motion.div>
 

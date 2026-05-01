@@ -42,7 +42,7 @@ export function SimulatorOnboarding() {
             </div>
             <div>
               <h4 className="text-sm font-semibold text-white">Model Decisions</h4>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-400 mt-1">
                 Change assumptions like hiring or productivity to see how they impact your bottom line weeks into the future.
               </p>
             </div>
@@ -54,7 +54,7 @@ export function SimulatorOnboarding() {
             </div>
             <div>
               <h4 className="text-sm font-semibold text-white">Compare Scenarios</h4>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-400 mt-1">
                 The engine evaluates risk and margin across multiple scenarios to recommend the safest path forward.
               </p>
             </div>
@@ -66,7 +66,7 @@ export function SimulatorOnboarding() {
             </div>
             <div>
               <h4 className="text-sm font-semibold text-white">Powered by Reux</h4>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-400 mt-1">
                 Reux handles the simulation logic in the backend—defining scenarios, running forecasts, and evaluating trade-offs.
               </p>
             </div>

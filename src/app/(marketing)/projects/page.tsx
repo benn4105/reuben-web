@@ -6,7 +6,7 @@ import ProjectCard from "@/components/ui/ProjectCard";
 const projects = [
   {
     title: "Business Simulator",
-    description: "A live public demo for modeling workforce, cost, and productivity scenarios. Compare forecasted outcomes and see the Reux engine evaluate each path. Try it now.",
+    description: "A live public demo for modeling workforce, cost, and productivity scenarios. Compare forecasted outcomes and see the Reux prototype engine evaluate each path.",
     tags: ["Live Demo", "Simulation", "Decision Logic"],
     href: "/simulator",
     featured: true,

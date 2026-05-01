@@ -68,10 +68,10 @@ export default function Home() {
             className="flex flex-col sm:flex-row items-center gap-6"
           >
             <AnimatedButton href="/simulator" variant="primary">
-              Launch Simulator
+              Try the Business Simulator
             </AnimatedButton>
             <AnimatedButton href="/projects/reux" variant="secondary">
-              Explore Reux Language
+              Explore Reux
             </AnimatedButton>
           </motion.div>
         </motion.div>
@@ -83,7 +83,7 @@ export default function Home() {
           transition={{ duration: 1, delay: 1.5 }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center"
         >
-          <span className="text-xs text-gray-500 uppercase tracking-widest mb-2">Scroll</span>
+          <span className="text-xs text-gray-400/60 uppercase tracking-widest mb-2">Scroll</span>
           <div className="w-[1px] h-12 bg-gradient-to-b from-gray-500 to-transparent" />
         </motion.div>
       </section>

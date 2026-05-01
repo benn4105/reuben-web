@@ -235,7 +235,7 @@ export default function ForecastChart({
                     <rect
                       x={coord.x + 8}
                       y={coord.y - 12}
-                      width={80}
+                      width={90}
                       height={20}
                       rx={4}
                       fill="rgba(0,0,0,0.8)"
@@ -243,7 +243,7 @@ export default function ForecastChart({
                       strokeWidth={0.5}
                     />
                     <text
-                      x={coord.x + 48}
+                      x={coord.x + 53}
                       y={coord.y + 2}
                       textAnchor="middle"
                       className="text-[10px] fill-white font-mono"
