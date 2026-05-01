@@ -207,7 +207,7 @@ export default function RoadmapPage() {
       >
         <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
           <CircleDashed className="text-gray-500 w-8 h-8" />
-          <h2 className="text-3xl font-bold text-white text-gray-400">Later</h2>
+          <h2 className="text-3xl font-bold text-gray-400">Later</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {laterMilestones.map((milestone, idx) => (

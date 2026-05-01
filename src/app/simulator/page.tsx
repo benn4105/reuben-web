@@ -64,8 +64,8 @@ export default function SimulatorDashboard() {
             Business Simulation Engine
           </h1>
           <p className="text-base text-gray-400 mb-6 leading-relaxed">
-            Test operational decisions—like workforce expansion or process optimization—before making them in the real world. 
-            Under the hood, this simulator uses <strong className="text-white">Reux</strong> to evaluate complex business logic, forecast margins, and calculate risk dynamically. It proves that Reux is more than just syntax; it&apos;s a powerful engine for real-world modeling.
+            Test operational decisions—like workforce expansion or process optimization—before committing to them. 
+            This simulator uses <strong className="text-white">Reux</strong> as the backend engine to model assumptions, forecast margins, and surface risk across scenarios.
           </p>
           
           <div className="flex flex-wrap gap-3 mb-8">

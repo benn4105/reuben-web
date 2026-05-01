@@ -232,8 +232,6 @@ export default function NewSimulationPage() {
     }
   };
 
-
-
   const handleTabChange = (tab: "baseline" | number) => {
     setActiveTab(tab);
     const target = tab === "baseline" ? baseline : scenarios[tab];

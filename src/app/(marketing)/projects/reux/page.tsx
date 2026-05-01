@@ -74,7 +74,7 @@ const roadmapMilestones = [
     title: "Simulation Ecosystem",
     status: "Planned",
     description:
-      "Expand beyond commerce into PLOS and enterprise simulation packs so Reux is validated by real decision workflows.",
+      "Expand beyond commerce into PLOS (Personal Life Operating System) and enterprise simulation packs so Reux is validated by real decision workflows.",
     items: ["PLOS models", "Operations packs", "Workforce packs", "Explainable decision reports"],
   },
 ];

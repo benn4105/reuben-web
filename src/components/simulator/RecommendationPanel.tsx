@@ -49,7 +49,7 @@ export default function RecommendationPanel({
                 Recommended Scenario
               </h3>
               <Badge className="bg-amber-500/20 text-amber-400 text-[10px] border-none">
-                BEST OUTCOME
+                RECOMMENDED
               </Badge>
             </div>
 

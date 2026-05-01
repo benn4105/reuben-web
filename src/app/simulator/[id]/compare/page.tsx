@@ -185,7 +185,7 @@ export default function ComparisonPage({
             Model Transparency Layer
           </h2>
           <p className="text-xs text-gray-500 mt-1 max-w-3xl">
-            Each scenario generates distinct Reux logic. Below is the compiled source for every scenario evaluated in this simulation.
+            Each scenario produces distinct Reux logic. Below is the compiled source for every scenario evaluated in this simulation.
           </p>
         </div>
         

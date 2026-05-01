@@ -128,16 +128,16 @@ export default function SimulationResultsPage({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-end justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold text-white tracking-tight truncate">
             {simulation.name}
           </h1>
           <p className="text-sm text-gray-500 mt-1">
             {simulation.scenarios.length} scenario{simulation.scenarios.length !== 1 ? "s" : ""} · {baseline.inputs.forecastWeeks}-week forecast
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 shrink-0">
           <Button
             onClick={() => router.push("/simulator/new")}
             variant="outline"
@@ -247,8 +247,6 @@ export default function SimulationResultsPage({
         </div>
       )}
 
-
-
       {/* Reux Snippet Transparency Layer */}
       <div className="pt-6 border-t border-white/[0.06]">
         <div className="mb-4">
@@ -256,7 +254,7 @@ export default function SimulationResultsPage({
             Model Transparency Layer
           </h2>
           <p className="text-xs text-gray-500 mt-1 max-w-3xl">
-            Reux powers the simulation model. While the UI remains TypeScript and React, the panel below shows the actual compiled Reux logic that the engine used in the backend to forecast your scenarios and make its recommendation.
+            The simulation model is written in Reux. The UI is standard TypeScript and React, but the panel below shows the compiled Reux logic the backend engine used to forecast outcomes and produce its recommendation.
           </p>
         </div>
         <ReuxSnippetPanel
