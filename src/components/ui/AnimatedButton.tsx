@@ -39,7 +39,8 @@ export default function AnimatedButton({
         onClick={onClick}
         target={external ? "_blank" : undefined}
         rel={external ? "noreferrer" : undefined}
-        className={cn(baseClasses, variants[variant], className)}
+        type={!href ? "button" : undefined}
+        className={cn(baseClasses, variants[variant], "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00F0FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]", className)}
       >
         <span className="relative z-10">{children}</span>
         {variant === "primary" && (

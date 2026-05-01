@@ -153,7 +153,7 @@ export default function SimulatorDashboard() {
             </p>
           </div>
           {simulations.length > 0 && (
-            <span className="text-xs text-gray-600 bg-white/[0.05] px-2 py-1 rounded-md">
+            <span className="text-xs text-gray-500 bg-white/[0.05] px-2 py-1 rounded-md">
               {simulations.length} simulation{simulations.length !== 1 ? "s" : ""}
             </span>
           )}

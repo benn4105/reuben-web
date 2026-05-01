@@ -64,7 +64,7 @@ export default function Footer() {
 
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
           <p>&copy; {currentYear} Reuben Inc. All rights reserved.</p>
-          <div className="flex space-x-6 mt-4 md:mt-0 text-gray-600">
+          <div className="flex space-x-6 mt-4 md:mt-0 text-gray-500">
             <span>Privacy Policy</span>
             <span>Terms of Service</span>
           </div>

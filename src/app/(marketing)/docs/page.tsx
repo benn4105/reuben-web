@@ -174,7 +174,7 @@ export default function DocsPage() {
                 <div key={i} className="rounded-xl overflow-hidden glass border border-white/10">
                   <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-black/50">
                     <span className="text-xs text-gray-500 font-mono">{example.filename}</span>
-                    <span className="text-xs text-gray-600">{example.title}</span>
+                    <span className="text-xs text-gray-500">{example.title}</span>
                   </div>
                   <div className="p-6 bg-[#0A0A0A]/80 overflow-x-auto">
                     <pre className="font-mono text-sm leading-relaxed text-gray-300">

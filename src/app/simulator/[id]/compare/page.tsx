@@ -192,7 +192,7 @@ export default function ComparisonPage({
         <div className="space-y-3">
           {simulation.scenarios.map(s => (
             <div key={s.id}>
-              <div className="text-xs text-gray-600 mb-1.5 font-medium flex items-center gap-2">
+              <div className="text-xs text-gray-400 mb-1.5 font-medium flex items-center gap-2">
                 <span className="text-gray-300">{s.inputs.name}</span>
                 {s.id === comparison.recommendedId && (
                   <span className="text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded uppercase text-[10px] tracking-wide">Recommended</span>

@@ -322,7 +322,7 @@ export default function NewSimulationPage() {
             className={cn(
               "w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-2.5 text-sm text-white",
               "focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20",
-              "transition-colors duration-150 placeholder:text-gray-600"
+              "transition-colors duration-150 placeholder:text-gray-500"
             )}
             placeholder="e.g. Q2 Workforce Planning"
           />
@@ -428,7 +428,7 @@ export default function NewSimulationPage() {
             ))}
             <button
               onClick={addScenario}
-              className="shrink-0 flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs text-gray-600 hover:text-cyan-400 transition-colors"
+              className="shrink-0 flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs text-gray-500 hover:text-cyan-400 transition-colors"
             >
               <Plus size={14} />
               Add

@@ -217,4 +217,11 @@ input[type="number"] {
   html {
     @apply font-sans;
   }
+  
+  /* Global Accessibility Focus States */
+  a:focus-visible, 
+  button:focus-visible,
+  [role="button"]:focus-visible {
+    @apply outline-none ring-2 ring-[#00F0FF] ring-offset-2 ring-offset-[#0A0A0A] rounded-sm;
+  }
 }

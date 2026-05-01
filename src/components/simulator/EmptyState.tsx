@@ -14,7 +14,7 @@ export function EmptyState({ title, description, action, className }: EmptyState
   return (
     <div className={cn("flex flex-col items-center justify-center py-16 px-6 text-center", className)}>
       <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.06] mb-5">
-        <Inbox size={32} className="text-gray-600" />
+        <Inbox size={32} className="text-gray-500" />
       </div>
       <h3 className="text-lg font-semibold text-gray-300 mb-2">{title}</h3>
       <p className="text-sm text-gray-500 max-w-sm mb-6">{description}</p>
