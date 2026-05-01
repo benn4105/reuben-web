@@ -110,6 +110,76 @@ entity Order {
     set shipped_at = now()
   }
 }`
+  },
+  {
+    id: "queries",
+    title: "Queries & Access",
+    description: "Instead of raw SQL strings or heavy ORM black-boxes, Reux provides a deeply-typed query language that compiles to secure, optimized PostgreSQL.",
+    traditionalCode: `// Traditional: Raw SQL or ORM
+async function getActiveCustomers(db, region) {
+  // Prone to refactoring bugs if DB schema changes
+  // Return type is often a loose 'any'
+  const query = \`
+    SELECT id, email, created_at 
+    FROM customers 
+    WHERE status = 'ACTIVE' 
+      AND region = $1
+    ORDER BY created_at DESC
+    LIMIT 50
+  \`;
+  
+  const result = await db.query(query, [region]);
+  return result.rows;
+}`,
+    reuxCode: `// Reux: Typed query declaration
+query ActiveCustomersByRegion(region: String) {
+  find Customer {
+    id
+    email
+    created_at
+  }
+  where status == Active and region == region
+  order by created_at desc
+  limit 50
+}
+
+// Automatically generates fully-typed TypeScript
+// functions with guaranteed schema alignment.`
+  },
+  {
+    id: "simulations",
+    title: "Scenario Simulations",
+    description: "Instead of building custom loop logic or hacking spreadsheet math into backend code, Reux treats business simulation as a first-class language primitive.",
+    traditionalCode: `// Traditional: Hacked logic loops
+function forecastMargin(baselineCost) {
+  const scenarios = [
+    { name: 'aggressive', spend: 75000, conv: 0.08 },
+    { name: 'conservative', spend: 50000, conv: 0.05 }
+  ];
+  
+  return scenarios.map(s => {
+    // Custom spreadsheet logic scattered in code
+    const margin = (s.conv * 1000000) - s.spend;
+    return { scenario: s.name, margin };
+  });
+}`,
+    reuxCode: `// Reux: Native simulation
+simulate growth_plan {
+  dimension product = enterprise
+  
+  baseline_cost = 50000
+  conversion_rate = 0.05 percent
+  
+  formula margin = (conversion_rate * 1000000) - baseline_cost
+  
+  scenario aggressive_marketing {
+    baseline_cost = 75000
+    conversion_rate = 0.08 percent
+  }
+  
+  objective maximize margin
+  forecast 12 weeks
+}`
   }
 ];
 
