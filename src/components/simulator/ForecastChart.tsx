@@ -81,7 +81,7 @@ export default function ForecastChart({
     const step = Math.max(1, Math.floor(data.length / 8));
     return data
       .filter((_, i) => i % step === 0 || i === data.length - 1)
-      .map((d, _, arr) => {
+      .map((d) => {
         const idx = datasets[0].data.indexOf(d);
         const x = CHART_PADDING.left + (idx / Math.max(1, datasets[0].data.length - 1)) * (width - CHART_PADDING.left - CHART_PADDING.right);
         return { label: d.label, x };

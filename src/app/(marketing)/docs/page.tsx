@@ -131,7 +131,7 @@ export default function DocsPage() {
           <section className="p-8 rounded-2xl glass border border-white/10 text-center">
             <h2 className="text-2xl font-bold mb-4">Want to see it in action?</h2>
             <p className="text-gray-400 mb-8 max-w-lg mx-auto">
-              You don't need to write code to experience the power of Reux. We've built a full Business Simulation Engine powered by the language.
+              You do not need to write code to experience the power of Reux. We have built a full Business Simulation Engine powered by the language.
             </p>
             <AnimatedButton href="/simulator" variant="primary">
               Launch Business Simulator

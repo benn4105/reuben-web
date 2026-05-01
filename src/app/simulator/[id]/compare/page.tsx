@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useCallback } from "react";
 import Link from "next/link";
 import ScenarioComparisonTable from "@/components/simulator/ScenarioComparisonTable";
 import RecommendationPanel from "@/components/simulator/RecommendationPanel";
@@ -10,7 +10,6 @@ import { LoadingChart } from "@/components/simulator/LoadingState";
 import { ErrorState } from "@/components/simulator/EmptyState";
 import { getSimulation } from "@/lib/simulation/mock-service";
 import type { Simulation } from "@/lib/simulation/types";
-import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 
 const CHART_COLORS = [
@@ -31,11 +30,7 @@ export default function ComparisonPage({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadData();
-  }, [id]);
-
-  async function loadData() {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -46,7 +41,15 @@ export default function ComparisonPage({
     } finally {
       setLoading(false);
     }
-  }
+  }, [id]);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      loadData();
+    }, 0);
+
+    return () => window.clearTimeout(timeout);
+  }, [loadData]);
 
   if (loading) {
     return (

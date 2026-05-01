@@ -154,7 +154,7 @@ export default function NewSimulationPage() {
           Build Simulation
         </h1>
         <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-          Set up your current operations as the <strong>Baseline</strong>, then create alternative <strong>Scenarios</strong> (e.g. "Aggressive Hiring" or "Lean Ops") by adjusting the assumptions. The Reux engine will compare them and recommend the safest path.
+          Set up your current operations as the <strong>Baseline</strong>, then create alternative <strong>Scenarios</strong> such as Aggressive Hiring or Lean Ops by adjusting the assumptions. The Reux engine will compare them and recommend the safest path.
         </p>
       </div>
 

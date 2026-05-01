@@ -12,7 +12,8 @@ export function SimulatorOnboarding() {
     // Only show once per session or use localStorage for real persistence
     const hasSeenOnboarding = sessionStorage.getItem("reux_sim_onboarding");
     if (!hasSeenOnboarding) {
-      setIsOpen(true);
+      const id = window.setTimeout(() => setIsOpen(true), 0);
+      return () => window.clearTimeout(id);
     }
   }, []);
 

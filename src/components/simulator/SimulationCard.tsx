@@ -7,7 +7,6 @@ import { ArrowRight, Clock, GitBranch } from "lucide-react";
 
 // shadcn / Radix components
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardAction } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 interface SimulationCardProps {
   simulation: SimulationSummary;

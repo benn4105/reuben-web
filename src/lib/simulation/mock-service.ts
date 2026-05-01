@@ -1,29 +1,23 @@
-// ─── Mock Simulation Service ─────────────────────────────────────────────────
-// Implements the same request/response contract as the future Reux backend API.
-// Replace this module with real API calls when the backend is ready.
-
 import type {
-  RunSimulationRequest,
-  RunSimulationResponse,
-  ListSimulationsResponse,
-  GetSimulationResponse,
   CompareRequest,
   CompareResponse,
-  SimulationSummary,
+  GetSimulationResponse,
+  ListSimulationsResponse,
+  RunSimulationRequest,
+  RunSimulationResponse,
   Simulation,
+  SimulationSummary,
 } from "./types";
 import { runScenario, findRecommendation } from "./engine";
 import { MOCK_SIMULATIONS } from "./mock-data";
+import * as liveApi from "./api-client";
 
-// In-memory store
 let simulations: Simulation[] = [...MOCK_SIMULATIONS];
 
-// Simulate network latency
 function delay(ms: number = 400): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// Typed direction helper (avoids `as const` on ternary which TS disallows)
 function dir(positive: boolean): "positive" | "negative" {
   return positive ? "positive" : "negative";
 }
@@ -73,13 +67,7 @@ function buildDeltas(baseline: ReturnType<typeof runScenario>, scenario: ReturnT
   ];
 }
 
-// ─── API Methods ─────────────────────────────────────────────────────────────
-
-/**
- * POST /api/simulations/run
- * Runs a new simulation with baseline + scenarios.
- */
-export async function runSimulation(request: RunSimulationRequest): Promise<RunSimulationResponse> {
+async function mockRunSimulation(request: RunSimulationRequest): Promise<RunSimulationResponse> {
   await delay(800);
 
   const baseline = runScenario(request.baseline);
@@ -110,11 +98,7 @@ export async function runSimulation(request: RunSimulationRequest): Promise<RunS
   return { simulation };
 }
 
-/**
- * GET /api/simulations
- * Returns all saved simulations as summaries.
- */
-export async function listSimulations(): Promise<ListSimulationsResponse> {
+async function mockListSimulations(): Promise<ListSimulationsResponse> {
   await delay(300);
 
   const summaries: SimulationSummary[] = simulations.map(sim => {
@@ -139,11 +123,7 @@ export async function listSimulations(): Promise<ListSimulationsResponse> {
   return { simulations: summaries };
 }
 
-/**
- * GET /api/simulations/:id
- * Returns full simulation detail.
- */
-export async function getSimulation(id: string): Promise<GetSimulationResponse> {
+async function mockGetSimulation(id: string): Promise<GetSimulationResponse> {
   await delay(400);
 
   const simulation = simulations.find(s => s.id === id);
@@ -154,11 +134,7 @@ export async function getSimulation(id: string): Promise<GetSimulationResponse> 
   return { simulation };
 }
 
-/**
- * POST /api/scenarios/compare
- * Compares specific scenarios within a simulation.
- */
-export async function compareScenarios(request: CompareRequest): Promise<CompareResponse> {
+async function mockCompareScenarios(request: CompareRequest): Promise<CompareResponse> {
   await delay(500);
 
   const simulation = simulations.find(s =>
@@ -192,4 +168,52 @@ export async function compareScenarios(request: CompareRequest): Promise<Compare
       firstDivergenceWeek: divergenceWeek,
     },
   };
+}
+
+export async function runSimulation(request: RunSimulationRequest): Promise<RunSimulationResponse> {
+  if (liveApi.hasLiveApi()) {
+    try {
+      return await liveApi.runSimulation(request);
+    } catch (error) {
+      console.warn("Live Reux simulation failed; falling back to mock service.", error);
+    }
+  }
+
+  return mockRunSimulation(request);
+}
+
+export async function listSimulations(): Promise<ListSimulationsResponse> {
+  if (liveApi.hasLiveApi()) {
+    try {
+      return await liveApi.listSimulations();
+    } catch (error) {
+      console.warn("Live Reux simulation list failed; falling back to mock service.", error);
+    }
+  }
+
+  return mockListSimulations();
+}
+
+export async function getSimulation(id: string): Promise<GetSimulationResponse> {
+  if (liveApi.hasLiveApi()) {
+    try {
+      return await liveApi.getSimulation(id);
+    } catch (error) {
+      console.warn("Live Reux simulation detail failed; falling back to mock service.", error);
+    }
+  }
+
+  return mockGetSimulation(id);
+}
+
+export async function compareScenarios(request: CompareRequest): Promise<CompareResponse> {
+  if (liveApi.hasLiveApi()) {
+    try {
+      return await liveApi.compareScenarios(request);
+    } catch (error) {
+      console.warn("Live Reux scenario comparison failed; falling back to mock service.", error);
+    }
+  }
+
+  return mockCompareScenarios(request);
 }

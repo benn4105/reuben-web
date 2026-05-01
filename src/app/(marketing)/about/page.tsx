@@ -47,7 +47,7 @@ export default function AboutPage() {
               At Reuben, we are redesigning the computing stack from first principles. By bridging the gap between low-level performance and high-level ergonomics, we empower engineers to build systems that are safe, scalable, and blazingly fast.
             </p>
             <p className="text-gray-300 text-lg leading-relaxed">
-              We aren't just building abstract research. We prove our technology by building real, high-leverage products—like our Business Simulation Engine—which demonstrates the raw power of our Reux programming language in production environments.
+              We are not just building abstract research. We prove our technology by building real, high-leverage products like our Business Simulation Engine, which demonstrates the raw power of our Reux programming language in production environments.
             </p>
           </motion.div>
 

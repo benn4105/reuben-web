@@ -1,197 +1,82 @@
-# Reux Backend Integration Guide
+# Reux Business Simulator Frontend Integration
 
-This document explains how the frontend simulation engine connects to the future Reux backend API.
+This folder contains the simulation contract used by the Reuben website business simulator.
 
-## Current Architecture
+The UI keeps one internal shape for forms, charts, cards, and comparison tables. The service layer decides whether to use the hosted Reux backend or the local mock engine.
 
-```
-┌─────────────────────────────────────────────────────────┐
-│  Frontend (Next.js)                                     │
-│                                                         │
-│  ┌──────────────┐    ┌───────────────────┐              │
-│  │  Pages/Views  │───▶│  Mock Service     │              │
-│  │  (React)      │    │  (mock-service.ts)│              │
-│  └──────────────┘    └───────────────────┘              │
-│                              │                          │
-│                      ┌───────▼───────────┐              │
-│                      │  Simulation Engine │              │
-│                      │  (engine.ts)       │              │
-│                      └───────────────────┘              │
-└─────────────────────────────────────────────────────────┘
+## Runtime Path
+
+```text
+Simulator pages
+  -> mock-service.ts facade
+    -> api-client.ts when NEXT_PUBLIC_REUX_DEMO_URL is configured
+    -> local mock engine when the live backend is unavailable
 ```
 
-## Future Architecture
+This means the public website can use Railway in production while local development still works without a backend.
 
-```
-┌────────────────────────────┐     ┌──────────────────────────┐
-│  Frontend (Next.js)        │     │  Reux Backend             │
-│                            │     │                          │
-│  ┌──────────┐  ┌────────┐  │     │  ┌────────────────────┐  │
-│  │  Pages   │──│  API    │──┼────▶│  │  Reux Engine       │  │
-│  │          │  │  Client │  │     │  │  (schemas, txns,   │  │
-│  └──────────┘  └────────┘  │     │  │   simulations,     │  │
-│                            │     │  │   forecasts)        │  │
-└────────────────────────────┘     │  └────────────────────┘  │
-                                   └──────────────────────────┘
+## Environment Variable
+
+Set this in Vercel for Production and Preview:
+
+```env
+NEXT_PUBLIC_REUX_DEMO_URL=https://reux-pilot-demo-production.up.railway.app
 ```
 
-## API Contract
+Do not include a trailing slash.
 
-All interfaces are defined in `src/lib/simulation/types.ts`. The mock service in `src/lib/simulation/mock-service.ts` implements the exact same request/response shapes that the Reux backend should provide.
+## Hosted Backend Contract
 
-### Endpoints
+The live Reux demo exposes:
 
-| Method | Endpoint | Request Body | Response | Description |
-|--------|----------|-------------|----------|-------------|
-| `POST` | `/api/simulations/run` | `RunSimulationRequest` | `RunSimulationResponse` | Run a new simulation |
-| `GET` | `/api/simulations` | — | `ListSimulationsResponse` | List all saved simulations |
-| `GET` | `/api/simulations/:id` | — | `GetSimulationResponse` | Get full simulation detail |
-| `POST` | `/api/scenarios/compare` | `CompareRequest` | `CompareResponse` | Compare scenarios |
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/simulations` | List available simulation templates. |
+| `GET` | `/api/simulations/operations-decision` | Load default assumptions and starter scenarios. |
+| `POST` | `/api/simulations/run` | Run a baseline and scenario set. |
+| `POST` | `/api/scenarios/compare` | Compare already-run scenario results. |
 
-### Request/Response Types
+The frontend currently calls `POST /api/simulations/run` for new simulations and caches the normalized result in browser `localStorage` under `reux_business_simulations`.
 
-#### `POST /api/simulations/run`
+## Shape Mapping
 
-```typescript
-// Request
-interface RunSimulationRequest {
-  name: string;
-  baseline: ScenarioInputs;
-  scenarios: ScenarioInputs[];
-}
+The UI form uses visitor-friendly names:
 
-// Response
-interface RunSimulationResponse {
-  simulation: Simulation;
-}
+| Frontend field | Backend field |
+| --- | --- |
+| `avgHourlyCost` | `averageHourlyCost` |
+| `productivityGainPct` | `productivityGainRate` |
+| `overtimeReductionPct` | `overtimeReductionRate` |
+| `supplierDelayRiskPct` | `supplierDelayRiskRate` |
+| `errorDefectRatePct` | `defectRate` |
+| `forecastWeeks` | `forecastPeriods` plus `forecastUnit: "week"` |
+
+Percent fields are displayed as `0-100` values in the UI and sent as decimal rates to the backend.
+
+The frontend also supplies these backend assumptions until the UI exposes them directly:
+
+```ts
+averageOrderValue: 85
+grossMarginRate: 0.42
 ```
 
-#### `GET /api/simulations`
+## Files
 
-```typescript
-// Response
-interface ListSimulationsResponse {
-  simulations: SimulationSummary[];
-}
+| File | Responsibility |
+| --- | --- |
+| `types.ts` | UI-facing TypeScript types. |
+| `api-client.ts` | Live Reux API adapter and response normalizer. |
+| `mock-service.ts` | Public service facade with live-first, mock-fallback behavior. |
+| `engine.ts` | Local preview and mock calculation engine. |
+| `mock-data.ts` | Seeded examples for local/mock mode. |
+
+## Verification
+
+Run these from the website repo:
+
+```bash
+npm run lint
+npm run build
 ```
 
-#### `GET /api/simulations/:id`
-
-```typescript
-// Response
-interface GetSimulationResponse {
-  simulation: Simulation;
-}
-```
-
-#### `POST /api/scenarios/compare`
-
-```typescript
-// Request
-interface CompareRequest {
-  baselineId: string;
-  scenarioIds: string[];
-}
-
-// Response
-interface CompareResponse {
-  comparison: ComparisonResult;
-}
-```
-
-## How to Switch to the Real Backend
-
-### Step 1: Create an API client
-
-Create `src/lib/simulation/api-client.ts`:
-
-```typescript
-const API_BASE = process.env.NEXT_PUBLIC_REUX_API_URL || 'http://localhost:8080';
-
-async function apiRequest<T>(
-  method: string,
-  path: string,
-  body?: unknown
-): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-
-  if (!response.ok) {
-    throw new Error(`API Error: ${response.status}`);
-  }
-
-  return response.json();
-}
-
-export async function runSimulation(request: RunSimulationRequest) {
-  return apiRequest<RunSimulationResponse>('POST', '/api/simulations/run', request);
-}
-
-export async function listSimulations() {
-  return apiRequest<ListSimulationsResponse>('GET', '/api/simulations');
-}
-
-export async function getSimulation(id: string) {
-  return apiRequest<GetSimulationResponse>('GET', `/api/simulations/${id}`);
-}
-
-export async function compareScenarios(request: CompareRequest) {
-  return apiRequest<CompareResponse>('POST', '/api/scenarios/compare', request);
-}
-```
-
-### Step 2: Update imports
-
-In every page/component that currently imports from `mock-service.ts`, change the import to point to `api-client.ts`:
-
-```diff
-- import { listSimulations } from "@/lib/simulation/mock-service";
-+ import { listSimulations } from "@/lib/simulation/api-client";
-```
-
-### Step 3: Set the environment variable
-
-Add to `.env.local`:
-
-```
-NEXT_PUBLIC_REUX_API_URL=https://your-reux-backend.example.com
-```
-
-### Step 4: Remove client-side engine (optional)
-
-Once the Reux backend handles all simulation logic, the client-side `engine.ts` can be removed or kept as a local preview tool.
-
-## Reux Backend Expectations
-
-The Reux backend should:
-
-1. **Accept `ScenarioInputs`** as defined in `types.ts`
-2. **Return `Simulation` objects** with fully computed forecasts, metrics, and comparisons
-3. **Generate Reux snippets** for each scenario (the `reuxSnippet` field)
-4. **Persist simulations** so they appear in the list endpoint
-5. **Handle comparison logic** including recommendation scoring
-
-## Data Model Reference
-
-See `src/lib/simulation/types.ts` for the complete data model. Key types:
-
-- `ScenarioInputs` — User-provided assumptions
-- `MetricSnapshot` — Computed point-in-time metrics
-- `ForecastPoint` — One week of forecast data
-- `ScenarioResult` — Full result for one scenario
-- `ComparisonResult` — Multi-scenario comparison with recommendation
-- `Simulation` — Top-level container
-
-## File Structure
-
-```
-src/lib/simulation/
-├── types.ts          # All TypeScript interfaces (the contract)
-├── engine.ts         # Client-side calculation logic (temporary)
-├── mock-data.ts      # Seeded example data
-├── mock-service.ts   # Mock API (replace with api-client.ts)
-└── README.md         # This file
-```
+For a live smoke test, set `NEXT_PUBLIC_REUX_DEMO_URL` and create a simulation from `/simulator/new`.

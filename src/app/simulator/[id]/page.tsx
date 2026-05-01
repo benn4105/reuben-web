@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import MetricCard from "@/components/simulator/MetricCard";
 import ForecastChart from "@/components/simulator/ForecastChart";
@@ -50,11 +50,7 @@ export default function SimulationResultsPage({
     "margin" | "revenue" | "operatingCost" | "productivity" | "riskScore" | "workforceLoad"
   >("margin");
 
-  useEffect(() => {
-    loadSimulation();
-  }, [id]);
-
-  async function loadSimulation() {
+  const loadSimulation = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -65,7 +61,15 @@ export default function SimulationResultsPage({
     } finally {
       setLoading(false);
     }
-  }
+  }, [id]);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      loadSimulation();
+    }, 0);
+
+    return () => window.clearTimeout(timeout);
+  }, [loadSimulation]);
 
   if (loading) {
     return (
