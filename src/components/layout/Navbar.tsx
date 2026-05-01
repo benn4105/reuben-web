@@ -18,6 +18,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/projects", label: "Projects" },
   { href: "/simulator", label: "Simulator" },
+  { href: "/docs", label: "Docs" },
   { href: "/about", label: "About" },
 ];
 

@@ -57,8 +57,8 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-lg md:text-xl text-gray-400 max-w-2xl mb-12"
           >
-            Reuben builds powerful, structurally sound tools for modern computing. 
-            See our newest product—the Reux-powered Business Simulation Engine.
+            Reuben builds data-aware tools for modern computing.
+            Try our public demo — a Business Simulator powered by the Reux prototype engine.
           </motion.p>
 
           <motion.div 
@@ -94,10 +94,10 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-end mb-16">
             <div>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-                Featured Products
+                Featured Projects
               </h2>
               <p className="text-gray-400 max-w-md">
-                Discover our flagship simulation engine and the programming language that powers it.
+                The Reux prototype language and the live Business Simulator demo that proves it works.
               </p>
             </div>
             <AnimatedButton href="/projects" variant="secondary" className="mt-8 md:mt-0 hidden md:inline-flex">
@@ -108,15 +108,15 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <ProjectCard
               title="Business Simulator"
-              description="A powerful decision engine for operators. Model workforce planning, productivity gains, and risk factors to forecast margin impacts weeks into the future. Compare scenarios and find the optimal path."
-              tags={["Product", "Simulation", "Analytics"]}
+              description="A live demo where you model workforce, cost, and productivity scenarios, then compare forecasted outcomes. Powered by the Reux prototype engine."
+              tags={["Live Demo", "Simulation", "Decision Logic"]}
               href="/simulator"
               featured={true}
             />
             <ProjectCard
-              title="Reux"
-              description="A new paradigm for structured computing. Reux offers uncompromising performance with a syntax designed for humans and systems alike. Built-in database integration and zero-cost abstractions."
-              tags={["Programming Language", "Compilers", "Systems"]}
+              title="Reux Language"
+              description="A prototype backend language for schemas, transactions, simulations, and decision logic. Data-aware by design, with generated TypeScript integration."
+              tags={["Prototype", "Backend Language", "Simulation"]}
               href="/projects/reux"
               featured={false}
             />
@@ -134,25 +134,25 @@ export default function Home() {
       <section className="py-24 relative z-20 border-t border-white/5 bg-[#0A0A0A]/15 backdrop-blur-xl">
         <div className="container mx-auto px-4 md:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">Capabilities</h2>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">What We Build</h2>
             <p className="text-gray-400 max-w-2xl mx-auto">
-              Our expertise spans across the entire computing stack, from low-level systems to high-level abstractions.
+              The Reuben ecosystem spans backend language design, simulation tooling, and developer infrastructure.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                title: "Languages",
-                description: "Designing expressive, safe, and performant programming languages.",
+                title: "Language Design",
+                description: "Reux: a prototype backend language for schemas, transactions, simulations, and decision logic.",
               },
               {
-                title: "Systems",
-                description: "Building robust infrastructure and scalable distributed systems.",
+                title: "Simulation Products",
+                description: "The Business Simulator lets operators model and compare operational scenarios before committing.",
               },
               {
-                title: "Tooling",
-                description: "Creating developer experiences that feel like magic.",
+                title: "Developer Tooling",
+                description: "CLI, VS Code extension, generated TypeScript, and release preflight checks.",
               },
             ].map((item, index) => (
               <motion.div
@@ -180,13 +180,18 @@ export default function Home() {
         </div>
         
         <div className="container mx-auto px-4 md:px-8 relative z-20 text-center">
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-8">Ready to build the future?</h2>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-8">See It In Action</h2>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-12">
-            Join us in creating the next generation of computing systems.
+            The Business Simulator is live. Model real operational decisions and see how Reux evaluates the outcomes.
           </p>
-          <AnimatedButton href="/about" variant="primary">
-            Learn More About Reuben
-          </AnimatedButton>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <AnimatedButton href="/simulator" variant="primary">
+              Open the Simulator
+            </AnimatedButton>
+            <AnimatedButton href="/docs" variant="secondary">
+              Developer Docs
+            </AnimatedButton>
+          </div>
         </div>
       </section>
     </div>

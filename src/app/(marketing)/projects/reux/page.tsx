@@ -15,6 +15,7 @@ import {
   Zap,
 } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
+import { cn } from "@/lib/utils";
 
 const codeSnippet = `module operations
 
@@ -118,16 +119,10 @@ export default function ReuxPage() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <AnimatedButton href="/simulator" variant="primary">
-              Launch Business Simulator
-            </AnimatedButton>
-            <AnimatedButton href="/projects/reux/demo" variant="secondary">
-              Try Terminal Demo
+              Try the Live Demo
             </AnimatedButton>
             <AnimatedButton href="/docs" variant="secondary">
-              Read the Docs
-            </AnimatedButton>
-            <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
-              GitHub
+              Developer Docs
             </AnimatedButton>
           </div>
         </motion.div>
@@ -145,7 +140,7 @@ export default function ReuxPage() {
               Reux is being built for the parts of applications where normal web stacks get messy: data models, state changes, workflows, forecasts, and decision rules.
             </p>
             <p className="text-gray-400 text-lg leading-relaxed mb-6">
-              The strategy is practical: build the UI with TypeScript and React, then let Reux own the backend logic that needs to be reliable, auditable, and explainable. The <strong className="text-white">Business Simulator</strong> is our first major proof-of-use, demonstrating Reux&apos;s ability to run complex, dynamic scenario modeling in real-time.
+              The strategy is practical: build the UI with TypeScript and React, then let Reux own the backend logic that needs to be reliable, auditable, and explainable. The <strong className="text-white">Business Simulator</strong> is the current public proof point — a live demo where Reux runs the scenario modeling behind the scenes.
             </p>
             <p className="text-gray-400 text-lg leading-relaxed">
               In the future, we plan to validate the language against rigorous environments like PLOS (Personal Life Operating System) and enterprise simulation workflows.
@@ -236,9 +231,12 @@ export default function ReuxPage() {
           <p className="text-gray-400 text-lg leading-relaxed mb-6">
             When business rules are scattered across frontend state, backend controllers, and database triggers, no one can confidently answer &quot;why did the system do this?&quot;
           </p>
-          <p className="text-gray-400 text-lg leading-relaxed">
-            By keeping data structures, scenarios, and decision objectives in a single readable Reux file, operations teams can actually audit the logic that powers their dashboards.
+          <p className="text-gray-400 text-lg leading-relaxed mb-8">
+            Reux keeps data structures, scenarios, and decision objectives in a single readable source file — so the logic that powers a dashboard can actually be reviewed and understood.
           </p>
+          <AnimatedButton href="/simulator" variant="secondary">
+            See it working in the Simulator
+          </AnimatedButton>
         </motion.div>
 
         {/* Roadmap */}
@@ -276,7 +274,12 @@ export default function ReuxPage() {
                   <span className="text-xs font-semibold uppercase tracking-wide text-[#00F0FF]">
                     {milestone.phase}
                   </span>
-                  <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-gray-400">
+                  <span className={cn(
+                    "rounded-full px-3 py-1 text-xs font-medium",
+                    milestone.status === "Completed" || milestone.status === "100% prototype"
+                      ? "border border-emerald-500/30 text-emerald-400 bg-emerald-500/10"
+                      : "border border-white/10 text-gray-400"
+                  )}>
                     {milestone.status}
                   </span>
                 </div>

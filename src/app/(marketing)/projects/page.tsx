@@ -5,31 +5,31 @@ import ProjectCard from "@/components/ui/ProjectCard";
 
 const projects = [
   {
-    title: "Reux",
-    description: "A data-aware backend language for schemas, transactions, migrations, simulations, forecasts, and decision logic. Reux is prototype-complete and moving toward public beta.",
-    tags: ["Programming Language", "Simulation", "Backend"],
-    href: "/projects/reux",
+    title: "Business Simulator",
+    description: "A live public demo for modeling workforce, cost, and productivity scenarios. Compare forecasted outcomes and see the Reux engine evaluate each path. Try it now.",
+    tags: ["Live Demo", "Simulation", "Decision Logic"],
+    href: "/simulator",
     featured: true,
   },
   {
-    title: "PLOS",
-    description: "Personal Life Operating System. A future personal simulation platform for finances, habits, goals, health, career, and time decisions, with Reux planned as the simulation layer underneath.",
-    tags: ["Personal Simulation", "Planning", "Reux"],
-    href: "#",
+    title: "Reux Language",
+    description: "A prototype backend language for schemas, transactions, migrations, simulations, and decision logic. Reux is prototype-complete and moving toward public beta.",
+    tags: ["Prototype", "Backend Language", "Simulation"],
+    href: "/projects/reux",
     featured: false,
   },
   {
-    title: "Business Simulation Engine",
-    description: "A real-time decision console for modeling operational, workforce, productivity, cost, margin, and risk scenarios before a business commits to a change.",
-    tags: ["Operations", "Forecasting", "Enterprise"],
-    href: "#",
-    featured: false,
-  },
-  {
-    title: "Reux Live Demo",
+    title: "Reux Live Demos",
     description: "Hosted commerce and logistics pilots showing Reux-generated database workflows, transactions, state changes, and outbox processing through a public browser demo.",
     tags: ["Public Demo", "PostgreSQL", "Transactions"],
     href: "/projects/reux/demo",
+    featured: false,
+  },
+  {
+    title: "PLOS",
+    description: "Personal Life Operating System. A planned personal simulation platform for finances, habits, goals, and career decisions, with Reux as the simulation layer.",
+    tags: ["Planned", "Personal Simulation", "Reux"],
+    href: "#",
     featured: false,
   },
 ];
@@ -46,8 +46,7 @@ export default function ProjectsPage() {
         >
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">Our Work</h1>
           <p className="text-xl text-gray-400">
-            Explore the foundational technologies and tools we build at Reuben. 
-            The current ecosystem centers on Reux, simulation-driven products, and practical demos that prove the language in real workflows.
+            The current ecosystem centers on Reux, simulation-driven products, and interactive demos that validate the language in real workflows.
           </p>
         </motion.div>
 

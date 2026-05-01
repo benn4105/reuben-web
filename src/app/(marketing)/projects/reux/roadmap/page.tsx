@@ -2,6 +2,7 @@
 
 import { motion, Variants } from "framer-motion";
 import { CheckCircle2, CircleDashed, ArrowRightCircle } from "lucide-react";
+import AnimatedButton from "@/components/ui/AnimatedButton";
 
 export default function RoadmapPage() {
   const availableNow = [
@@ -115,7 +116,7 @@ export default function RoadmapPage() {
 
         <div className="col-span-1 md:col-span-2 glass p-6 rounded-2xl border border-white/5 bg-white/5">
           <p className="text-gray-300 text-center text-sm md:text-base">
-            Reux is not being positioned as a complete full-stack language yet. Today, it is best described as a backend, data, workflow, and simulation language with generated TypeScript integration points.
+            Reux is a backend, data, workflow, and simulation language with generated TypeScript integration. It is not yet positioned as a full-stack language.
           </p>
         </div>
       </motion.div>
@@ -239,6 +240,25 @@ export default function RoadmapPage() {
           <p>
             Over time, Reux may grow toward full-stack capabilities through service declarations, generated APIs, client contracts, realtime workflows, auth/session rules, and possibly UI-facing primitives. For now, the focus is building a strong, believable foundation: data, backend logic, transactions, events, and simulations.
           </p>
+        </div>
+      </motion.div>
+
+      {/* Bottom CTA */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="mt-16 text-center"
+      >
+        <p className="text-gray-400 mb-6">Want to see where the roadmap stands today?</p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <AnimatedButton href="/simulator" variant="primary">
+            Try the Business Simulator
+          </AnimatedButton>
+          <AnimatedButton href="/projects/reux" variant="secondary">
+            Back to Reux Overview
+          </AnimatedButton>
         </div>
       </motion.div>
     </div>
