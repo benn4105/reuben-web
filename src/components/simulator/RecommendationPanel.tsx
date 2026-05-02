@@ -52,7 +52,7 @@ export default function RecommendationPanel({
             {/* Header */}
             <div className="flex items-center gap-2 mb-1">
               <h3 className="text-sm font-semibold text-foreground">
-                Recommended Scenario
+                Best Path Forward
               </h3>
               <Badge className="bg-amber-500/20 text-amber-400 text-[10px] border-none">
                 RECOMMENDED
@@ -124,7 +124,7 @@ export default function RecommendationPanel({
               )}
               {reasons && reasons.length > 0 && (
                 <div>
-                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Why this path?</h4>
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Why this scenario wins</h4>
                   <ul className="space-y-1.5">
                     {reasons.map((r, i) => (
                       <li key={i} className="text-xs text-muted-foreground flex gap-2">
@@ -136,7 +136,7 @@ export default function RecommendationPanel({
               )}
               {tradeoffs && tradeoffs.length > 0 && (
                 <div>
-                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 mt-3">Known Tradeoffs</h4>
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 mt-3">Tradeoffs to watch</h4>
                   <ul className="space-y-1.5">
                     {tradeoffs.map((t, i) => (
                       <li key={i} className="text-xs text-muted-foreground flex gap-2">

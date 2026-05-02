@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { encodeShareLink, copyToClipboard } from "@/lib/simulation/share";
 import { exportToCsv, exportToPdf } from "@/lib/simulation/export";
-import { Share2, Check, Download, FileText, FileSpreadsheet, Link2, Clock } from "lucide-react";
+import { Share2, Check, Download, FileText, FileSpreadsheet, Link2, Clock, MessageSquare, ArrowRight } from "lucide-react";
 
 const CHART_COLORS = [
   "#64748b", // slate (baseline)
@@ -321,7 +321,7 @@ export default function SimulationResultsPage({
       {comparison && recommended && (
         <div className="space-y-3">
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-            Reux Decision Readout
+            Recommendation
           </h2>
           <RecommendationPanel
             scenarioName={recommended.inputs.name}
@@ -383,16 +383,44 @@ export default function SimulationResultsPage({
       <div className="pt-6 border-t border-white/[0.06]">
         <div className="mb-4">
           <h2 className="text-sm font-semibold text-white tracking-wide">
-            Model Transparency Layer
+            How Reux Produced This Result
           </h2>
           <p className="text-xs text-gray-500 mt-1 max-w-3xl">
-            The simulation model is written in Reux. The UI is standard TypeScript and React, but the panel below shows the compiled Reux logic the backend engine used to forecast outcomes and produce its recommendation.
+            Every simulation runs through a Reux model — a compiled backend program that defines the assumptions, formulas, and decision logic. The snippet below is the actual Reux source the engine evaluated. This is the same code a developer would write to build custom simulation products with Reux.
           </p>
         </div>
         <ReuxSnippetPanel
           snippet={recommended?.reuxSnippet || baseline.reuxSnippet}
           defaultOpen={false}
         />
+      </div>
+
+      {/* Next Steps */}
+      <div className="pt-6 border-t border-white/[0.06]">
+        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="min-w-0">
+              <h3 className="text-sm font-semibold text-white mb-1">What to do next</h3>
+              <p className="text-xs text-gray-500 max-w-lg">
+                Try a different set of assumptions, share this result with your team, or explore how Reux could power decision logic in your own product.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2 shrink-0">
+              <Button
+                onClick={() => router.push("/simulator/new")}
+                size="sm"
+                className="gap-1.5 bg-white text-black hover:bg-gray-200"
+              >
+                Run Another <ArrowRight size={14} />
+              </Button>
+              <Button asChild variant="outline" size="sm" className="gap-1.5 border-white/[0.08] text-gray-400 hover:text-white">
+                <Link href="/contact">
+                  <MessageSquare size={14} /> Get in Touch
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

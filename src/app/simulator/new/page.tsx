@@ -399,7 +399,7 @@ export default function NewSimulationPage() {
             )}
           </div>
           <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-            Define a <strong>Baseline</strong>, create alternative <strong>Scenarios</strong>, and let the Reux engine compare them to recommend the safest path.
+            Start by setting a <strong>Baseline</strong> that reflects your current operations, then add <strong>Scenarios</strong> to test changes. The Reux engine will evaluate each one and recommend the strongest path.
           </p>
         </div>
         {baseline && (
@@ -424,7 +424,7 @@ export default function NewSimulationPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Quick Presets
+              Start from a Template
             </label>
             <button
               onClick={() => setShowTemplates(!showTemplates)}
@@ -509,6 +509,7 @@ export default function NewSimulationPage() {
             )}
             placeholder="e.g. Q2 Workforce Planning"
           />
+          <p className="text-[10px] text-gray-500 mt-1">A short label for this run. This will appear in your results and history.</p>
         </div>
       </div>
 
@@ -654,6 +655,7 @@ export default function NewSimulationPage() {
             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
               Live Preview — {activeTab === "baseline" ? "Baseline" : activeInputs.name}
             </h3>
+            <p className="text-[10px] text-gray-500 -mt-1 mb-3">Metrics update in real time as you adjust inputs. These are local estimates — the final run uses the Reux engine for a full forecast.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
               <MetricCard
                 label="Weekly Revenue"
@@ -711,7 +713,10 @@ export default function NewSimulationPage() {
           </div>
 
           {/* Reux Snippet */}
-          <ReuxSnippetPanel snippet={liveSnippet} defaultOpen={true} />
+          <div>
+            <p className="text-[10px] text-gray-500 mb-2">This is the Reux source that will be compiled and evaluated on the backend when you run the simulation.</p>
+            <ReuxSnippetPanel snippet={liveSnippet} defaultOpen={true} />
+          </div>
         </div>
       </div>
       )}

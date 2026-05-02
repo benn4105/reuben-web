@@ -239,9 +239,10 @@ export default function ScenarioInputPanel({
 
       {/* Core Numbers */}
       <div className="space-y-1">
-        <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+        <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
           Workforce & Demand
         </h4>
+        <p className="text-[10px] text-gray-500 mb-3">Core operating numbers that define your current or proposed setup.</p>
         <div className="grid grid-cols-2 gap-4">
           <NumberField
             id="employees"
@@ -282,9 +283,9 @@ export default function ScenarioInputPanel({
       {/* Improvement Sliders */}
       <div className="space-y-1">
         <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-          Assumptions
+          Operational Assumptions
         </h4>
-        <p className="text-[10px] text-gray-500 mb-3">All rates are percentages (0–100). Up to 8 scenarios per simulation.</p>
+        <p className="text-[10px] text-gray-500 mb-3">Percentage-based factors that influence cost, quality, and risk. Adjust these to model different strategies.</p>
         <div className="space-y-5">
           <SliderField
             id="productivity-gain"
@@ -293,7 +294,7 @@ export default function ScenarioInputPanel({
             onChange={v => update("productivityGainPct", v)}
             max={50}
             step={0.5}
-            tooltip="Expected % improvement in output per employee"
+            tooltip="How much more output each employee produces vs. today"
           />
           <SliderField
             id="overtime-reduction"
@@ -302,7 +303,7 @@ export default function ScenarioInputPanel({
             onChange={v => update("overtimeReductionPct", v)}
             max={100}
             step={1}
-            tooltip="Expected % reduction in overtime hours"
+            tooltip="How much overtime hours decrease, reducing cost but potentially limiting capacity"
           />
           <SliderField
             id="supplier-delay"
@@ -311,16 +312,16 @@ export default function ScenarioInputPanel({
             onChange={v => update("supplierDelayRiskPct", v)}
             max={50}
             step={1}
-            tooltip="Probability of supply chain delays affecting operations"
+            tooltip="Chance of supply chain delays — higher values increase risk score and cost"
           />
           <SliderField
             id="defect-rate"
-            label="Error/Defect Rate"
+            label="Error / Defect Rate"
             value={values.errorDefectRatePct}
             onChange={v => update("errorDefectRatePct", v)}
             max={20}
             step={0.5}
-            tooltip="Expected % of output that fails quality checks"
+            tooltip="Percentage of output that fails quality checks and adds rework cost"
           />
         </div>
       </div>

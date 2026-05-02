@@ -274,6 +274,16 @@ export default function DocsPage() {
                 </div>
               ))}
             </div>
+
+            <div className="mt-6 rounded-lg border border-cyan-500/10 bg-cyan-500/[0.03] px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <p className="text-xs text-gray-400">
+                The <code className="text-cyan-400 font-mono">simulate</code> block above is the same syntax the live Business Simulator compiles and runs.{" "}
+                <span className="text-gray-500">Try it with your own numbers.</span>
+              </p>
+              <AnimatedButton href="/simulator/new?preset=optimization" variant="secondary">
+                Open Simulator
+              </AnimatedButton>
+            </div>
           </section>
 
           {/* Editor Support Preview */}
