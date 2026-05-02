@@ -22,7 +22,9 @@ const CHART_PADDING = { top: 20, right: 16, bottom: 32, left: 60 };
 function formatTick(value: number, format?: string): string {
   switch (format) {
     case "currency":
-      return value >= 1000 ? `$${(value / 1000).toFixed(0)}k` : `$${value}`;
+      if (Math.abs(value) >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
+      if (Math.abs(value) >= 1000) return `$${(value / 1000).toFixed(0)}k`;
+      return `$${value}`;
     case "percent":
       return `${value}%`;
     default:

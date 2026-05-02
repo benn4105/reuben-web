@@ -197,12 +197,19 @@ export default function SimulatorDashboard() {
             title="Ready to forecast your first decision?"
             description="The Business Simulator uses Reux to test operational assumptions—like hiring or process optimization—and predicts the safest path forward."
             action={
-              <Button asChild className="gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 border-none hover:shadow-[0_0_20px_rgba(0,200,255,0.25)]">
-                <Link href="/simulator/new">
-                  <PlusCircle size={16} />
-                  Create First Simulation
-                </Link>
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button asChild className="gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 border-none hover:shadow-[0_0_20px_rgba(0,200,255,0.25)]">
+                  <Link href="/simulator/new">
+                    <PlusCircle size={16} />
+                    Create First Simulation
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" className="gap-2 border-white/[0.08] text-gray-300 hover:text-white">
+                  <Link href="/simulator/new?preset=optimization">
+                    Load Guided Demo
+                  </Link>
+                </Button>
+              </div>
             }
           />
         ) : (

@@ -91,7 +91,10 @@ export default function ScenarioComparisonTable({
   const allScenarios = [baseline, ...scenarios];
 
   return (
-    <div className={cn("overflow-x-auto w-full", className)}>
+    <div className={cn("relative", className)}>
+      {/* Right scroll indicator */}
+      <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#0A0A0A] to-transparent z-10 pointer-events-none sm:hidden" />
+      <div className="overflow-x-auto w-full scrollbar-none">
       <Table className="min-w-[600px]">
         <TableHeader>
           <TableRow className="border-white/[0.06] hover:bg-transparent">
@@ -165,6 +168,7 @@ export default function ScenarioComparisonTable({
           ))}
         </TableBody>
       </Table>
+      </div>
     </div>
   );
 }

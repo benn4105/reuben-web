@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
-import { Terminal, Download, Code2, Eye, Code, AlertTriangle } from "lucide-react";
+import { Terminal, Download, Code2, Eye, Code, AlertTriangle, Copy, Check } from "lucide-react";
 import IdeMockup from "@/components/ui/IdeMockup";
+import { copyToClipboard } from "@/lib/simulation/share";
 
 const INSTALL_CMD = "npm install @reux/cli -g";
 const SOURCE_INSTALL_CMD = `git clone https://github.com/benn4105/Reux.git
@@ -11,6 +13,28 @@ cd Reux
 npm install
 npm run onboarding:smoke`;
 
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      onClick={async () => {
+        const ok = await copyToClipboard(text);
+        if (ok) {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        }
+      }}
+      className="flex items-center gap-1 text-[11px] text-gray-500 hover:text-gray-300 transition-colors"
+      title="Copy to clipboard"
+    >
+      {copied ? (
+        <><Check size={12} className="text-emerald-400" /> Copied</>
+      ) : (
+        <><Copy size={12} /> Copy</>
+      )}
+    </button>
+  );
+}
 
 
 const EXAMPLES = [
@@ -129,7 +153,7 @@ export default function DocsPage() {
               <div className="p-2 rounded-lg bg-violet-500/10">
                 <Terminal className="text-violet-400" size={24} />
               </div>
-              <h2 className="text-2xl font-bold">Run From Source</h2>
+              <h2 className="text-2xl font-bold" id="run-from-source">Run From Source</h2>
             </div>
             
             <p className="text-gray-400 mb-6 leading-relaxed">
@@ -152,7 +176,10 @@ export default function DocsPage() {
             <div className="mt-6 rounded-xl overflow-hidden glass border border-white/10">
               <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-black/50">
                 <span className="text-xs text-gray-500 font-mono">run from source today</span>
-                <span className="text-xs text-emerald-400">Available</span>
+                <div className="flex items-center gap-3">
+                  <CopyButton text={SOURCE_INSTALL_CMD} />
+                  <span className="text-xs text-emerald-400">Available</span>
+                </div>
               </div>
               <div className="p-5 bg-[#0A0A0A]/80 overflow-x-auto">
                 <pre className="font-mono text-sm leading-relaxed text-gray-300">
@@ -240,10 +267,9 @@ export default function DocsPage() {
                 {
                   title: "Run From Source",
                   description: "Clone the repo, install deps, and run the onboarding smoke test locally.",
-                  href: "#",
+                  href: "#run-from-source",
                   color: "border-violet-500/20 hover:border-violet-500/40",
                   icon: "💻",
-                  onClick: true,
                 },
                 {
                   title: "Browse Syntax Examples",
