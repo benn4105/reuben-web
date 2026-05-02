@@ -41,7 +41,8 @@ test.describe('Simulator E2E Flow', () => {
     await expect(page).toHaveURL(/.*\/simulator\/(sim_|live_).+/);
     
     // Expect the recommendation panel and best margin text
-    await expect(page.locator('text="Reux Decision Readout"')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: 'Recommendation' })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: 'Best Path Forward' })).toBeVisible();
     await expect(page.locator('text="Weekly Margin"').first()).toBeVisible();
     
     // The scenario comparison table should be visible at the bottom
