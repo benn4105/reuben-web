@@ -458,7 +458,7 @@ export default function NewSimulationPage() {
               </div>
             )}
             {/* Scenario Tabs */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-none">
               <button
                 onClick={() => handleTabChange("baseline")}
                 className={cn(
@@ -539,7 +539,7 @@ export default function NewSimulationPage() {
             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
               Live Preview — {activeTab === "baseline" ? "Baseline" : activeInputs.name}
             </h3>
-            <div className="grid grid-cols-2 xl:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
               <MetricCard
                 label="Weekly Revenue"
                 value={liveMetrics.revenue}

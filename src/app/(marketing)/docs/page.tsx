@@ -222,19 +222,72 @@ export default function DocsPage() {
             </ul>
           </section>
 
-          {/* What's Next */}
-          <section className="text-center pb-8 border-t border-white/5 pt-12">
-            <h2 className="text-2xl font-bold mb-4 text-white">Continue Exploring</h2>
-            <p className="text-gray-400 mb-8 max-w-xl mx-auto">
-              Ready to see more? Follow our progress on the roadmap or run live simulations directly in the browser.
+          {/* Continue Exploring — Developer CTA Cards */}
+          <section className="pb-8 border-t border-white/5 pt-12">
+            <h2 className="text-2xl font-bold mb-2 text-white">Continue Exploring</h2>
+            <p className="text-gray-400 mb-8 max-w-xl">
+              Pick what fits your workflow.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <AnimatedButton href="/simulator" variant="primary">
-                Open Business Simulator
-              </AnimatedButton>
-              <AnimatedButton href="/projects/reux/roadmap" variant="secondary">
-                View Roadmap
-              </AnimatedButton>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                {
+                  title: "Try the Simulator",
+                  description: "Run a live simulation in your browser. No account, no install.",
+                  href: "/simulator",
+                  color: "border-cyan-500/20 hover:border-cyan-500/40",
+                  icon: "🎮",
+                },
+                {
+                  title: "Run From Source",
+                  description: "Clone the repo, install deps, and run the onboarding smoke test locally.",
+                  href: "#",
+                  color: "border-violet-500/20 hover:border-violet-500/40",
+                  icon: "💻",
+                  onClick: true,
+                },
+                {
+                  title: "Browse Syntax Examples",
+                  description: "Jump to simulate blocks, transaction functions, and generated TypeScript.",
+                  href: "#examples",
+                  color: "border-white/10 hover:border-white/20",
+                  icon: "📝",
+                },
+                {
+                  title: "View Roadmap",
+                  description: "See what is available now, in beta, next, and future.",
+                  href: "/projects/reux/roadmap",
+                  color: "border-amber-500/20 hover:border-amber-500/40",
+                  icon: "🗺️",
+                },
+                {
+                  title: "GitHub Repository",
+                  description: "Browse source code, examples, and open issues.",
+                  href: "https://github.com/benn4105/Reux",
+                  color: "border-white/10 hover:border-white/20",
+                  icon: "🔗",
+                  external: true,
+                },
+                {
+                  title: "Reux Product Page",
+                  description: "Features, use cases, live pilots, and the full product story.",
+                  href: "/projects/reux",
+                  color: "border-white/10 hover:border-white/20",
+                  icon: "📄",
+                },
+              ].map((card) => (
+                <a
+                  key={card.title}
+                  href={card.href}
+                  {...(card.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  className={`group flex gap-4 p-5 rounded-xl border ${card.color} bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-200`}
+                >
+                  <span className="text-2xl shrink-0">{card.icon}</span>
+                  <div>
+                    <h3 className="text-sm font-bold text-white mb-1 group-hover:text-[#00F0FF] transition-colors">{card.title}</h3>
+                    <p className="text-xs text-gray-500 leading-relaxed">{card.description}</p>
+                  </div>
+                </a>
+              ))}
             </div>
           </section>
 

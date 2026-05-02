@@ -105,6 +105,21 @@ export default function SimulatorDashboard() {
               <p className="text-xs text-gray-500">The Reux engine evaluates each scenario to surface the strongest margin with the lowest risk.</p>
             </div>
           </div>
+
+          {/* Trust Signals */}
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-6 pt-4 border-t border-white/[0.04]">
+            {[
+              "No account required",
+              "Public demo backend",
+              "Scenario data is for demo use only",
+              "Powered by Reux prototype",
+            ].map((signal) => (
+              <span key={signal} className="inline-flex items-center gap-1.5 text-[11px] text-gray-500">
+                <span className="w-1 h-1 rounded-full bg-gray-600" />
+                {signal}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 

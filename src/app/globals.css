@@ -92,6 +92,14 @@ select:focus-visible {
   background-image: radial-gradient(circle at center, var(--tw-gradient-from) 0%, var(--tw-gradient-to) 100%);
 }
 
+@utility scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* ─── Simulator-specific styles ────────────────────────────────────────────── */
 
 /* Custom scrollbar for simulator panels */

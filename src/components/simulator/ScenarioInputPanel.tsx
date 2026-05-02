@@ -201,6 +201,7 @@ export default function ScenarioInputPanel({
             placeholder="e.g. Q2 Baseline"
             maxLength={120}
           />
+          <p className="text-[10px] text-gray-500">Max 120 characters. This appears in results and comparisons.</p>
         </div>
 
         <div className="space-y-2">
@@ -280,9 +281,10 @@ export default function ScenarioInputPanel({
 
       {/* Improvement Sliders */}
       <div className="space-y-1">
-        <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+        <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
           Assumptions
         </h4>
+        <p className="text-[10px] text-gray-500 mb-3">All rates are percentages (0–100). Up to 8 scenarios per simulation.</p>
         <div className="space-y-5">
           <SliderField
             id="productivity-gain"
@@ -349,6 +351,7 @@ export default function ScenarioInputPanel({
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
+        <p className="text-[10px] text-gray-500 mt-2">Up to 52 weeks. Longer forecasts increase simulation detail.</p>
       </div>
 
       {/* Actions */}

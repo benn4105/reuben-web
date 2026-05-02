@@ -10,6 +10,7 @@ import {
   Briefcase 
 } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
+import Link from "next/link";
 
 const features = [
   {
@@ -148,6 +149,10 @@ export default function PlosPage() {
               <p className="text-gray-400 text-lg leading-relaxed">
                 The intended architecture is for career choices, budget changes, and habit tweaks in the PLOS UI to become Reux simulation declarations or model inputs as the runtime matures.
               </p>
+              <div className="flex flex-wrap gap-3 mt-6">
+                <Link href="/projects/reux" className="text-sm font-medium text-[#00F0FF] hover:underline">Learn about Reux →</Link>
+                <Link href="/simulator" className="text-sm font-medium text-gray-400 hover:text-white hover:underline">Try the Business Simulator →</Link>
+              </div>
             </div>
             <div className="flex-1 w-full">
               <div className="rounded-xl overflow-hidden glass border border-white/10 bg-black/50">
@@ -176,7 +181,7 @@ export default function PlosPage() {
           </div>
         </motion.div>
 
-        {/* Waitlist / CTA */}
+        {/* Interest / CTA */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -184,24 +189,21 @@ export default function PlosPage() {
           transition={{ duration: 0.8 }}
           className="text-center max-w-2xl mx-auto pb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Join the Early Access List</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Interested in PLOS?</h2>
           <p className="text-gray-400 text-lg mb-8">
-            PLOS is currently in active development. We are focusing on releasing the underlying Reux compiler and Business Simulator first. Leave your email to be notified when PLOS beta opens.
+            PLOS is a planned future product. We are currently focused on shipping the Reux language and Business Simulator. If you&apos;d like to follow our progress or express interest, reach out directly.
           </p>
           
-          <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
-            <input 
-              type="email" 
-              placeholder="Enter your email" 
-              className="flex-1 bg-white/5 border border-white/10 rounded-full px-6 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8A2BE2] transition-shadow"
-              required
-            />
-            <AnimatedButton onClick={() => {}} variant="primary" className="whitespace-nowrap">
-              Join Waitlist
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <AnimatedButton href="mailto:interest@reuben.inc?subject=PLOS%20Early%20Interest" variant="primary">
+              Express Interest
             </AnimatedButton>
-          </form>
-          <p className="text-xs text-gray-500 mt-4">
-            No spam. We&apos;ll only email you when we have a playable demo.
+            <AnimatedButton href="/projects/reux/roadmap" variant="secondary">
+              View Roadmap
+            </AnimatedButton>
+          </div>
+          <p className="text-xs text-gray-500 mt-6">
+            No mailing list yet — we&apos;ll announce PLOS progress on the roadmap page.
           </p>
         </motion.div>
 

@@ -137,43 +137,101 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Capabilities Section */}
+      {/* Start Here — Audience Paths */}
       <section className="py-24 relative z-20 border-t border-white/5 bg-[#0A0A0A]/15 backdrop-blur-xl">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">What We Build</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
-              The Reuben ecosystem spans backend language design, simulation tooling, and developer infrastructure.
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Start Here</h2>
+            <p className="text-gray-400 max-w-xl mx-auto">
+              Pick your path based on what you want to explore.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[
               {
-                title: "Language Design",
-                description: "Reux: a prototype backend language for schemas, transactions, simulations, and decision logic.",
+                emoji: "🎮",
+                title: "Try the Demo",
+                description: "Model operational decisions and see Reux evaluate the outcomes. No account needed.",
+                href: "/simulator",
+                cta: "Open Simulator",
+                color: "from-cyan-500/20 to-cyan-500/5",
+                border: "hover:border-cyan-500/30",
               },
               {
-                title: "Simulation Products",
-                description: "The Business Simulator lets operators model and compare operational scenarios before committing.",
+                emoji: "🔧",
+                title: "Evaluate the Language",
+                description: "Syntax examples, editor support, run-from-source instructions, and architecture notes.",
+                href: "/docs",
+                cta: "Developer Preview",
+                color: "from-violet-500/20 to-violet-500/5",
+                border: "hover:border-violet-500/30",
               },
               {
-                title: "Developer Tooling",
-                description: "CLI, VS Code extension, generated TypeScript, and release preflight checks.",
+                emoji: "🗺️",
+                title: "See the Roadmap",
+                description: "What is live, what is prototype-complete, what is planned, and the long-term direction.",
+                href: "/projects/reux/roadmap",
+                cta: "View Roadmap",
+                color: "from-amber-500/20 to-amber-500/5",
+                border: "hover:border-amber-500/30",
               },
-            ].map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="glass-card p-8 rounded-2xl"
+            ].map((path) => (
+              <a
+                key={path.title}
+                href={path.href}
+                className={`group glass-card p-6 rounded-2xl border border-white/5 ${path.border} transition-all duration-300 hover:-translate-y-1 block`}
               >
-                <h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
-                <p className="text-gray-400 leading-relaxed">{item.description}</p>
-              </motion.div>
+                <div className="text-3xl mb-4">{path.emoji}</div>
+                <h3 className="text-lg font-bold text-white mb-2">{path.title}</h3>
+                <p className="text-sm text-gray-400 leading-relaxed mb-4">{path.description}</p>
+                <span className="text-sm font-semibold text-white group-hover:text-[#00F0FF] transition-colors">
+                  {path.cta} →
+                </span>
+              </a>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Reux Exists */}
+      <section className="py-24 relative z-20 bg-[#0A0A0A]/15 backdrop-blur-xl">
+        <div className="container mx-auto px-4 md:px-8 max-w-4xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight mb-6">The Problem</h2>
+              <ul className="space-y-4 text-gray-400 leading-relaxed">
+                <li className="flex gap-3">
+                  <span className="text-rose-400 shrink-0 mt-1">✕</span>
+                  Backend logic scattered across controllers, ORMs, migrations, workers, and config files.
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-rose-400 shrink-0 mt-1">✕</span>
+                  State changes that are hard to audit, trace, or simulate.
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-rose-400 shrink-0 mt-1">✕</span>
+                  Simulations and forecasts bolted on later with spreadsheets or ad hoc scripts.
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight mb-6">The Answer</h2>
+              <ul className="space-y-4 text-gray-300 leading-relaxed">
+                <li className="flex gap-3">
+                  <span className="text-emerald-400 shrink-0 mt-1">✓</span>
+                  Reux models data, state, transactions, events, and simulations together in one language.
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-emerald-400 shrink-0 mt-1">✓</span>
+                  The UI stays normal React/Next.js — Reux only owns the backend logic.
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-emerald-400 shrink-0 mt-1">✓</span>
+                  The Business Simulator proves this works today.
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
