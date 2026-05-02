@@ -13,7 +13,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-white/5 bg-[#0A0A0A] py-12 mt-20">
       <div className="container mx-auto px-4 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center space-x-2 mb-4 group inline-flex">
@@ -29,9 +29,9 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Links */}
+          {/* Product */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Projects</h4>
+            <h4 className="text-white font-semibold mb-4">Product</h4>
             <ul className="space-y-2">
               <li>
                 <Link href="/simulator" className="text-gray-400 hover:text-[#00F0FF] transition-colors text-sm">
@@ -39,8 +39,13 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/docs" className="text-gray-400 hover:text-[#00F0FF] transition-colors text-sm">
-                  Developer Preview
+                <Link href="/projects/reux" className="text-gray-400 hover:text-[#00F0FF] transition-colors text-sm">
+                  Reux Language
+                </Link>
+              </li>
+              <li>
+                <Link href="/projects/plos" className="text-gray-400 hover:text-[#00F0FF] transition-colors text-sm">
+                  PLOS
                 </Link>
               </li>
               <li>
@@ -51,14 +56,39 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Social */}
+          {/* Developers */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Connect</h4>
-            <div className="flex space-x-4">
-              <a href="https://github.com/benn4105/Reux" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors" aria-label="GitHub">
-                <GithubIcon size={20} />
-              </a>
-            </div>
+            <h4 className="text-white font-semibold mb-4">Developers</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/docs" className="text-gray-400 hover:text-[#00F0FF] transition-colors text-sm">
+                  Developer Preview
+                </Link>
+              </li>
+              <li>
+                <Link href="/projects/reux/roadmap" className="text-gray-400 hover:text-[#00F0FF] transition-colors text-sm">
+                  Roadmap
+                </Link>
+              </li>
+              <li>
+                <a href="https://github.com/benn4105/Reux" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#00F0FF] transition-colors text-sm flex items-center gap-1.5">
+                  <GithubIcon size={14} />
+                  GitHub
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h4 className="text-white font-semibold mb-4">Company</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/about" className="text-gray-400 hover:text-[#00F0FF] transition-colors text-sm">
+                  About
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
 

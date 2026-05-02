@@ -75,6 +75,12 @@ export default function Navbar() {
             <GithubIcon size={18} />
             <span>GitHub</span>
           </Link>
+          <Link
+            href="/simulator/new"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm font-semibold hover:shadow-[0_0_20px_rgba(0,200,255,0.25)] transition-shadow"
+          >
+            Try Simulator
+          </Link>
         </nav>
 
         {/* Mobile Menu Toggle */}

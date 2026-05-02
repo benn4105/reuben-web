@@ -96,13 +96,20 @@ export default function AboutPage() {
 
                 {/* Application Layer */}
                 <div className="w-full flex flex-col md:flex-row gap-4 justify-center">
-                  <Link href="/projects/plos" className="flex-1 max-w-[400px] glass border border-white/10 p-6 md:py-8 rounded-2xl text-center hover:border-[#8A2BE2]/40 transition-colors cursor-pointer group shadow-lg">
-                    <h4 className="text-lg md:text-xl text-white font-bold mb-2 group-hover:text-[#8A2BE2] transition-colors">PLOS</h4>
-                    <p className="text-xs md:text-sm text-gray-400">Personal Life Operating System</p>
-                  </Link>
                   <Link href="/simulator" className="flex-1 max-w-[400px] glass border border-white/10 p-6 md:py-8 rounded-2xl text-center hover:border-[#00F0FF]/40 transition-colors cursor-pointer group shadow-lg">
-                    <h4 className="text-lg md:text-xl text-white font-bold mb-2 group-hover:text-[#00F0FF] transition-colors">Business Simulator</h4>
-                    <p className="text-xs md:text-sm text-gray-400">Live operational scenario modeling</p>
+                    <h4 className="text-lg md:text-xl text-white font-bold mb-1 group-hover:text-[#00F0FF] transition-colors">Business Simulator</h4>
+                    <p className="text-xs md:text-sm text-gray-400 mb-2">Live operational scenario modeling</p>
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-400">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      Live Demo
+                    </span>
+                  </Link>
+                  <Link href="/projects/plos" className="flex-1 max-w-[400px] glass border border-white/10 p-6 md:py-8 rounded-2xl text-center hover:border-[#8A2BE2]/40 transition-colors cursor-pointer group shadow-lg">
+                    <h4 className="text-lg md:text-xl text-white font-bold mb-1 group-hover:text-[#8A2BE2] transition-colors">PLOS</h4>
+                    <p className="text-xs md:text-sm text-gray-400 mb-2">Personal Life Operating System</p>
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                      Planned
+                    </span>
                   </Link>
                 </div>
               </div>

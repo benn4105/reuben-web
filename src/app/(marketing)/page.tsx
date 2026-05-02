@@ -45,9 +45,9 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight mb-6 text-white"
           >
-            Engineering the <br className="hidden md:block" />
+            Simulate Before <br className="hidden md:block" />
             <span className="text-gray-400">
-              Future of Systems
+              You Commit
             </span>
           </motion.h1>
 
@@ -57,8 +57,8 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-lg md:text-xl text-gray-400 max-w-2xl mb-12"
           >
-            Reuben builds data-aware tools for modern computing.
-            Try our public demo: a Business Simulator powered by the Reux prototype engine.
+            Reuben builds data-aware tools powered by the <strong className="text-white">Reux</strong> backend engine.
+            Try the live Business Simulator — model operational decisions, compare scenarios, and see which path wins.
           </motion.p>
 
           <motion.div 

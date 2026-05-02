@@ -132,7 +132,7 @@ export default function RoadmapPage() {
 
         <div className="col-span-1 md:col-span-2 glass p-6 rounded-2xl border border-white/5 bg-white/5">
           <p className="text-gray-300 text-center text-sm md:text-base">
-            Reux is a backend, data, workflow, and simulation language with generated TypeScript integration. It is not yet positioned as a full-stack language.
+            Reux is a backend, data, workflow, and simulation language with generated TypeScript integration. It is not yet positioned as a full-stack language. The 100% prototype metric means all features in the planned prototype scope are working — not that the product is finished.
           </p>
         </div>
       </motion.div>

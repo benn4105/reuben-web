@@ -201,7 +201,7 @@ export default function DocsPage() {
               <h2 className="text-2xl font-bold">Editor Support Preview</h2>
             </div>
             <p className="text-gray-400 mb-8 leading-relaxed max-w-3xl">
-              The Reux Language Server (LSP) provides realtime type-checking, auto-completion, and inline diagnostics. It parses your schema, queries, and simulations to ensure total safety before you ever run a migration.
+              Reux has early VS Code support with syntax highlighting, plus CLI-backed diagnostics, formatting, completions, hover info, and definition jumps. A dedicated language server process (full LSP) is planned but not yet live.
             </p>
             <div className="relative mb-16">
               <IdeMockup />

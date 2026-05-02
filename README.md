@@ -1,62 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Reuben Web — Frontend
 
-## Getting Started
+The public website for the Reuben ecosystem: homepage, project pages, Business Simulator, developer preview, and marketing pages.
 
-First, run the development server:
+Built with **Next.js 16**, React, Tailwind CSS, and shadcn/ui.
+
+## Quick Start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-## Reux Demo
+## Environment Variables
 
-The Reux demo page is available at `/projects/reux/demo`. Set the hosted demo service URL before deploying the website:
+| Variable | Required | Description |
+|---|---|---|
+| `NEXT_PUBLIC_REUX_DEMO_URL` | For live demo | URL of the hosted Reux pilot demo service. When unset, the simulator falls back to the local mock engine. |
 
-```bash
-NEXT_PUBLIC_REUX_DEMO_URL=https://your-reux-demo-host.example.com
-```
+**Production value:**
 
-When this variable is not set, the demo page shows a setup placeholder instead of embedding the app.
-
-Current production demo service:
-
-```bash
+```env
 NEXT_PUBLIC_REUX_DEMO_URL=https://reux-pilot-demo-production.up.railway.app
 ```
 
-## Railway
+Do not include a trailing slash.
 
-This repo includes `railway.json` for Railway deployments. Create a Railway service from `benn4105/reuben-web`, then set:
+## Key Routes
+
+Check these before each deployment:
+
+| Route | Purpose | Notes |
+|---|---|---|
+| `/` | Homepage | Primary CTA → Simulator |
+| `/simulator` | Simulator dashboard | Lists saved simulations, shows intro |
+| `/simulator/new` | Scenario builder | Input validation mirrors backend limits |
+| `/simulator/[id]` | Simulation results | Charts, metrics, recommendation |
+| `/simulator/[id]/compare` | Scenario comparison | Side-by-side charts and table |
+| `/projects` | All projects | Grouped by status: Live / Prototype / Planned |
+| `/projects/reux` | Reux product page | Features, pilots, roadmap summary |
+| `/projects/reux/roadmap` | Full roadmap | Available Now / Beta / Next / Future |
+| `/projects/reux/demo` | Live Reux demos | Requires `NEXT_PUBLIC_REUX_DEMO_URL` |
+| `/projects/plos` | PLOS product page | Planned product — no live features |
+| `/docs` | Developer preview | Syntax examples, editor support, run-from-source |
+| `/about` | About Reuben | Vision, ecosystem diagram, team |
+
+## Simulator API Limits
+
+The frontend mirrors these backend constraints locally in `src/lib/simulation/constants.ts` to provide immediate validation feedback:
+
+- **Max run scenarios:** 8
+- **Max compare scenarios:** 12
+- **Max forecast periods:** 52
+- **Max timeline points:** 52
+- **Scenario ID max:** 64 characters
+- **Scenario name max:** 120 characters
+- **Scenario description max:** 500 characters
+- **Scenario ID regex:** `^[a-zA-Z0-9][a-zA-Z0-9_-]*$`
+
+## Build & Lint
 
 ```bash
-NEXT_PUBLIC_REUX_DEMO_URL=https://your-reux-demo-service.up.railway.app
+npm run lint
+npm run build
 ```
 
-Railway will use `npm run build`, `npm run start`, and `/projects/reux/demo` as the deployment health check.
+Both must pass before merging to main.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Railway Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This repo includes `railway.json`. Create a Railway service from `benn4105/reuben-web` and set the `NEXT_PUBLIC_REUX_DEMO_URL` variable.
 
-## Learn More
+## Architecture Notes
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Marketing pages** live under `src/app/(marketing)/` with a shared layout.
+- **Simulator pages** live under `src/app/simulator/` with a separate sidebar layout.
+- **Simulation logic** is in `src/lib/simulation/` — see the [simulation README](src/lib/simulation/README.md) for the API contract.
+- The simulator uses a **live-first, mock-fallback** pattern: it tries the real Reux backend first, and falls back to a local engine when the backend is unavailable.

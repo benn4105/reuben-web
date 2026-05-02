@@ -53,7 +53,7 @@ export default function PlosPage() {
           <div className="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-8 border border-[#8A2BE2]/30">
             <Rocket className="w-4 h-4 text-[#8A2BE2]" />
             <span className="text-sm font-medium tracking-wide text-[#8A2BE2] uppercase">
-              In Development
+              Planned Product
             </span>
           </div>
           
@@ -64,8 +64,11 @@ export default function PlosPage() {
             Personal Life Operating System
           </h2>
           
-          <p className="text-xl md:text-2xl text-gray-400 font-light mb-10 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-400 font-light mb-4 leading-relaxed">
             Enterprise-grade scenario modeling, brought to the individual. Simulate your finances, habits, and career decisions over decades.
+          </p>
+          <p className="text-base text-gray-500 mb-10">
+            PLOS is a planned future product. We are currently focused on shipping the Reux language and Business Simulator first.
           </p>
         </motion.div>
 
