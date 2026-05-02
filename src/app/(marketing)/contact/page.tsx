@@ -32,7 +32,7 @@ export default function ContactPage() {
             Get in Touch
           </h1>
           <p className="text-xl text-gray-400">
-            Have questions about Reux, PLOS, or enterprise simulation capabilities? We'd love to hear from you.
+            Have questions about Reux, PLOS, or enterprise simulation capabilities? We would love to hear from you.
           </p>
         </motion.div>
 
@@ -51,7 +51,7 @@ export default function ContactPage() {
               </div>
               <h2 className="text-2xl font-bold mb-4">Message Sent</h2>
               <p className="text-gray-400 mb-8">
-                Thanks for reaching out. We'll get back to you shortly.
+                Thanks for reaching out. We will get back to you shortly.
               </p>
               <Button onClick={() => setStatus("idle")} variant="outline">
                 Send another message

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
-// In a real app, this would use next-mdx-remote or gray-matter to read from a /content dir
 const POSTS: Record<string, { title: string; date: string; category: string; content: React.ReactNode }> = {
   "reux-prototype-complete": {
     title: "Reux Public Prototype Complete",
@@ -11,19 +10,19 @@ const POSTS: Record<string, { title: string; date: string; category: string; con
     content: (
       <>
         <p>
-          Today we're opening up the <strong>Business Simulator</strong>, a live demonstration of the Reux engine forecasting margins and risk based on operational inputs.
+          Today we are opening up the <strong>Business Simulator</strong>, a live demonstration of the Reux engine forecasting margins and risk based on operational inputs.
         </p>
         <p>
-          Reux is a domain-specific programming language designed specifically for the complex logic that underpins data-aware products. Over the past few months, we've built a working compiler, CLI, and integration layer that allows Next.js frontend applications to seamlessly pass inputs into Reux and receive strongly-typed responses.
+          Reux is a domain-specific programming language designed specifically for the complex logic that underpins data-aware products. Over the past few months, we have built a working compiler, CLI, and integration layer that allows Next.js frontend applications to seamlessly pass inputs into Reux and receive strongly-typed responses.
         </p>
         <p>
           Try the simulator today to see how we evaluate multiple scenarios, generate forecasts, and assign risk scores under the hood.
         </p>
       </>
-    )
+    ),
   },
   "why-we-are-building-reux": {
-    title: "Why We're Building a New Language for Operations",
+    title: "Why We Are Building a New Language for Operations",
     date: "2026-04-15",
     category: "Engineering",
     content: (
@@ -32,14 +31,14 @@ const POSTS: Record<string, { title: string; date: string; category: string; con
           Most web applications struggle with complex business rules. They start simple, but as requirements grow, state changes and decision logic become scattered across frontend components, API handlers, and database triggers.
         </p>
         <p>
-          We believe there's a better way. By extracting this logic into a specialized backend language—Reux—we can provide built-in primitives for scenarios, forecasts, dimensions, and objectives. 
+          We believe there is a better way. By extracting this logic into Reux, a specialized backend language, we can provide built-in primitives for scenarios, forecasts, dimensions, and objectives.
         </p>
         <p>
-          This ensures that the "rules of the game" are always auditable, testable, and separate from your presentation layer.
+          This ensures that the rules of the game are always auditable, testable, and separate from your presentation layer.
         </p>
       </>
-    )
-  }
+    ),
+  },
 };
 
 export function generateStaticParams() {
@@ -54,7 +53,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
 
 export default function BlogPostPage({ params }: { params: { slug: string } }) {
   const post = POSTS[params.slug as keyof typeof POSTS];
-  
+
   if (!post) {
     notFound();
   }
@@ -64,7 +63,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#00F0FF] rounded-full blur-[200px] mix-blend-screen opacity-5 pointer-events-none" />
 
       <div className="container mx-auto px-4 md:px-8 max-w-3xl relative z-10">
-        <Link 
+        <Link
           href="/blog"
           className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-white mb-12 transition-colors"
         >
