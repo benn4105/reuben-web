@@ -169,6 +169,11 @@ export default function ScenarioComparisonTable({
         </TableBody>
       </Table>
       </div>
+      {/* Mobile scroll hint */}
+      <div className="flex items-center justify-center gap-1.5 py-2 text-[10px] text-gray-500 sm:hidden" aria-hidden="true">
+        <span>Swipe to compare</span>
+        <span className="animate-pulse">→</span>
+      </div>
     </div>
   );
 }

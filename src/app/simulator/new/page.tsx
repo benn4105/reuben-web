@@ -13,7 +13,7 @@ import { decodeShareLink, encodeShareLink, copyToClipboard } from "@/lib/simulat
 import { saveDraft, loadDraft, clearDraft, formatDraftAge } from "@/lib/simulation/drafts";
 import type { SimulationTemplate } from "@/lib/simulation/templates";
 import type { ScenarioInputs, MetricSnapshot } from "@/lib/simulation/types";
-import { Plus, Trash2, Wand2, Share2, Check } from "lucide-react";
+import { Plus, Trash2, Wand2, Share2, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { SIMULATION_LIMITS } from "@/lib/simulation/constants";
@@ -676,21 +676,9 @@ export default function NewSimulationPage() {
                 icon="margin"
               />
               <MetricCard
-                label="Margin %"
-                value={liveMetrics.marginPct}
-                format="percent"
-                icon="margin"
-              />
-              <MetricCard
                 label="Productivity"
                 value={`${liveMetrics.productivity} u/e/w`}
                 icon="productivity"
-              />
-              <MetricCard
-                label="Workforce Load"
-                value={liveMetrics.workforceLoad}
-                format="percent"
-                icon="workforce"
               />
               <MetricCard
                 label="Risk Score"
@@ -698,18 +686,42 @@ export default function NewSimulationPage() {
                 icon="risk"
               />
               <MetricCard
-                label="Overtime Cost"
-                value={liveMetrics.overtimeCost}
-                format="currency"
-                icon="cost"
-              />
-              <MetricCard
-                label="Defect Cost"
-                value={liveMetrics.defectCost}
-                format="currency"
-                icon="cost"
+                label="Workforce Load"
+                value={liveMetrics.workforceLoad}
+                format="percent"
+                icon="workforce"
               />
             </div>
+
+            {/* Collapsible secondary metrics */}
+            <details className="group">
+              <summary className="flex items-center gap-1.5 cursor-pointer text-[11px] text-gray-500 hover:text-gray-300 transition-colors mt-2 select-none list-none [&::-webkit-details-marker]:hidden">
+                <ChevronDown size={14} className="group-open:hidden" />
+                <ChevronUp size={14} className="hidden group-open:block" />
+                <span className="group-open:hidden">Show 3 more metrics</span>
+                <span className="hidden group-open:inline">Hide extra metrics</span>
+              </summary>
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 mt-3">
+                <MetricCard
+                  label="Margin %"
+                  value={liveMetrics.marginPct}
+                  format="percent"
+                  icon="margin"
+                />
+                <MetricCard
+                  label="Overtime Cost"
+                  value={liveMetrics.overtimeCost}
+                  format="currency"
+                  icon="cost"
+                />
+                <MetricCard
+                  label="Defect Cost"
+                  value={liveMetrics.defectCost}
+                  format="currency"
+                  icon="cost"
+                />
+              </div>
+            </details>
           </div>
 
           {/* Reux Snippet */}

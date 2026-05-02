@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { encodeShareLink, copyToClipboard } from "@/lib/simulation/share";
 import { exportToCsv, exportToPdf } from "@/lib/simulation/export";
-import { Share2, Check, Download, FileText, FileSpreadsheet, Link2, Clock, MessageSquare, ArrowRight } from "lucide-react";
+import { Share2, Check, Download, FileText, FileSpreadsheet, Link2, Clock, MessageSquare, ArrowRight, BarChart3 } from "lucide-react";
 
 const CHART_COLORS = [
   "#64748b", // slate (baseline)
@@ -265,6 +265,18 @@ export default function SimulationResultsPage({
               <><Share2 size={14} /> Share Config</>
             )}
           </Button>
+          {comparison && altScenarios.length > 0 && (
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="gap-2 border-white/[0.08] text-gray-400 hover:text-white"
+            >
+              <Link href={`/simulator/${id}/compare`}>
+                <BarChart3 size={14} /> Compare
+              </Link>
+            </Button>
+          )}
           <Button
             onClick={() => router.push("/simulator/new")}
             variant="outline"
