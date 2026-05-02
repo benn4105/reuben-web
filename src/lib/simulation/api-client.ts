@@ -26,6 +26,7 @@ import type {
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_REUX_DEMO_URL?.replace(/\/$/, "");
 const STORAGE_KEY = "reux_business_simulations";
+const SESSION_STORAGE_KEY = "reux_demo_session_id";
 const DEFAULT_AVERAGE_ORDER_VALUE = 85;
 const DEFAULT_GROSS_MARGIN_RATE = 0.42;
 const OPERATIONS_SIMULATION_NAME = "operations_decision";
@@ -219,6 +220,27 @@ interface BackendRunResponse {
   };
 }
 
+interface BackendSavedRunRecord {
+  id: string;
+  name?: string;
+  simulationId: string;
+  createdAt: string;
+  expiresAt?: string;
+  session?: {
+    id: string;
+    isolated: boolean;
+    schema?: string;
+  };
+  scenarioCount: number;
+  bestMargin?: number;
+  bestMarginScenario?: string;
+  riskRange?: [number, number];
+  recommendedScenarioId?: string;
+  recommendedScenarioName?: string;
+  request: unknown;
+  response: BackendRunResponse;
+}
+
 interface BackendCompareResponse {
   comparison: BackendComparison;
   generatedAt: string;
@@ -307,6 +329,7 @@ async function fetchWithRetry<T>(path: string, options: FetchOptions = {}): Prom
         ...fetchOptions,
         headers: {
           "Content-Type": "application/json",
+          ...demoSessionHeader(),
           ...fetchOptions.headers,
         },
       });
@@ -371,39 +394,35 @@ export async function runReuxSimulationModel(
 }
 
 export async function runSimulation(request: RunSimulationRequest): Promise<RunSimulationResponse> {
-  let simulation: Simulation;
-  let runMeta: SavedRunMeta | undefined;
-
   try {
-    const genericResponse = await runReuxSimulationModel(OPERATIONS_SIMULATION_NAME, toReuxRunRequest(request));
-    simulation = toFrontendSimulationFromReuxRun(request.name, request, genericResponse);
-  } catch (error) {
-    if (error instanceof SimulationApiError && error.code === "simulation_execution_validation_failed") {
-      throw error;
-    }
-
     const backendResponse = await fetchWithRetry<BackendRunResponse>("/api/simulations/run", {
       method: "POST",
       body: JSON.stringify(toBackendRunRequest(request)),
       retries: 2,
     });
-    simulation = toFrontendSimulation(request.name, backendResponse);
+    const simulation = toFrontendSimulation(request.name, backendResponse);
+    const runMeta = backendResponse.run
+      ? toSavedRunMeta(backendResponse.run, request.name)
+      : undefined;
+    const savedSimulation = runMeta ? { ...simulation, id: runMeta.id } : simulation;
 
-    // Capture server-persisted run metadata when available
-    if (backendResponse.run) {
-      runMeta = {
-        id: backendResponse.run.id,
-        name: backendResponse.run.name,
-        createdAt: backendResponse.run.createdAt,
-        expiresAt: backendResponse.run.expiresAt,
-      };
-      // Use the server-assigned run id so the URL is shareable
-      simulation = { ...simulation, id: runMeta.id };
+    saveCachedSimulation(savedSimulation);
+    return { simulation: savedSimulation, run: runMeta };
+  } catch (error) {
+    if (
+      error instanceof SimulationApiError &&
+      error.status &&
+      error.status >= 400 &&
+      error.status < 500
+    ) {
+      throw error;
     }
-  }
 
-  saveCachedSimulation(simulation);
-  return { simulation, run: runMeta };
+    const genericResponse = await runReuxSimulationModel(OPERATIONS_SIMULATION_NAME, toReuxRunRequest(request));
+    const simulation = toFrontendSimulationFromReuxRun(request.name, request, genericResponse);
+    saveCachedSimulation(simulation);
+    return { simulation };
+  }
 }
 
 export async function listSimulations(): Promise<ListSimulationsResponse> {
@@ -425,11 +444,13 @@ export async function getSimulation(id: string): Promise<GetSimulationResponse> 
 export async function listSavedRuns(): Promise<ListSavedRunsResponse> {
   interface BackendRunSummary {
     id: string;
-    name: string;
+    name?: string;
+    simulationId?: string;
     createdAt: string;
     scenarioCount: number;
-    bestMargin: number;
-    riskRange: [number, number];
+    bestMargin?: number;
+    bestMarginScenario?: string;
+    riskRange?: [number, number];
     expiresAt?: string;
   }
 
@@ -441,24 +462,25 @@ export async function listSavedRuns(): Promise<ListSavedRunsResponse> {
   return {
     runs: data.runs.map((r): SavedRunSummary => ({
       id: r.id,
-      name: r.name,
+      name: r.name ?? r.simulationId ?? "Saved Business Simulation",
       createdAt: r.createdAt,
       scenarioCount: r.scenarioCount,
-      bestMargin: r.bestMargin,
-      riskRange: r.riskRange,
+      bestMargin: r.bestMargin ?? 0,
+      bestMarginScenario: r.bestMarginScenario,
+      riskRange: r.riskRange ?? [0, 0],
       expiresAt: r.expiresAt,
     })),
   };
 }
 
 export async function getSavedRun(id: string): Promise<GetSavedRunResponse> {
-  const data = await fetchWithRetry<BackendRunResponse>(`/api/simulation-runs/${encodeURIComponent(id)}`, {
+  const data = await fetchWithRetry<{ run: BackendSavedRunRecord }>(`/api/simulation-runs/${encodeURIComponent(id)}`, {
     method: "GET",
     retries: 1,
   });
 
-  const simulation = toFrontendSimulation(data.simulation.name, data);
-  // Override the locally-generated id with the server-persisted run id
+  const response = data.run.response;
+  const simulation = toFrontendSimulation(data.run.name ?? response.simulation.name, response);
   return { simulation: { ...simulation, id } };
 }
 
@@ -761,6 +783,7 @@ function labelFromId(value: string): string {
 
 function toBackendRunRequest(request: RunSimulationRequest) {
   return {
+    name: request.name,
     simulationId: "operations-decision",
     baseline: toBackendAssumptions(request.baseline),
     scenarios: request.scenarios.map(toBackendScenarioInput),
@@ -768,6 +791,16 @@ function toBackendRunRequest(request: RunSimulationRequest) {
       includeTimeline: true,
       includeReuxSource: true,
     },
+  };
+}
+
+function toSavedRunMeta(run: BackendRunResponse["run"], fallbackName: string): SavedRunMeta | undefined {
+  if (!run) return undefined;
+  return {
+    id: run.id,
+    name: run.name ?? fallbackName,
+    createdAt: run.createdAt,
+    expiresAt: run.expiresAt,
   };
 }
 
@@ -1006,4 +1039,37 @@ function slugify(value: string): string {
     .replace(/(^-|-$)/g, "");
 
   return slug || `scenario-${Date.now()}`;
+}
+
+function demoSessionHeader(): Record<string, string> {
+  const sessionId = demoSessionId();
+  return sessionId ? { "x-reux-demo-session": sessionId } : {};
+}
+
+function demoSessionId(): string {
+  if (typeof window === "undefined") return "";
+
+  try {
+    const existing = window.localStorage.getItem(SESSION_STORAGE_KEY);
+    if (existing && /^[a-z0-9]{8,16}$/.test(existing)) return existing;
+
+    const generated = randomSessionId();
+    window.localStorage.setItem(SESSION_STORAGE_KEY, generated);
+    return generated;
+  } catch {
+    return "";
+  }
+}
+
+function randomSessionId(): string {
+  const bytes = new Uint8Array(8);
+  if (typeof window !== "undefined" && window.crypto?.getRandomValues) {
+    window.crypto.getRandomValues(bytes);
+  } else {
+    for (let index = 0; index < bytes.length; index += 1) {
+      bytes[index] = Math.floor(Math.random() * 256);
+    }
+  }
+
+  return Array.from(bytes, (byte) => (byte % 36).toString(36)).join("");
 }

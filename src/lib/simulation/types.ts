@@ -174,6 +174,7 @@ export interface SavedRunSummary {
   createdAt: string;
   scenarioCount: number;
   bestMargin: number;
+  bestMarginScenario?: string;
   riskRange: [number, number];
   expiresAt?: string;
 }
