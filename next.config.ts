@@ -1,11 +1,20 @@
 import type { NextConfig } from "next";
-import { withSentryConfig } from "@sentry/nextjs";
+import { createRequire } from "node:module";
 
 const nextConfig: NextConfig = {
   /* config options here */
 };
 
-export default withSentryConfig(nextConfig, {
+const require = createRequire(import.meta.url);
+let withSentryConfig: undefined | ((config: NextConfig, options: Record<string, unknown>) => NextConfig);
+
+try {
+  ({ withSentryConfig } = require("@sentry/nextjs"));
+} catch {
+  withSentryConfig = undefined;
+}
+
+const sentryOptions = {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options
   org: "reuben",
@@ -20,4 +29,6 @@ export default withSentryConfig(nextConfig, {
   },
   disableLogger: true,
   automaticVercelMonitors: true,
-});
+};
+
+export default withSentryConfig ? withSentryConfig(nextConfig, sentryOptions) : nextConfig;
