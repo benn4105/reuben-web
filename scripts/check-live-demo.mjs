@@ -13,8 +13,13 @@ const apiUrl = normalizeUrl(args.get("api") ?? process.env.NEXT_PUBLIC_REUX_DEMO
 const checks = [];
 
 async function main() {
+  await checkWebsiteRoute("/", ["Try the Business Simulator", "Explore Reux", "Start Here"]);
+  await checkWebsiteRoute("/projects/reux", ["Reux Programming Language", "Try the Business Simulator", "Developer Preview", "Roadmap"]);
   await checkWebsiteRoute("/simulator", ["Business Simulator", "Reux Model Catalog"]);
+  await checkWebsiteRoute("/simulator/new", ["Build Simulation", "Preparing simulation model", "New Simulation"]);
   await checkWebsiteRoute("/projects/reux/demo", ["Try Business Simulator", "Open Fullscreen"]);
+  await checkWebsiteRoute("/docs", ["Developer Preview", "VS Code", "Try Business Simulator", "View Roadmap"]);
+  await checkWebsiteRoute("/projects/reux/roadmap", ["Roadmap", "Developer Preview Launch", "Business Simulator MVP"]);
   await checkApiHealth();
   await checkReuxCatalog();
   await checkOperationsRun();
@@ -52,13 +57,14 @@ async function checkWebsiteRoute(path, requiredText) {
 }
 
 async function checkApiHealth() {
-  const health = await fetchJson(`${apiUrl}/api/health`);
+  const { body: health, headers } = await fetchJsonWithHeaders(`${apiUrl}/api/health`);
   const productSimulations = Array.isArray(health.productSimulations) ? health.productSimulations : [];
+  const apiVersion = health.apiVersion ?? headers.get("x-reux-api-version");
 
   checks.push({
     name: "api health",
     ok: health.ok === true && productSimulations.includes("operations_decision"),
-    detail: `${productSimulations.length} executable models`,
+    detail: `${productSimulations.length} executable models${apiVersion ? `, api ${apiVersion}` : ", missing api version"}`,
   });
 }
 
@@ -123,6 +129,10 @@ async function checkOperationsRun() {
 }
 
 async function fetchJson(url, options) {
+  return (await fetchJsonWithHeaders(url, options)).body;
+}
+
+async function fetchJsonWithHeaders(url, options) {
   const response = await fetch(url, options);
   const text = await response.text();
 
@@ -131,7 +141,10 @@ async function fetchJson(url, options) {
   }
 
   try {
-    return JSON.parse(text);
+    return {
+      body: JSON.parse(text),
+      headers: response.headers,
+    };
   } catch (error) {
     throw new Error(`${url} did not return JSON: ${error instanceof Error ? error.message : String(error)}`);
   }

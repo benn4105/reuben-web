@@ -78,6 +78,7 @@ npm run check:live-demo
 
 The smoke check verifies:
 
+- The homepage, Reux project page, docs, roadmap, and simulator start path expose the right first-visitor CTAs.
 - `https://reuben-web.vercel.app/simulator` serves the public simulator and Reux model catalog.
 - `https://reuben-web.vercel.app/projects/reux/demo` links visitors into the Business Simulator.
 - The Railway demo service reports healthy executable Reux models.
