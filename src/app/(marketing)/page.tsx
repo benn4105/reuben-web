@@ -58,7 +58,7 @@ export default function Home() {
             className="text-lg md:text-xl text-gray-400 max-w-2xl mb-12"
           >
             Reuben builds data-aware tools for modern computing.
-            Try our public demo — a Business Simulator powered by the Reux prototype engine.
+            Try our public demo: a Business Simulator powered by the Reux prototype engine.
           </motion.p>
 
           <motion.div 

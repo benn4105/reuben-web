@@ -6,6 +6,10 @@ import { Terminal, Download, Code2, Eye, Database, Search, Zap, Send, LineChart,
 import IdeMockup from "@/components/ui/IdeMockup";
 
 const INSTALL_CMD = "npm install @reux/cli -g";
+const SOURCE_INSTALL_CMD = `git clone https://github.com/benn4105/Reux.git
+cd Reux
+npm install
+npm run onboarding:smoke`;
 
 const CAPABILITIES = [
   { icon: <Database size={20} className="text-emerald-400" />, title: "Schema + migration modeling" },
@@ -155,6 +159,18 @@ export default function DocsPage() {
                 <span className="text-xs text-gray-500 uppercase tracking-wide shrink-0 ml-4">Planned</span>
               </div>
             </div>
+
+            <div className="mt-6 rounded-xl overflow-hidden glass border border-white/10">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-black/50">
+                <span className="text-xs text-gray-500 font-mono">run from source today</span>
+                <span className="text-xs text-emerald-400">Available</span>
+              </div>
+              <div className="p-5 bg-[#0A0A0A]/80 overflow-x-auto">
+                <pre className="font-mono text-sm leading-relaxed text-gray-300">
+                  <code>{SOURCE_INSTALL_CMD}</code>
+                </pre>
+              </div>
+            </div>
           </section>
 
           {/* IDE Experience */}
@@ -163,10 +179,10 @@ export default function DocsPage() {
               <div className="p-2 rounded-lg bg-indigo-500/10">
                 <Code className="text-indigo-400" size={24} />
               </div>
-              <h2 className="text-2xl font-bold">First-Class IDE Experience</h2>
+              <h2 className="text-2xl font-bold">Editor Support Preview</h2>
             </div>
             <p className="text-gray-400 mb-8 leading-relaxed max-w-3xl">
-              The Reux Language Server (LSP) provides realtime type-checking, auto-completion, and inline diagnostics. It parses your schema, queries, and simulations to ensure total safety before you ever run a migration.
+              Reux has early VS Code support for syntax highlighting plus CLI-backed diagnostics, formatting, completions, hover text, and definition jumps. A true language-server process is still on the roadmap.
             </p>
             <div className="relative mb-16">
               <IdeMockup />
@@ -212,6 +228,7 @@ export default function DocsPage() {
             <ul className="space-y-3 text-sm text-amber-500/80 list-disc pl-5">
               <li><strong>Public npm package not finalized:</strong> The CLI and core runtime are still internal prototypes.</li>
               <li><strong>API stability:</strong> Syntax and language features may change before the public beta.</li>
+              <li><strong>Full language server:</strong> Current editor support is useful, but a dedicated LSP is still planned.</li>
               <li><strong>Not a full-stack language:</strong> Reux focuses purely on backend data modeling and decision logic. Product apps still use normal web frontend technologies.</li>
             </ul>
           </section>
