@@ -120,3 +120,38 @@ export interface CompareRequest {
 export interface CompareResponse {
   comparison: ComparisonResult;
 }
+
+export type ReuxSimulationValue = boolean | number | string;
+
+export interface ReuxSimulationAssumption {
+  name: string;
+  type: "boolean" | "number" | "string";
+  value: ReuxSimulationValue;
+  unit?: string;
+}
+
+export interface ReuxSimulationMetadata {
+  name: string;
+  dimensions: Record<string, string>;
+  forecast: {
+    periods: number;
+    unit: "day" | "week" | "month" | "quarter" | "year";
+  };
+  assumptions: ReuxSimulationAssumption[];
+  metrics: string[];
+  objectives: Array<{
+    metric: string;
+    direction: "maximize" | "minimize";
+  }>;
+  scenarios: string[];
+  sourceFile?: string;
+}
+
+export interface ListReuxSimulationsResponse {
+  simulations: ReuxSimulationMetadata[];
+}
+
+export interface GetReuxSimulationResponse {
+  simulation: ReuxSimulationMetadata;
+  sourceFile?: string;
+}

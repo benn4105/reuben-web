@@ -10,7 +10,7 @@ import ScenarioComparisonTable from "@/components/simulator/ScenarioComparisonTa
 import ReuxSnippetPanel from "@/components/simulator/ReuxSnippetPanel";
 import { LoadingMetrics, LoadingChart } from "@/components/simulator/LoadingState";
 import { ErrorState } from "@/components/simulator/EmptyState";
-import { getSimulation } from "@/lib/simulation/api-client";
+import { getSimulation } from "@/lib/simulation/mock-service";
 import type { Simulation } from "@/lib/simulation/types";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";

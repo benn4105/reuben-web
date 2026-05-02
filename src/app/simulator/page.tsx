@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import MetricCard from "@/components/simulator/MetricCard";
 import SimulationCard from "@/components/simulator/SimulationCard";
+import ReuxModelCatalog from "@/components/simulator/ReuxModelCatalog";
 import { EmptyState } from "@/components/simulator/EmptyState";
 import { LoadingCards, LoadingMetrics } from "@/components/simulator/LoadingState";
 import { SimulatorOnboarding } from "@/components/simulator/SimulatorOnboarding";
-import { listSimulations } from "@/lib/simulation/api-client";
+import { listSimulations } from "@/lib/simulation/mock-service";
 import type { SimulationSummary } from "@/lib/simulation/types";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -122,6 +123,8 @@ export default function SimulatorDashboard() {
           </div>
         </div>
       </div>
+
+      <ReuxModelCatalog />
 
       {/* Aggregate Metrics */}
       {loading ? (

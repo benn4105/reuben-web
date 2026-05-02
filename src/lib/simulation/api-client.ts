@@ -4,7 +4,9 @@ import type {
   CompareResponse,
   ComparisonResult,
   ForecastPoint,
+  GetReuxSimulationResponse,
   GetSimulationResponse,
+  ListReuxSimulationsResponse,
   ListSimulationsResponse,
   MetricDelta,
   MetricSnapshot,
@@ -14,12 +16,15 @@ import type {
   ScenarioResult,
   Simulation,
   SimulationSummary,
+  ReuxSimulationMetadata,
+  ReuxSimulationValue,
 } from "./types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_REUX_DEMO_URL?.replace(/\/$/, "");
 const STORAGE_KEY = "reux_business_simulations";
 const DEFAULT_AVERAGE_ORDER_VALUE = 85;
 const DEFAULT_GROSS_MARGIN_RATE = 0.42;
+const OPERATIONS_SIMULATION_NAME = "operations_decision";
 
 export function hasLiveApi(): boolean {
   return Boolean(API_BASE_URL);
@@ -42,7 +47,7 @@ export async function checkLiveApiStatus(): Promise<LiveApiStatus> {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/simulations`, {
+    const response = await fetch(`${API_BASE_URL}/api/health`, {
       headers: { Accept: "application/json" },
       signal: AbortSignal.timeout(5000),
     });
@@ -56,11 +61,18 @@ export async function checkLiveApiStatus(): Promise<LiveApiStatus> {
       };
     }
 
+    const health = await response.json().catch(() => ({}));
+    const productSimulations = Array.isArray(health.productSimulations)
+      ? health.productSimulations.length
+      : undefined;
+
     return {
       configured: true,
       ok: true,
       url: API_BASE_URL,
-      message: "Connected to the live Reux backend.",
+      message: productSimulations
+        ? `Connected to the live Reux backend with ${productSimulations} executable models.`
+        : "Connected to the live Reux backend.",
     };
   } catch (error) {
     return {
@@ -215,6 +227,61 @@ interface BackendTemplateResponse {
   exampleScenarios: BackendScenarioInput[];
 }
 
+interface ReuxSimulationPeriodResult {
+  period: number;
+  label: string;
+  assumptions: Record<string, ReuxSimulationValue>;
+  assumptionUnits: Record<string, string>;
+  metrics: Record<string, number>;
+  metricUnits: Record<string, string>;
+}
+
+interface ReuxSimulationScenarioRunResult {
+  name: string;
+  periods: ReuxSimulationPeriodResult[];
+}
+
+interface ReuxSimulationRunComparison {
+  baseline: string;
+  finalPeriod: number;
+  scenarios: Array<{
+    name: string;
+    metricDeltas: Record<string, number>;
+    metricUnits: Record<string, string>;
+    firstDivergence?: {
+      period: number;
+      label: string;
+      metricDeltas: Record<string, number>;
+      metricUnits: Record<string, string>;
+    };
+  }>;
+  explanations: Array<{
+    metric: string;
+    objective?: "maximize" | "minimize";
+    preferredScenario?: string;
+    preferredDelta?: number;
+    summary: string;
+  }>;
+}
+
+interface ReuxSimulationRunResult {
+  name: string;
+  model: "prototype-formula-forecast";
+  dimensions: Record<string, string>;
+  forecast: ReuxSimulationMetadata["forecast"];
+  objectives: ReuxSimulationMetadata["objectives"];
+  periods: ReuxSimulationPeriodResult[];
+  scenarios?: ReuxSimulationScenarioRunResult[];
+  comparison?: ReuxSimulationRunComparison;
+}
+
+interface ReuxSimulationRunResponse {
+  simulation: ReuxSimulationMetadata;
+  run: ReuxSimulationRunResult;
+  generatedAt: string;
+  sourceFile?: string;
+}
+
 async function fetchWithRetry<T>(path: string, options: FetchOptions = {}): Promise<T> {
   if (!API_BASE_URL) {
     throw new Error("NEXT_PUBLIC_REUX_DEMO_URL is not configured.");
@@ -268,13 +335,50 @@ async function fetchWithRetry<T>(path: string, options: FetchOptions = {}): Prom
   throw lastError ?? new Error("API request failed.");
 }
 
-export async function runSimulation(request: RunSimulationRequest): Promise<RunSimulationResponse> {
-  const backendResponse = await fetchWithRetry<BackendRunResponse>("/api/simulations/run", {
+export async function listReuxSimulationModels(): Promise<ListReuxSimulationsResponse> {
+  return fetchWithRetry<ListReuxSimulationsResponse>("/api/reux/simulations", {
+    method: "GET",
+    retries: 2,
+  });
+}
+
+export async function getReuxSimulationModel(name: string): Promise<GetReuxSimulationResponse> {
+  return fetchWithRetry<GetReuxSimulationResponse>(`/api/reux/simulations/${encodeURIComponent(name)}`, {
+    method: "GET",
+    retries: 2,
+  });
+}
+
+export async function runReuxSimulationModel(
+  name: string,
+  request: Record<string, unknown> = {},
+): Promise<ReuxSimulationRunResponse> {
+  return fetchWithRetry<ReuxSimulationRunResponse>(`/api/reux/simulations/${encodeURIComponent(name)}/run`, {
     method: "POST",
-    body: JSON.stringify(toBackendRunRequest(request)),
+    body: JSON.stringify({ simulationName: name, ...request }),
     retries: 3,
   });
-  const simulation = toFrontendSimulation(request.name, backendResponse);
+}
+
+export async function runSimulation(request: RunSimulationRequest): Promise<RunSimulationResponse> {
+  let simulation: Simulation;
+
+  try {
+    const genericResponse = await runReuxSimulationModel(OPERATIONS_SIMULATION_NAME, toReuxRunRequest(request));
+    simulation = toFrontendSimulationFromReuxRun(request.name, request, genericResponse);
+  } catch (error) {
+    if (error instanceof SimulationApiError && error.code === "simulation_execution_validation_failed") {
+      throw error;
+    }
+
+    const backendResponse = await fetchWithRetry<BackendRunResponse>("/api/simulations/run", {
+      method: "POST",
+      body: JSON.stringify(toBackendRunRequest(request)),
+      retries: 2,
+    });
+    simulation = toFrontendSimulation(request.name, backendResponse);
+  }
+
   saveCachedSimulation(simulation);
   return { simulation };
 }
@@ -327,18 +431,265 @@ export async function compareScenarios(request: CompareRequest): Promise<Compare
 }
 
 export async function getOperationsDecision(): Promise<{ baseline: ScenarioInputs; scenarios: ScenarioInputs[] }> {
-  const template = await fetchWithRetry<BackendTemplateResponse>("/api/simulations/operations-decision");
-  const baseline = toFrontendInputs("Current Operations", template.defaultAssumptions);
+  try {
+    const template = await fetchWithRetry<BackendTemplateResponse>("/api/simulations/operations-decision");
+    const baseline = toFrontendInputs("Current Operations", template.defaultAssumptions);
+
+    return {
+      baseline,
+      scenarios: template.exampleScenarios.map(scenario =>
+        toFrontendInputs(scenario.name, {
+          ...template.defaultAssumptions,
+          ...scenario.assumptions,
+        })
+      ),
+    };
+  } catch {
+    const response = await runReuxSimulationModel(OPERATIONS_SIMULATION_NAME);
+    const baseline = toFrontendInputsFromReuxAssumptions(
+      "Current Operations",
+      response.run.periods[0]?.assumptions ?? {},
+      response.run.forecast.periods,
+    );
+
+    const executableScenarios = (response.run.scenarios ?? []).filter((scenario) => slugify(scenario.name) !== "baseline");
+
+    return {
+      baseline,
+      scenarios: executableScenarios.map((scenario) =>
+        toFrontendInputsFromReuxAssumptions(
+          labelFromId(scenario.name),
+          scenario.periods[0]?.assumptions ?? {},
+          response.run.forecast.periods,
+        )
+      ),
+    };
+  }
+}
+
+function toReuxRunRequest(request: RunSimulationRequest) {
+  return {
+    assumptions: toReuxAssumptionOverrides(request.baseline),
+    scenarios: request.scenarios.map((scenario) => ({
+      name: scenario.name,
+      overrides: toReuxAssumptionOverrides(scenario),
+    })),
+  };
+}
+
+function toReuxAssumptionOverrides(inputs: ScenarioInputs): Record<string, ReuxSimulationValue> {
+  return {
+    employees: inputs.employees,
+    averageHourlyCost: inputs.avgHourlyCost,
+    weeklyDemand: inputs.weeklyDemand,
+    averageOrderValue: DEFAULT_AVERAGE_ORDER_VALUE,
+    grossMarginRate: DEFAULT_GROSS_MARGIN_RATE,
+    productivityGainRate: inputs.productivityGainPct / 100,
+    overtimeReductionRate: inputs.overtimeReductionPct / 100,
+    supplierDelayRiskRate: inputs.supplierDelayRiskPct / 100,
+    defectRate: inputs.errorDefectRatePct / 100,
+  };
+}
+
+function toFrontendSimulationFromReuxRun(
+  name: string,
+  request: RunSimulationRequest,
+  response: ReuxSimulationRunResponse,
+): Simulation {
+  const createdAt = response.generatedAt;
+  const baseline = toScenarioResultFromReuxPeriods(
+    "baseline",
+    request.baseline.name,
+    request.baseline,
+    response.run.periods,
+  );
+  const executableScenarios = (response.run.scenarios ?? []).filter((scenario) => slugify(scenario.name) !== "baseline");
+  const scenarios = executableScenarios.map((scenario, index) =>
+    toScenarioResultFromReuxPeriods(
+      slugify(scenario.name),
+      request.scenarios[index]?.name ?? labelFromId(scenario.name),
+      request.scenarios[index],
+      scenario.periods,
+    )
+  );
+  const comparison = toComparisonResultFromReuxRun(response.run, baseline, scenarios);
+
+  return {
+    id: `live_${Date.now()}`,
+    name,
+    createdAt,
+    updatedAt: response.generatedAt,
+    status: "completed",
+    baselineInputs: baseline.inputs,
+    scenarios: [baseline, ...scenarios],
+    comparison,
+  };
+}
+
+function toScenarioResultFromReuxPeriods(
+  id: string,
+  name: string,
+  providedInputs: ScenarioInputs | undefined,
+  periods: ReuxSimulationPeriodResult[],
+): ScenarioResult {
+  const firstPeriod = periods[0];
+  const finalPeriod = periods[periods.length - 1] ?? firstPeriod;
+  const inputs = providedInputs ?? toFrontendInputsFromReuxAssumptions(name, finalPeriod?.assumptions ?? {}, periods.length);
+
+  return {
+    id,
+    inputs,
+    summary: toMetricSnapshotFromReuxMetrics(finalPeriod?.metrics ?? {}),
+    forecast: periods.map(toForecastPointFromReuxPeriod),
+    reuxSnippet: generateReuxSnippet(inputs),
+  };
+}
+
+function toComparisonResultFromReuxRun(
+  run: ReuxSimulationRunResult,
+  baseline: ScenarioResult,
+  scenarios: ScenarioResult[],
+): ComparisonResult {
+  const recommendation = findReuxRecommendation(run, baseline, scenarios);
 
   return {
     baseline,
-    scenarios: template.exampleScenarios.map(scenario =>
-      toFrontendInputs(scenario.name, {
-        ...template.defaultAssumptions,
-        ...scenario.assumptions,
-      })
+    scenarios,
+    deltas: Object.fromEntries(
+      scenarios.map((scenario) => [
+        scenario.id,
+        buildReuxMetricDeltas(baseline, scenario),
+      ])
     ),
+    recommendedId: recommendation.recommendedId,
+    recommendationReason: recommendation.reason,
+    firstDivergenceWeek: recommendation.firstDivergenceWeek,
   };
+}
+
+function findReuxRecommendation(
+  run: ReuxSimulationRunResult,
+  baseline: ScenarioResult,
+  scenarios: ScenarioResult[],
+): { recommendedId: string; reason: string; firstDivergenceWeek: number } {
+  const preferredName = run.comparison?.explanations.find((explanation) => explanation.preferredScenario)?.preferredScenario;
+  const preferredSlug = preferredName ? slugify(preferredName) : undefined;
+  const preferred = preferredName
+    ? scenarios.find((scenario) => slugify(scenario.inputs.name) === preferredSlug)
+    : undefined;
+
+  if (preferred) {
+    const divergence = run.comparison?.scenarios.find((scenario) => slugify(scenario.name) === preferredSlug)?.firstDivergence?.period ?? 1;
+    const summaries = run.comparison?.explanations
+      .filter((explanation) => explanation.preferredScenario === preferredName)
+      .map((explanation) => explanation.summary);
+
+    return {
+      recommendedId: preferred.id,
+      reason: summaries && summaries.length > 0
+        ? summaries.join(" ")
+        : `${preferred.inputs.name} is recommended by the Reux objective ranking.`,
+      firstDivergenceWeek: divergence,
+    };
+  }
+
+  const best = [baseline, ...scenarios].sort((a, b) => {
+    const marginDelta = b.summary.margin - a.summary.margin;
+    if (marginDelta !== 0) return marginDelta;
+    return a.summary.riskScore - b.summary.riskScore;
+  })[0] ?? baseline;
+
+  return {
+    recommendedId: best.id,
+    reason: best.id === baseline.id
+      ? "The baseline configuration is currently the strongest Reux-ranked option."
+      : `${best.inputs.name} has the strongest margin profile among the evaluated Reux scenarios.`,
+    firstDivergenceWeek: 1,
+  };
+}
+
+function buildReuxMetricDeltas(baseline: ScenarioResult, scenario: ScenarioResult): MetricDelta[] {
+  return [
+    toReuxMetricDelta("Operating Cost", baseline.summary.operatingCost, scenario.summary.operatingCost, true),
+    toReuxMetricDelta("Productivity", baseline.summary.productivity, scenario.summary.productivity, false),
+    toReuxMetricDelta("Margin", baseline.summary.margin, scenario.summary.margin, false),
+    toReuxMetricDelta("Risk Score", baseline.summary.riskScore, scenario.summary.riskScore, true),
+  ];
+}
+
+function toReuxMetricDelta(label: string, baseline: number, scenario: number, lowerIsBetter: boolean): MetricDelta {
+  const delta = scenario - baseline;
+  const isPositive = lowerIsBetter ? delta <= 0 : delta >= 0;
+
+  return {
+    label,
+    baseline,
+    scenario,
+    delta,
+    deltaPct: baseline !== 0 ? (delta / Math.abs(baseline)) * 100 : 0,
+    direction: delta === 0 ? "neutral" : isPositive ? "positive" : "negative",
+  };
+}
+
+function toFrontendInputsFromReuxAssumptions(
+  name: string,
+  assumptions: Record<string, ReuxSimulationValue>,
+  forecastWeeks: number,
+): ScenarioInputs {
+  return {
+    name,
+    employees: numberAssumption(assumptions.employees, 50),
+    avgHourlyCost: numberAssumption(assumptions.averageHourlyCost, 32),
+    weeklyDemand: numberAssumption(assumptions.weeklyDemand, 1200),
+    productivityGainPct: numberAssumption(assumptions.productivityGainRate, 0) * 100,
+    overtimeReductionPct: numberAssumption(assumptions.overtimeReductionRate, 0) * 100,
+    supplierDelayRiskPct: numberAssumption(assumptions.supplierDelayRiskRate, 0) * 100,
+    errorDefectRatePct: numberAssumption(assumptions.defectRate, 0) * 100,
+    forecastWeeks: forecastWeeks || 12,
+  };
+}
+
+function toMetricSnapshotFromReuxMetrics(metrics: Record<string, number>): MetricSnapshot {
+  const revenue = Math.round(metrics.revenue ?? 0);
+  const margin = Math.round(metrics.margin ?? metrics.marginDelta ?? 0);
+
+  return {
+    revenue,
+    operatingCost: Math.round(metrics.operatingCost ?? 0),
+    margin,
+    marginPct: revenue > 0 ? Math.round((margin / revenue) * 1000) / 10 : 0,
+    productivity: Math.round((metrics.productivity ?? 0) * 10) / 10,
+    workforceLoad: Math.round((metrics.workforceLoad ?? 0) * 10) / 10,
+    riskScore: Math.round((metrics.riskScore ?? 0) * 10) / 10,
+    overtimeCost: 0,
+    defectCost: Math.round(metrics.defectCost ?? 0),
+    supplierDelayCost: 0,
+  };
+}
+
+function toForecastPointFromReuxPeriod(point: ReuxSimulationPeriodResult): ForecastPoint {
+  const metrics = toMetricSnapshotFromReuxMetrics(point.metrics);
+
+  return {
+    week: point.period,
+    label: point.label,
+    revenue: metrics.revenue,
+    operatingCost: metrics.operatingCost,
+    margin: metrics.margin,
+    productivity: metrics.productivity,
+    riskScore: metrics.riskScore,
+    workforceLoad: metrics.workforceLoad,
+  };
+}
+
+function numberAssumption(value: ReuxSimulationValue | undefined, fallback: number): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
+}
+
+function labelFromId(value: string): string {
+  return value
+    .replace(/[_-]+/g, " ")
+    .replace(/\b\w/g, (match) => match.toUpperCase());
 }
 
 function toBackendRunRequest(request: RunSimulationRequest) {

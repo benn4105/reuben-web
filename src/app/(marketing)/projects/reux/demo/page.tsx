@@ -37,14 +37,19 @@ export default async function ReuxDemoPage({ searchParams }: ReuxDemoPageProps) 
             </p>
           </div>
 
-          {configured && (
-            <AnimatedButton href={demoSrc} variant="secondary" external>
-              <span className="inline-flex items-center gap-2">
-                Open Fullscreen
-                <ExternalLink className="h-4 w-4" />
-              </span>
+          <div className="flex flex-wrap gap-3">
+            <AnimatedButton href="/simulator" variant="primary">
+              Try Business Simulator
             </AnimatedButton>
-          )}
+            {configured && (
+              <AnimatedButton href={demoSrc} variant="secondary" external>
+                <span className="inline-flex items-center gap-2">
+                  Open Fullscreen
+                  <ExternalLink className="h-4 w-4" />
+                </span>
+              </AnimatedButton>
+            )}
+          </div>
         </div>
 
         {configured ? (

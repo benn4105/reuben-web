@@ -23,7 +23,7 @@ interface ReuxSnippetPanelProps {
 function highlightSyntax(code: string): React.ReactNode[] {
   function highlightLine(line: string, lineIdx: number): React.ReactNode {
     const tokens: React.ReactNode[] = [];
-    const regex = /(\b(?:simulate|forecast|if|then|else|return|let|mut)\b)|(\b\d+\.?\d*\b)|(\w+)(?=\s*=)|("(?:[^"\\]|\\.)*")|(\S+|\s+)/g;
+    const regex = /(\b(?:module|simulate|dimension|formula|objective|scenario|change|forecast|maximize|minimize|if|then|else|return|let|mut)\b)|(\b\d+\.?\d*\b)|(\w+)(?=\s*=)|("(?:[^"\\]|\\.)*")|(\S+|\s+)/g;
     let match: RegExpExecArray | null;
     let lastIndex = 0;
 

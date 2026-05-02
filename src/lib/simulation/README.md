@@ -27,7 +27,30 @@ Do not include a trailing slash.
 
 ## Hosted Backend Contract
 
-The live Reux demo exposes:
+The live Reux demo exposes two compatible simulator paths:
+
+### Generic Reux Simulation API
+
+This is the primary path for the public Business Simulator because it proves the UI is running against executable Reux models, not only a product-specific adapter.
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/health` | Check deployment health and available executable models. |
+| `GET` | `/api/reux/simulations` | List executable Reux models for the website catalog. |
+| `GET` | `/api/reux/simulations/:name` | Load one model's dimensions, assumptions, objectives, metrics, and scenarios. |
+| `POST` | `/api/reux/simulations/:name/run` | Execute a model with runtime assumption/scenario overrides. |
+
+For the Business Simulator, `api-client.ts` runs:
+
+```text
+POST /api/reux/simulations/operations_decision/run
+```
+
+The generic response is normalized back into the shared UI shape used by the dashboard, charts, recommendation panel, and Reux transparency panel.
+
+### Business Simulator Adapter API
+
+This route remains as a compatibility fallback and a product-specific adapter contract.
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |
@@ -36,7 +59,7 @@ The live Reux demo exposes:
 | `POST` | `/api/simulations/run` | Run a baseline and scenario set. |
 | `POST` | `/api/scenarios/compare` | Compare already-run scenario results. |
 
-The frontend currently calls `POST /api/simulations/run` for new simulations and caches the normalized result in browser `localStorage` under `reux_business_simulations`.
+New simulations are cached in browser `localStorage` under `reux_business_simulations` after the live response is normalized. If the live backend is unavailable, `mock-service.ts` falls back to the local mock engine so the UI remains usable during local development.
 
 ## Shape Mapping
 

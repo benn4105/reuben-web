@@ -112,14 +112,35 @@ export function generateForecast(inputs: ScenarioInputs): ForecastPoint[] {
 }
 
 export function generateReuxSnippet(inputs: ScenarioInputs): string {
-  return `simulate operations_throughput {
+  return `module business_simulator
+
+simulate operations_decision {
+  dimension product = business_simulation
+  dimension domain = operations
+  dimension audience = enterprise
+
   employees = ${inputs.employees}
-  avg_hourly_cost = ${inputs.avgHourlyCost}
-  weekly_demand = ${inputs.weeklyDemand}
-  productivity_gain = ${(inputs.productivityGainPct / 100).toFixed(2)}
-  overtime_reduction = ${(inputs.overtimeReductionPct / 100).toFixed(2)}
-  supplier_delay_risk = ${(inputs.supplierDelayRiskPct / 100).toFixed(2)}
-  error_defect_rate = ${(inputs.errorDefectRatePct / 100).toFixed(2)}
+  averageHourlyCost = ${inputs.avgHourlyCost} USD
+  weeklyDemand = ${inputs.weeklyDemand}
+  averageOrderValue = 85 USD
+  grossMarginRate = 42 percent
+  productivityGainRate = ${(inputs.productivityGainPct / 100).toFixed(2)}
+  overtimeReductionRate = ${(inputs.overtimeReductionPct / 100).toFixed(2)}
+  supplierDelayRiskRate = ${(inputs.supplierDelayRiskPct / 100).toFixed(2)}
+  defectRate = ${(inputs.errorDefectRatePct / 100).toFixed(3)}
+
+  formula revenue = weeklyDemand * averageOrderValue
+  formula productivity = (weeklyDemand / employees) * (1 + productivityGainRate)
+  formula workforceLoad = weeklyDemand / (employees * (1 + productivityGainRate))
+  formula operatingCost = employees * averageHourlyCost
+  formula margin = (revenue * grossMarginRate) - operatingCost
+  formula riskScore = (supplierDelayRiskRate + defectRate) * 100
+
+  objective maximize margin
+  objective maximize productivity
+  objective minimize operatingCost
+  objective minimize riskScore
+
   forecast ${inputs.forecastWeeks} weeks
 }`;
 }
