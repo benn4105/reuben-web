@@ -8,7 +8,7 @@ import ReuxModelCatalog from "@/components/simulator/ReuxModelCatalog";
 import { EmptyState } from "@/components/simulator/EmptyState";
 import { LoadingCards, LoadingMetrics } from "@/components/simulator/LoadingState";
 import { SimulatorOnboarding } from "@/components/simulator/SimulatorOnboarding";
-import { listSimulations } from "@/lib/simulation/mock-service";
+import { listSimulations, deleteSimulation } from "@/lib/simulation/mock-service";
 import type { SimulationSummary } from "@/lib/simulation/types";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,15 @@ export default function SimulatorDashboard() {
       setError(err instanceof Error ? err.message : "Failed to load simulations");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleDelete(id: string) {
+    try {
+      await deleteSimulation(id);
+      setSimulations((prev) => prev.filter((s) => s.id !== id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete simulation");
     }
   }
 
@@ -218,7 +227,7 @@ export default function SimulatorDashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
             {simulations.map(sim => (
-              <SimulationCard key={sim.id} simulation={sim} />
+              <SimulationCard key={sim.id} simulation={sim} onDelete={handleDelete} />
             ))}
           </div>
         )}

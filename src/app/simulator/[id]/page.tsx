@@ -14,8 +14,15 @@ import { getSimulation } from "@/lib/simulation/mock-service";
 import type { Simulation } from "@/lib/simulation/types";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { encodeShareLink, copyToClipboard } from "@/lib/simulation/share";
-import { Share2, Check } from "lucide-react";
+import { exportToCsv, exportToPdf } from "@/lib/simulation/export";
+import { Share2, Check, Download, FileText, FileSpreadsheet } from "lucide-react";
 
 const CHART_COLORS = [
   "#64748b", // slate (baseline)
@@ -155,6 +162,26 @@ export default function SimulationResultsPage({
           </p>
         </div>
         <div className="flex gap-2 shrink-0">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 border-white/[0.08] text-gray-400 hover:text-white"
+              >
+                <Download size={14} /> Export
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-40 border-white/[0.08] bg-[#0a0a0a]">
+              <DropdownMenuItem onClick={() => exportToPdf(simulation)} className="cursor-pointer gap-2 text-gray-300 hover:text-white focus:text-white">
+                <FileText size={14} className="text-rose-400" /> PDF Report
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => exportToCsv(simulation)} className="cursor-pointer gap-2 text-gray-300 hover:text-white focus:text-white">
+                <FileSpreadsheet size={14} className="text-emerald-400" /> CSV Data
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Button
             onClick={handleShare}
             variant="outline"

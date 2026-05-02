@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { SimulationSummary } from "@/lib/simulation/types";
-import { ArrowRight, Clock, GitBranch } from "lucide-react";
+import { ArrowRight, Clock, GitBranch, Trash2 } from "lucide-react";
 
 // shadcn / Radix components
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardAction } from "@/components/ui/card";
@@ -11,6 +11,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardAction } from
 interface SimulationCardProps {
   simulation: SimulationSummary;
   className?: string;
+  onDelete?: (id: string) => void;
 }
 
 function formatCurrency(value: number): string {
@@ -43,6 +44,7 @@ const STATUS_COLORS: Record<string, string> = {
 export default function SimulationCard({
   simulation,
   className,
+  onDelete,
 }: SimulationCardProps) {
   return (
     <Link href={`/simulator/${simulation.id}`}>
@@ -53,13 +55,26 @@ export default function SimulationCard({
         )}
       >
         <CardHeader>
-          <div className="flex items-center gap-2">
-            <div className={cn("w-2 h-2 rounded-full", STATUS_COLORS[simulation.status])} />
+          <div className="flex items-center gap-2 pr-8">
+            <div className={cn("w-2 h-2 rounded-full shrink-0", STATUS_COLORS[simulation.status])} />
             <CardTitle className="text-sm font-semibold text-foreground truncate">
               {simulation.name}
             </CardTitle>
           </div>
-          <CardAction>
+          <CardAction className="flex items-center gap-2">
+            {onDelete && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onDelete(simulation.id);
+                }}
+                className="text-muted-foreground/30 hover:text-rose-400 transition-colors p-1"
+                title="Delete simulation"
+              >
+                <Trash2 size={14} />
+              </button>
+            )}
             <ArrowRight
               size={16}
               className="text-muted-foreground/30 group-hover:text-muted-foreground group-hover:translate-x-0.5 transition-all"

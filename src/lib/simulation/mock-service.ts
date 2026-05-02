@@ -135,6 +135,15 @@ async function mockGetSimulation(id: string): Promise<GetSimulationResponse> {
   return { simulation };
 }
 
+async function mockDeleteSimulation(id: string): Promise<void> {
+  await delay(300);
+  const index = simulations.findIndex(s => s.id === id);
+  if (index === -1) {
+    throw new Error(`Simulation not found: ${id}`);
+  }
+  simulations.splice(index, 1);
+}
+
 async function mockCompareScenarios(request: CompareRequest): Promise<CompareResponse> {
   await delay(500);
 
@@ -208,6 +217,11 @@ export async function getSimulation(id: string): Promise<GetSimulationResponse> 
   }
 
   return mockGetSimulation(id);
+}
+
+export async function deleteSimulation(id: string): Promise<void> {
+  // If there's a live API, it should implement this too, but for now we only support it locally
+  return mockDeleteSimulation(id);
 }
 
 export async function compareScenarios(request: CompareRequest): Promise<CompareResponse> {

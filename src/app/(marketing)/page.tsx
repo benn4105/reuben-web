@@ -2,9 +2,16 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import HeroScene from "@/components/3d/HeroScene";
+import dynamic from "next/dynamic";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import ProjectCard from "@/components/ui/ProjectCard";
+
+const HeroScene = dynamic(() => import("@/components/3d/HeroScene"), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 bg-gradient-to-b from-[#00F0FF]/10 to-transparent animate-pulse" />
+  ),
+});
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
