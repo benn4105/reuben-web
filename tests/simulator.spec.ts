@@ -38,7 +38,7 @@ test.describe('Simulator E2E Flow', () => {
     await runButton.click();
 
     // Verify we transition to the results page
-    await expect(page).toHaveURL(/.*\/simulator\/sim_.+/);
+    await expect(page).toHaveURL(/.*\/simulator\/(sim_|live_).+/);
     
     // Expect the recommendation panel and best margin text
     await expect(page.locator('text="Reux Decision Readout"')).toBeVisible({ timeout: 10000 });

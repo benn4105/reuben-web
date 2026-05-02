@@ -6,12 +6,15 @@ const nextConfig: NextConfig = {
 };
 
 const require = createRequire(import.meta.url);
+const sentryEnabled = Boolean(process.env.SENTRY_AUTH_TOKEN);
 let withSentryConfig: undefined | ((config: NextConfig, options: Record<string, unknown>) => NextConfig);
 
-try {
-  ({ withSentryConfig } = require("@sentry/nextjs"));
-} catch {
-  withSentryConfig = undefined;
+if (sentryEnabled) {
+  try {
+    ({ withSentryConfig } = require("@sentry/nextjs"));
+  } catch {
+    withSentryConfig = undefined;
+  }
 }
 
 const sentryOptions = {
