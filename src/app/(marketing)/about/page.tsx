@@ -69,38 +69,38 @@ export default function AboutPage() {
               
               <div className="relative z-10 flex flex-col items-center gap-4">
                 {/* Foundation / Parent Layer */}
-                <div className="w-full max-w-3xl glass border border-white/20 p-8 md:p-10 rounded-2xl text-center shadow-[0_0_30px_rgba(255,255,255,0.05)]">
-                  <h4 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-2 uppercase">Reuben</h4>
-                  <p className="text-sm md:text-lg text-gray-400 font-medium">Ecosystem & Parent Brand</p>
+                <div className="w-full max-w-[800px] glass border border-white/20 p-8 md:py-12 md:px-12 rounded-2xl text-center shadow-[0_0_30px_rgba(255,255,255,0.05)]">
+                  <h3 className="text-3xl md:text-[42px] leading-none font-black text-white tracking-tight mb-2 uppercase">Reuben</h3>
+                  <p className="text-sm md:text-base text-gray-400 font-medium">Ecosystem & Parent Brand</p>
                 </div>
                 
                 {/* Connector */}
-                <div className="flex flex-col items-center justify-center w-full my-2">
-                  <div className="h-12 w-px bg-gradient-to-b from-white/20 to-[#00F0FF]/50 relative">
+                <div className="flex flex-col items-center justify-center w-full my-1">
+                  <div className="h-8 w-px bg-gradient-to-b from-white/20 to-[#00F0FF]/50 relative">
                     <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 border-b-2 border-r-2 border-[#00F0FF]/50 rotate-45" />
                   </div>
                 </div>
 
                 {/* Engine Layer */}
-                <div className="w-full max-w-2xl glass border border-[#00F0FF]/30 bg-[#00F0FF]/10 p-8 rounded-2xl text-center shadow-[0_0_30px_rgba(0,240,255,0.1)]">
-                  <h4 className="text-2xl md:text-4xl font-black text-white tracking-tight mb-2">Reux</h4>
+                <div className="w-full max-w-[720px] glass border border-[#00F0FF]/30 bg-[#00F0FF]/10 p-6 md:py-10 md:px-10 rounded-2xl text-center shadow-[0_0_30px_rgba(0,240,255,0.1)]">
+                  <h3 className="text-2xl md:text-[36px] leading-none font-black text-white tracking-tight mb-2">Reux</h3>
                   <p className="text-sm md:text-base text-[#00F0FF]/80 font-medium">Data-aware workflow & simulation language</p>
                 </div>
 
                 {/* Connector */}
-                <div className="flex flex-col items-center justify-center w-full my-2">
-                  <div className="h-12 w-px bg-gradient-to-b from-[#00F0FF]/50 to-white/20 relative">
-                    <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 border-b-2 border-r-2 border-white/20 rotate-45" />
+                <div className="flex flex-col items-center justify-center w-full my-1">
+                  <div className="h-8 w-px bg-gradient-to-b from-[#00F0FF]/50 to-[#00F0FF]/50 relative">
+                    <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 border-b-2 border-r-2 border-[#00F0FF]/50 rotate-45" />
                   </div>
                 </div>
 
                 {/* Application Layer */}
-                <div className="w-full flex flex-col md:flex-row gap-6 justify-center">
-                  <Link href="/projects/plos" className="flex-1 max-w-sm glass border border-white/10 p-6 rounded-2xl text-center hover:border-[#8A2BE2]/40 transition-colors cursor-pointer group shadow-lg">
+                <div className="w-full flex flex-col md:flex-row gap-4 justify-center">
+                  <Link href="/projects/plos" className="flex-1 max-w-[400px] glass border border-white/10 p-6 md:py-8 rounded-2xl text-center hover:border-[#8A2BE2]/40 transition-colors cursor-pointer group shadow-lg">
                     <h4 className="text-lg md:text-xl text-white font-bold mb-2 group-hover:text-[#8A2BE2] transition-colors">PLOS</h4>
                     <p className="text-xs md:text-sm text-gray-400">Personal Life Operating System</p>
                   </Link>
-                  <Link href="/simulator" className="flex-1 max-w-sm glass border border-white/10 p-6 rounded-2xl text-center hover:border-[#00F0FF]/40 transition-colors cursor-pointer group shadow-lg">
+                  <Link href="/simulator" className="flex-1 max-w-[400px] glass border border-white/10 p-6 md:py-8 rounded-2xl text-center hover:border-[#00F0FF]/40 transition-colors cursor-pointer group shadow-lg">
                     <h4 className="text-lg md:text-xl text-white font-bold mb-2 group-hover:text-[#00F0FF] transition-colors">Business Simulator</h4>
                     <p className="text-xs md:text-sm text-gray-400">Live operational scenario modeling</p>
                   </Link>
