@@ -68,6 +68,27 @@ npm run build
 
 Both must pass before merging to main.
 
+## Live Demo Smoke Check
+
+After Vercel deploys, run:
+
+```bash
+npm run check:live-demo
+```
+
+The smoke check verifies:
+
+- `https://reuben-web.vercel.app/simulator` serves the public simulator and Reux model catalog.
+- `https://reuben-web.vercel.app/projects/reux/demo` links visitors into the Business Simulator.
+- The Railway demo service reports healthy executable Reux models.
+- `operations_decision` executes through the generic Reux simulation API.
+
+Override targets when testing preview deploys:
+
+```bash
+npm run check:live-demo -- --site https://your-preview.vercel.app --api https://your-railway-service.up.railway.app
+```
+
 ## Railway Deployment
 
 This repo includes `railway.json`. Create a Railway service from `benn4105/reuben-web` and set the `NEXT_PUBLIC_REUX_DEMO_URL` variable.

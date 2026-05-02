@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:live-demo": "node scripts/check-live-demo.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
