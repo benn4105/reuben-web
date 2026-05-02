@@ -3,6 +3,7 @@ import type {
   CompareResponse,
   GetSimulationResponse,
   ListSimulationsResponse,
+  ListSavedRunsResponse,
   RunSimulationRequest,
   RunSimulationResponse,
   Simulation,
@@ -183,7 +184,9 @@ async function mockCompareScenarios(request: CompareRequest): Promise<CompareRes
 export async function runSimulation(request: RunSimulationRequest): Promise<RunSimulationResponse> {
   if (liveApi.hasLiveApi()) {
     try {
-      return await liveApi.runSimulation(request);
+      const result = await liveApi.runSimulation(request);
+      // Pass through both the simulation and any server-side run metadata
+      return result;
     } catch (error) {
       if (error instanceof liveApi.SimulationApiError && error.status && error.status >= 400 && error.status < 500) {
         throw error;
@@ -208,6 +211,29 @@ export async function listSimulations(): Promise<ListSimulationsResponse> {
 }
 
 export async function getSimulation(id: string): Promise<GetSimulationResponse> {
+  // For live_ IDs, try the server-persisted run endpoint first
+  if (id.startsWith("live_") && liveApi.hasLiveApi()) {
+    try {
+      return await liveApi.getSavedRun(id);
+    } catch (error) {
+      // If the server returns 404/410 (expired), fall through to local cache
+      if (
+        error instanceof liveApi.SimulationApiError &&
+        error.status &&
+        (error.status === 404 || error.status === 410)
+      ) {
+        // Try local cache before giving up
+        try {
+          return await liveApi.getSimulation(id);
+        } catch {
+          // Re-throw the original 404/410 so the UI can show expired state
+          throw error;
+        }
+      }
+      console.warn("Live saved run fetch failed; trying local cache.", error);
+    }
+  }
+
   if (liveApi.hasLiveApi()) {
     try {
       return await liveApi.getSimulation(id);
@@ -248,6 +274,19 @@ export async function compareScenarios(request: CompareRequest): Promise<Compare
   }
 
   return mockCompareScenarios(request);
+}
+
+export async function listSavedRuns(): Promise<ListSavedRunsResponse> {
+  if (liveApi.hasLiveApi()) {
+    try {
+      return await liveApi.listSavedRuns();
+    } catch (error) {
+      console.warn("Live saved runs fetch failed.", error);
+    }
+  }
+
+  // No mock equivalent — return empty when live API is unavailable
+  return { runs: [] };
 }
 
 export async function getOperationsDecision(): Promise<{ baseline: ScenarioInputs; scenarios: ScenarioInputs[] }> {

@@ -8,26 +8,33 @@ import ReuxModelCatalog from "@/components/simulator/ReuxModelCatalog";
 import { EmptyState } from "@/components/simulator/EmptyState";
 import { LoadingCards, LoadingMetrics } from "@/components/simulator/LoadingState";
 import { SimulatorOnboarding } from "@/components/simulator/SimulatorOnboarding";
-import { listSimulations, deleteSimulation, renameSimulation } from "@/lib/simulation/mock-service";
-import type { SimulationSummary } from "@/lib/simulation/types";
-import { PlusCircle } from "lucide-react";
+import { listSimulations, deleteSimulation, renameSimulation, listSavedRuns } from "@/lib/simulation/mock-service";
+import type { SimulationSummary, SavedRunSummary } from "@/lib/simulation/types";
+import { PlusCircle, Clock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent, CardAction } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 export default function SimulatorDashboard() {
   const [simulations, setSimulations] = useState<SimulationSummary[]>([]);
+  const [savedRuns, setSavedRuns] = useState<SavedRunSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadSimulations();
+    loadData();
   }, []);
 
-  async function loadSimulations() {
+  async function loadData() {
     try {
       setLoading(true);
       setError(null);
-      const response = await listSimulations();
-      setSimulations(response.simulations);
+      const [simResponse, runsResponse] = await Promise.all([
+        listSimulations(),
+        listSavedRuns().catch(() => ({ runs: [] as SavedRunSummary[] })),
+      ]);
+      setSimulations(simResponse.simulations);
+      setSavedRuns(runsResponse.runs);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load simulations");
     } finally {
@@ -184,6 +191,30 @@ export default function SimulatorDashboard() {
         </div>
       ) : null}
 
+      {/* Recent Runs (server-persisted, shareable) */}
+      {!loading && savedRuns.length > 0 && (
+        <div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+            <div>
+              <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
+                Recent Runs
+              </h2>
+              <p className="text-xs text-gray-500 mt-1">
+                Server-saved runs from this session. Shareable links — these expire automatically.
+              </p>
+            </div>
+            <span className="text-xs text-gray-500 bg-white/[0.05] px-2 py-1 rounded-md">
+              {savedRuns.length} run{savedRuns.length !== 1 ? "s" : ""}
+            </span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            {savedRuns.map(run => (
+              <RecentRunCard key={run.id} run={run} />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Simulations List */}
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
@@ -208,7 +239,7 @@ export default function SimulatorDashboard() {
           <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-6 text-center">
             <p className="text-sm text-rose-400 mb-3">{error}</p>
             <Button
-              onClick={loadSimulations}
+              onClick={loadData}
               variant="ghost"
               size="sm"
             >
@@ -246,3 +277,97 @@ export default function SimulatorDashboard() {
     </div>
   );
 }
+
+// ─── Recent Run Card ─────────────────────────────────────────────────────────
+
+function formatCurrency(value: number): string {
+  if (Math.abs(value) >= 1000) {
+    return `$${(value / 1000).toFixed(1)}k`;
+  }
+  return `$${value.toLocaleString()}`;
+}
+
+function timeAgo(date: string): string {
+  const now = new Date();
+  const then = new Date(date);
+  const diffMs = now.getTime() - then.getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  const diffDays = Math.floor(diffHours / 24);
+  return `${diffDays}d ago`;
+}
+
+function RecentRunCard({ run }: { run: SavedRunSummary }) {
+  return (
+    <Link href={`/simulator/${run.id}`}>
+      <Card
+        className={cn(
+          "border-none ring-white/[0.06] bg-card/50 hover:ring-cyan-500/20 hover:bg-card/80 transition-all duration-200 cursor-pointer group"
+        )}
+      >
+        <CardHeader>
+          <div className="flex items-center gap-2 pr-8 min-w-0 flex-1">
+            <div className="w-2 h-2 rounded-full shrink-0 bg-cyan-500" />
+            <CardTitle className="text-sm font-semibold text-foreground truncate">
+              {run.name}
+            </CardTitle>
+          </div>
+          <CardAction className="flex items-center gap-1">
+            <ArrowRight
+              size={16}
+              className="text-muted-foreground/30 group-hover:text-muted-foreground group-hover:translate-x-0.5 transition-all"
+            />
+          </CardAction>
+        </CardHeader>
+
+        <CardContent>
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">
+                Best Margin
+              </div>
+              <div className="text-sm font-semibold font-mono text-emerald-400 tabular-nums">
+                {formatCurrency(run.bestMargin)}
+              </div>
+            </div>
+            <div>
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">
+                Risk Range
+              </div>
+              <div className="text-sm font-semibold font-mono text-foreground/70 tabular-nums">
+                {run.riskRange[0]}–{run.riskRange[1]}
+              </div>
+            </div>
+            <div>
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">
+                Scenarios
+              </div>
+              <div className="text-sm font-semibold text-foreground/70">
+                {run.scenarioCount}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+
+        <div className="bg-transparent border-none p-0 px-4 pb-3">
+          <div className="flex items-center gap-3 text-muted-foreground/60">
+            <div className="flex items-center gap-1">
+              <Clock size={12} />
+              <span className="text-[11px]">{timeAgo(run.createdAt)}</span>
+            </div>
+            {run.expiresAt && (
+              <span className="text-[10px] text-amber-500/70">
+                Expires {timeAgo(run.expiresAt)}
+              </span>
+            )}
+          </div>
+        </div>
+      </Card>
+    </Link>
+  );
+}
+

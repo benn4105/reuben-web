@@ -6,12 +6,16 @@ import type {
   ForecastPoint,
   GetReuxSimulationResponse,
   GetSimulationResponse,
+  GetSavedRunResponse,
   ListReuxSimulationsResponse,
   ListSimulationsResponse,
+  ListSavedRunsResponse,
   MetricDelta,
   MetricSnapshot,
   RunSimulationRequest,
   RunSimulationResponse,
+  SavedRunMeta,
+  SavedRunSummary,
   ScenarioInputs,
   ScenarioResult,
   Simulation,
@@ -207,6 +211,12 @@ interface BackendRunResponse {
   comparison: BackendComparison;
   reuxSource?: string;
   generatedAt: string;
+  run?: {
+    id: string;
+    name: string;
+    createdAt: string;
+    expiresAt?: string;
+  };
 }
 
 interface BackendCompareResponse {
@@ -362,6 +372,7 @@ export async function runReuxSimulationModel(
 
 export async function runSimulation(request: RunSimulationRequest): Promise<RunSimulationResponse> {
   let simulation: Simulation;
+  let runMeta: SavedRunMeta | undefined;
 
   try {
     const genericResponse = await runReuxSimulationModel(OPERATIONS_SIMULATION_NAME, toReuxRunRequest(request));
@@ -377,10 +388,22 @@ export async function runSimulation(request: RunSimulationRequest): Promise<RunS
       retries: 2,
     });
     simulation = toFrontendSimulation(request.name, backendResponse);
+
+    // Capture server-persisted run metadata when available
+    if (backendResponse.run) {
+      runMeta = {
+        id: backendResponse.run.id,
+        name: backendResponse.run.name,
+        createdAt: backendResponse.run.createdAt,
+        expiresAt: backendResponse.run.expiresAt,
+      };
+      // Use the server-assigned run id so the URL is shareable
+      simulation = { ...simulation, id: runMeta.id };
+    }
   }
 
   saveCachedSimulation(simulation);
-  return { simulation };
+  return { simulation, run: runMeta };
 }
 
 export async function listSimulations(): Promise<ListSimulationsResponse> {
@@ -393,6 +416,50 @@ export async function getSimulation(id: string): Promise<GetSimulationResponse> 
     throw new Error(`Simulation not found: ${id}`);
   }
   return { simulation };
+}
+
+// ─── Saved Run Endpoints ────────────────────────────────────────────────────
+// These hit the new server-side run persistence layer.
+// They are only called when the live API is configured.
+
+export async function listSavedRuns(): Promise<ListSavedRunsResponse> {
+  interface BackendRunSummary {
+    id: string;
+    name: string;
+    createdAt: string;
+    scenarioCount: number;
+    bestMargin: number;
+    riskRange: [number, number];
+    expiresAt?: string;
+  }
+
+  const data = await fetchWithRetry<{ runs: BackendRunSummary[] }>("/api/simulation-runs", {
+    method: "GET",
+    retries: 1,
+  });
+
+  return {
+    runs: data.runs.map((r): SavedRunSummary => ({
+      id: r.id,
+      name: r.name,
+      createdAt: r.createdAt,
+      scenarioCount: r.scenarioCount,
+      bestMargin: r.bestMargin,
+      riskRange: r.riskRange,
+      expiresAt: r.expiresAt,
+    })),
+  };
+}
+
+export async function getSavedRun(id: string): Promise<GetSavedRunResponse> {
+  const data = await fetchWithRetry<BackendRunResponse>(`/api/simulation-runs/${encodeURIComponent(id)}`, {
+    method: "GET",
+    retries: 1,
+  });
+
+  const simulation = toFrontendSimulation(data.simulation.name, data);
+  // Override the locally-generated id with the server-persisted run id
+  return { simulation: { ...simulation, id } };
 }
 
 export async function compareScenarios(request: CompareRequest): Promise<CompareResponse> {

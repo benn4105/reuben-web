@@ -102,6 +102,7 @@ export interface RunSimulationRequest {
 
 export interface RunSimulationResponse {
   simulation: Simulation;
+  run?: SavedRunMeta;
 }
 
 export interface ListSimulationsResponse {
@@ -154,4 +155,33 @@ export interface ListReuxSimulationsResponse {
 export interface GetReuxSimulationResponse {
   simulation: ReuxSimulationMetadata;
   sourceFile?: string;
+}
+
+// ─── Saved Run Types ─────────────────────────────────────────────────────────
+// These types describe the temporary server-persisted run records
+// returned by POST /api/simulations/run and GET /api/simulation-runs.
+
+export interface SavedRunMeta {
+  id: string;          // "live_..." id
+  name: string;
+  createdAt: string;
+  expiresAt?: string;  // ISO timestamp — when the backend will garbage-collect the run
+}
+
+export interface SavedRunSummary {
+  id: string;
+  name: string;
+  createdAt: string;
+  scenarioCount: number;
+  bestMargin: number;
+  riskRange: [number, number];
+  expiresAt?: string;
+}
+
+export interface ListSavedRunsResponse {
+  runs: SavedRunSummary[];
+}
+
+export interface GetSavedRunResponse {
+  simulation: Simulation;
 }

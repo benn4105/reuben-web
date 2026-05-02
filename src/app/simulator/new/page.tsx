@@ -356,7 +356,9 @@ export default function NewSimulationPage() {
       // Clear the draft upon successful run
       clearDraft();
       
-      router.push(`/simulator/${response.simulation.id}`);
+      // Prefer the server-persisted run ID (shareable) over the local simulation ID
+      const routeId = response.run?.id || response.simulation.id;
+      router.push(`/simulator/${routeId}`);
     } catch (err: unknown) {
       console.error("Simulation failed:", err);
       setIsRunning(false);

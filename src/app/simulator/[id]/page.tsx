@@ -11,6 +11,7 @@ import ReuxSnippetPanel from "@/components/simulator/ReuxSnippetPanel";
 import { LoadingMetrics, LoadingChart } from "@/components/simulator/LoadingState";
 import { ErrorState } from "@/components/simulator/EmptyState";
 import { getSimulation } from "@/lib/simulation/mock-service";
+import { SimulationApiError } from "@/lib/simulation/api-client";
 import type { Simulation } from "@/lib/simulation/types";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,7 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { encodeShareLink, copyToClipboard } from "@/lib/simulation/share";
 import { exportToCsv, exportToPdf } from "@/lib/simulation/export";
-import { Share2, Check, Download, FileText, FileSpreadsheet } from "lucide-react";
+import { Share2, Check, Download, FileText, FileSpreadsheet, Link2, Clock } from "lucide-react";
 
 const CHART_COLORS = [
   "#64748b", // slate (baseline)
@@ -51,12 +52,16 @@ export default function SimulationResultsPage({
   const [simulation, setSimulation] = useState<Simulation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isExpired, setIsExpired] = useState(false);
   const [activeMetric, setActiveMetric] = useState<
     "margin" | "revenue" | "operatingCost" | "productivity" | "riskScore" | "workforceLoad"
   >("margin");
   const [shareState, setShareState] = useState<"idle" | "copied">("idle");
+  const [linkCopyState, setLinkCopyState] = useState<"idle" | "copied">("idle");
 
-  async function handleShare() {
+  const isShareableRun = id.startsWith("live_");
+
+  async function handleShareConfig() {
     if (!simulation) return;
     const url = encodeShareLink(
       simulation.name,
@@ -70,14 +75,37 @@ export default function SimulationResultsPage({
     }
   }
 
+  async function handleCopyLink() {
+    const url = `${window.location.origin}/simulator/${id}`;
+    const ok = await copyToClipboard(url);
+    if (ok) {
+      setLinkCopyState("copied");
+      setTimeout(() => setLinkCopyState("idle"), 2500);
+    }
+  }
+
   const loadSimulation = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
+      setIsExpired(false);
       const response = await getSimulation(id);
       setSimulation(response.simulation);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load simulation");
+      if (
+        err instanceof SimulationApiError &&
+        err.status &&
+        (err.status === 404 || err.status === 410)
+      ) {
+        setIsExpired(true);
+        setError(
+          err.status === 410
+            ? "This simulation run has expired. Saved runs are temporary and are automatically cleaned up after a period of inactivity."
+            : "This simulation run was not found. It may have expired or the link may be invalid."
+        );
+      } else {
+        setError(err instanceof Error ? err.message : "Failed to load simulation");
+      }
     } finally {
       setLoading(false);
     }
@@ -100,6 +128,32 @@ export default function SimulationResultsPage({
         </div>
         <LoadingMetrics />
         <LoadingChart />
+      </div>
+    );
+  }
+
+  if (isExpired) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
+        <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20 mb-5">
+          <Clock size={32} className="text-amber-400" />
+        </div>
+        <h3 className="text-lg font-semibold text-gray-300 mb-2">
+          Run Expired
+        </h3>
+        <p className="text-sm text-gray-500 max-w-md mb-6">
+          {error}
+        </p>
+        <div className="flex gap-3">
+          <Button asChild className="gap-2 bg-white text-black hover:bg-gray-200">
+            <Link href="/simulator/new">
+              Start New Simulation
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="border-white/[0.08] text-gray-300 hover:text-white">
+            <Link href="/simulator">Back to Dashboard</Link>
+          </Button>
+        </div>
       </div>
     );
   }
@@ -161,7 +215,7 @@ export default function SimulationResultsPage({
             {simulation.scenarios.length} scenario{simulation.scenarios.length !== 1 ? "s" : ""} · {baseline.inputs.forecastWeeks}-week forecast
           </p>
         </div>
-        <div className="flex gap-2 shrink-0">
+        <div className="flex gap-2 shrink-0 flex-wrap">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -182,8 +236,25 @@ export default function SimulationResultsPage({
             </DropdownMenuContent>
           </DropdownMenu>
 
+          {/* Copy direct link (for shareable server-persisted runs) */}
+          {isShareableRun && (
+            <Button
+              onClick={handleCopyLink}
+              variant="outline"
+              size="sm"
+              className="gap-2 border-white/[0.08] text-gray-400 hover:text-white"
+            >
+              {linkCopyState === "copied" ? (
+                <><Check size={14} className="text-emerald-400" /> Copied</>
+              ) : (
+                <><Link2 size={14} /> Copy Link</>
+              )}
+            </Button>
+          )}
+
+          {/* Share as re-runnable config */}
           <Button
-            onClick={handleShare}
+            onClick={handleShareConfig}
             variant="outline"
             size="sm"
             className="gap-2 border-white/[0.08] text-gray-400 hover:text-white"
@@ -191,7 +262,7 @@ export default function SimulationResultsPage({
             {shareState === "copied" ? (
               <><Check size={14} className="text-emerald-400" /> Copied</>
             ) : (
-              <><Share2 size={14} /> Share</>
+              <><Share2 size={14} /> Share Config</>
             )}
           </Button>
           <Button
