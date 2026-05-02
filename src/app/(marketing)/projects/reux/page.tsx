@@ -134,6 +134,40 @@ export default function ReuxPage() {
           </div>
         </motion.div>
 
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="mb-24 grid grid-cols-1 md:grid-cols-3 gap-4"
+        >
+          {[
+            {
+              label: "Category",
+              title: "Backend language for decision-aware systems",
+              copy: "Reux models the data, state changes, durable events, and simulations that normal app code tends to scatter across services.",
+            },
+            {
+              label: "Proof",
+              title: "Validated through real products",
+              copy: "The Business Simulator is the current public proof point. PLOS and enterprise simulation packs are the next validation surfaces.",
+            },
+            {
+              label: "Boundary",
+              title: "Works under normal web apps",
+              copy: "Reux is not replacing React, Next.js, or TypeScript UI work. It owns the backend logic that needs to be auditable and explainable.",
+            },
+          ].map((item) => (
+            <div key={item.title} className="glass-card rounded-xl border border-white/10 p-6">
+              <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-[#00F0FF]">
+                {item.label}
+              </div>
+              <h2 className="mb-3 text-xl font-bold text-white">{item.title}</h2>
+              <p className="text-sm leading-relaxed text-gray-400">{item.copy}</p>
+            </div>
+          ))}
+        </motion.div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24 items-center">
           {/* What is Reux */}
           <motion.div

@@ -121,7 +121,7 @@ export default function DocsPage() {
             Reux is currently a prototype backend language and runtime. It supports schemas, queries, transactions, durable events, migrations, simulation declarations, generated TypeScript, and early VS Code tooling.
           </p>
           <p className="text-lg text-gray-500 mb-12">
-            Note: Local package publishing is not public yet.
+            The source repository is public today. The packaged npm beta is still being prepared, so the best developer path is cloning the repo and running the local CLI.
           </p>
 
           {/* Try It Today */}
@@ -157,7 +157,7 @@ export default function DocsPage() {
             </div>
             
             <p className="text-gray-400 mb-6 leading-relaxed">
-              Reux is currently developed in a private monorepo. While the source code is not yet public, we are preparing the CLI and compiler for a public beta release. The standard <code className="text-cyan-400 font-mono">npm install</code> command will be available once the API stabilizes.
+              Reux is available from source today. Clone the public repo, install dependencies, and run the onboarding smoke test to prove the compiler, CLI, examples, seed checks, SQL emitters, and simulation runner are working locally. The standard <code className="text-cyan-400 font-mono">npm install</code> package path will come later when the public beta package name and API stability are finalized.
             </p>
 
             <div className="relative group">
@@ -173,6 +173,19 @@ export default function DocsPage() {
               </div>
             </div>
 
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {[
+                { label: "Public repo", value: "Available" },
+                { label: "Local CLI", value: "Available" },
+                { label: "npm beta", value: "Planned" },
+              ].map((item) => (
+                <div key={item.label} className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                  <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">{item.label}</div>
+                  <div className="text-sm font-semibold text-white">{item.value}</div>
+                </div>
+              ))}
+            </div>
+
             <div className="mt-6 rounded-xl overflow-hidden glass border border-white/10">
               <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-black/50">
                 <span className="text-xs text-gray-500 font-mono">run from source today</span>
@@ -186,6 +199,50 @@ export default function DocsPage() {
                   <code>{SOURCE_INSTALL_CMD}</code>
                 </pre>
               </div>
+            </div>
+
+            <div className="mt-6 flex flex-col sm:flex-row gap-4">
+              <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
+                Open GitHub Repository
+              </AnimatedButton>
+              <AnimatedButton href="/projects/reux/roadmap" variant="secondary">
+                View Beta Roadmap
+              </AnimatedButton>
+            </div>
+          </section>
+
+          {/* Developer Access Checklist */}
+          <section className="mb-16">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-lg bg-cyan-500/10">
+                <Terminal className="text-cyan-400" size={24} />
+              </div>
+              <h2 className="text-2xl font-bold">Developer Access Checklist</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                {
+                  title: "1. Run the smoke path",
+                  description: "Use onboarding:smoke first. It is database-free and proves the local toolchain works.",
+                },
+                {
+                  title: "2. Read examples",
+                  description: "Start with examples/simulations/business_simulator.reux and examples/pilot_reux.dl.",
+                },
+                {
+                  title: "3. Enable editor support",
+                  description: "Use editors/vscode for file associations, syntax highlighting, diagnostics, formatting, and completions.",
+                },
+                {
+                  title: "4. Try PostgreSQL later",
+                  description: "Only set DATABASE_URL when you want runtime checks, migrations, seeds, or the local hosted demo.",
+                },
+              ].map((item) => (
+                <div key={item.title} className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+                  <h3 className="text-sm font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{item.description}</p>
+                </div>
+              ))}
             </div>
           </section>
 
@@ -242,7 +299,7 @@ export default function DocsPage() {
               <h2 className="text-xl font-bold text-amber-400">What is not ready yet</h2>
             </div>
             <ul className="space-y-3 text-sm text-amber-500/80 list-disc pl-5">
-              <li><strong>Public npm package not finalized:</strong> The CLI and core runtime are still internal prototypes.</li>
+              <li><strong>Public npm package not finalized:</strong> The source repo is available, but packaged npm distribution is still being prepared.</li>
               <li><strong>API stability:</strong> Syntax and language features may change before the public beta.</li>
               <li><strong>Full language server:</strong> Current editor support is useful, but a dedicated LSP is still planned.</li>
               <li><strong>Not a full-stack language:</strong> Reux focuses purely on backend data modeling and decision logic. Product apps still use normal web frontend technologies.</li>
