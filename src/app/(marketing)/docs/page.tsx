@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import AnimatedButton from "@/components/ui/AnimatedButton";
-import { Terminal, Download, Code2, Eye, Database, Search, Zap, Send, LineChart, FileCode, Code, Server, AlertTriangle } from "lucide-react";
+import { Terminal, Download, Code2, Eye, Code, AlertTriangle } from "lucide-react";
 import IdeMockup from "@/components/ui/IdeMockup";
 
 const INSTALL_CMD = "npm install @reux/cli -g";
@@ -11,16 +11,7 @@ cd Reux
 npm install
 npm run onboarding:smoke`;
 
-const CAPABILITIES = [
-  { icon: <Database size={20} className="text-emerald-400" />, title: "Schema + migration modeling" },
-  { icon: <Search size={20} className="text-blue-400" />, title: "Typed queries" },
-  { icon: <Zap size={20} className="text-yellow-400" />, title: "Transaction functions" },
-  { icon: <Send size={20} className="text-orange-400" />, title: "Durable outbox events" },
-  { icon: <LineChart size={20} className="text-cyan-400" />, title: "Simulation declarations" },
-  { icon: <FileCode size={20} className="text-violet-400" />, title: "Generated TypeScript integration" },
-  { icon: <Code size={20} className="text-indigo-400" />, title: "VS Code support" },
-  { icon: <Server size={20} className="text-pink-400" />, title: "Public demo API" }
-];
+
 
 const EXAMPLES = [
   {
@@ -109,19 +100,6 @@ export default function DocsPage() {
             Note: Local package publishing is not public yet.
           </p>
 
-          {/* Current Capabilities */}
-          <section className="mb-16">
-            <h2 className="text-2xl font-bold mb-6">Current Capabilities</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {CAPABILITIES.map((cap, i) => (
-                <div key={i} className="glass-card flex items-center gap-3 rounded-xl p-4 border border-white/5 hover:border-white/15 transition-colors">
-                  <div className="shrink-0 p-2 bg-white/5 rounded-lg">{cap.icon}</div>
-                  <div className="text-sm font-medium text-gray-300">{cap.title}</div>
-                </div>
-              ))}
-            </div>
-          </section>
-
           {/* Try It Today */}
           <section className="mb-16">
             <div className="flex items-center gap-3 mb-6">
@@ -132,7 +110,7 @@ export default function DocsPage() {
             </div>
             
             <p className="text-gray-400 mb-6 leading-relaxed">
-              While the <code className="text-cyan-400 font-mono">npm install</code> command is planned for the upcoming public beta, you can explore Reux right now through our live demos and projects.
+              The best way to understand Reux is to see it in action. Explore our live Business Simulator to see how Reux evaluates complex operational scenarios in real-time.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -142,10 +120,21 @@ export default function DocsPage() {
               <AnimatedButton href="/projects/reux" variant="secondary">
                 View Reux Project
               </AnimatedButton>
-              <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
-                GitHub
-              </AnimatedButton>
             </div>
+          </section>
+
+          {/* Run From Source */}
+          <section className="mb-16">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-lg bg-violet-500/10">
+                <Terminal className="text-violet-400" size={24} />
+              </div>
+              <h2 className="text-2xl font-bold">Run From Source</h2>
+            </div>
+            
+            <p className="text-gray-400 mb-6 leading-relaxed">
+              Reux is currently developed in a private monorepo. While the source code is not yet public, we are preparing the CLI and compiler for a public beta release. The standard <code className="text-cyan-400 font-mono">npm install</code> command will be available once the API stabilizes.
+            </p>
 
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-violet-500/10 rounded-xl blur-sm transition-opacity opacity-0 group-hover:opacity-100" />
@@ -173,29 +162,13 @@ export default function DocsPage() {
             </div>
           </section>
 
-          {/* IDE Experience */}
-          <section className="mb-24" id="ide">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-lg bg-indigo-500/10">
-                <Code className="text-indigo-400" size={24} />
-              </div>
-              <h2 className="text-2xl font-bold">Editor Support Preview</h2>
-            </div>
-            <p className="text-gray-400 mb-8 leading-relaxed max-w-3xl">
-              Reux has early VS Code support for syntax highlighting plus CLI-backed diagnostics, formatting, completions, hover text, and definition jumps. A true language-server process is still on the roadmap.
-            </p>
-            <div className="relative mb-16">
-              <IdeMockup />
-            </div>
-          </section>
-
-          {/* Writing Code */}
+          {/* Syntax Examples */}
           <section className="mb-16" id="examples">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 rounded-lg bg-cyan-500/10">
                 <Code2 className="text-cyan-400" size={24} />
               </div>
-              <h2 className="text-2xl font-bold">Reux Syntax Preview</h2>
+              <h2 className="text-2xl font-bold">Syntax Examples</h2>
             </div>
             
             <p className="text-gray-400 mb-6 leading-relaxed">
@@ -216,6 +189,22 @@ export default function DocsPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </section>
+
+          {/* Editor Support Preview */}
+          <section className="mb-24" id="ide">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-lg bg-indigo-500/10">
+                <Code className="text-indigo-400" size={24} />
+              </div>
+              <h2 className="text-2xl font-bold">Editor Support Preview</h2>
+            </div>
+            <p className="text-gray-400 mb-8 leading-relaxed max-w-3xl">
+              The Reux Language Server (LSP) provides realtime type-checking, auto-completion, and inline diagnostics. It parses your schema, queries, and simulations to ensure total safety before you ever run a migration.
+            </p>
+            <div className="relative mb-16">
+              <IdeMockup />
             </div>
           </section>
 

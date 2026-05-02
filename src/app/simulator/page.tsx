@@ -81,7 +81,12 @@ export default function SimulatorDashboard() {
             </Button>
             <Button asChild variant="ghost" className="gap-2 text-gray-400 hover:text-white">
               <Link href="/docs">
-                See Documentation
+                Developer Docs
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" className="gap-2 text-gray-400 hover:text-white hidden sm:flex">
+              <Link href="/projects/reux/roadmap">
+                Roadmap
               </Link>
             </Button>
           </div>

@@ -105,7 +105,7 @@ export default function Home() {
             </AnimatedButton>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <ProjectCard
               title="Business Simulator"
               description="A live demo where you model workforce, cost, and productivity scenarios, then compare forecasted outcomes. Powered by the Reux prototype engine."
@@ -118,6 +118,13 @@ export default function Home() {
               description="A prototype backend language for schemas, transactions, simulations, and decision logic. Data-aware by design, with generated TypeScript integration."
               tags={["Prototype", "Backend Language", "Simulation"]}
               href="/projects/reux"
+              featured={false}
+            />
+            <ProjectCard
+              title="PLOS"
+              description="Personal Life Operating System. A planned platform bringing enterprise-grade scenario modeling to individual finances, habits, and careers."
+              tags={["Planned", "Consumer", "Future"]}
+              href="/projects/plos"
               featured={false}
             />
           </div>
