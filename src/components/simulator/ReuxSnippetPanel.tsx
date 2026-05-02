@@ -97,8 +97,8 @@ export default function ReuxSnippetPanel({
           <div className="text-sm font-semibold text-foreground/80">
             Powered by Reux
           </div>
-          <div className="text-xs text-muted-foreground mt-1 leading-relaxed">
-            Reux code generated from your inputs. The backend engine runs this to forecast outcomes and calculate risk.
+          <div className="text-xs text-muted-foreground mt-1 leading-relaxed max-w-lg">
+            This UI is built with standard web tech (React/Tailwind), but the data-aware simulation and decision logic is entirely handled by the Reux backend engine via this generated syntax.
           </div>
         </div>
         <Badge variant="outline" className="text-[10px]">
@@ -151,8 +151,8 @@ export default function ReuxSnippetPanel({
               <div className="text-sm font-semibold text-foreground/80">
                 Powered by Reux
               </div>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                Reux code generated from your inputs. The backend engine runs this to forecast outcomes and calculate risk.
+              <div className="text-xs text-muted-foreground mt-1 leading-relaxed max-w-lg">
+                This UI is built with standard web tech (React/Tailwind), but the data-aware simulation and decision logic is entirely handled by the Reux backend engine via this generated syntax.
               </div>
             </div>
           </div>

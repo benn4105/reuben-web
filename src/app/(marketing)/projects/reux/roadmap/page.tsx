@@ -24,8 +24,6 @@ export default function RoadmapPage() {
   const nextMilestones = [
     {
       title: "Package & Release Polish",
-    {
-      title: "Package & Release Polish",
       description: "Finalize package distribution, publish the public beta, and improve developer onboarding paths."
     },
     {

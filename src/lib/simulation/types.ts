@@ -3,7 +3,9 @@
 // The mock service implements these exactly so swapping to the real API is trivial.
 
 export interface ScenarioInputs {
+  id?: string;
   name: string;
+  description?: string;
   employees: number;
   avgHourlyCost: number;
   weeklyDemand: number;
@@ -60,7 +62,10 @@ export interface ComparisonResult {
   scenarios: ScenarioResult[];
   deltas: Record<string, MetricDelta[]>;  // scenarioId → deltas
   recommendedId: string;
-  recommendationReason: string;
+  recommendationReason: string; // Keep for backwards compatibility
+  recommendationSummary?: string;
+  recommendationReasons?: string[];
+  recommendationTradeoffs?: string[];
   firstDivergenceWeek: number;
 }
 

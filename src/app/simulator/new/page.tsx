@@ -12,6 +12,7 @@ import type { ScenarioInputs, MetricSnapshot } from "@/lib/simulation/types";
 import { Plus, Trash2, Wand2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { SIMULATION_LIMITS } from "@/lib/simulation/constants";
 
 type PresetKey = "expansion" | "optimization" | "surge";
 
@@ -200,13 +201,80 @@ export default function NewSimulationPage() {
   };
 
   const removeScenario = (idx: number) => {
-    if (scenarios.length <= 1) return;
     setScenarios(prev => prev.filter((_, i) => i !== idx));
     setActiveTab("baseline");
   };
 
+  const duplicateScenario = (idx: number) => {
+    if (scenarios.length >= SIMULATION_LIMITS.MAX_RUN_SCENARIOS) {
+      setError(`Cannot exceed ${SIMULATION_LIMITS.MAX_RUN_SCENARIOS} scenarios.`);
+      return;
+    }
+    const source = scenarios[idx];
+    setScenarios(prev => [
+      ...prev,
+      {
+        ...source,
+        name: `${source.name} (Copy)`,
+        id: undefined, // ensure ID is regenerated or empty
+      },
+    ]);
+    setActiveTab(scenarios.length);
+  };
+
   const handleRun = async () => {
     if (!baseline) return;
+
+    // Frontend Validation mirroring backend limits
+    const issues: ValidationErrorIssue[] = [];
+
+    if (scenarios.length > SIMULATION_LIMITS.MAX_RUN_SCENARIOS) {
+      issues.push({ path: "scenarios", message: `Cannot exceed ${SIMULATION_LIMITS.MAX_RUN_SCENARIOS} scenarios per run.` });
+    }
+
+    if (simulationName.length > SIMULATION_LIMITS.MAX_SCENARIO_NAME_LENGTH) {
+      issues.push({ path: "simulation.name", message: `Simulation name must be under ${SIMULATION_LIMITS.MAX_SCENARIO_NAME_LENGTH} characters.` });
+    }
+
+    const checkScenario = (scenario: ScenarioInputs, pathPrefix: string) => {
+      if (scenario.name.length > SIMULATION_LIMITS.MAX_SCENARIO_NAME_LENGTH) {
+        issues.push({ path: `${pathPrefix}.name`, message: `Name must be under ${SIMULATION_LIMITS.MAX_SCENARIO_NAME_LENGTH} characters.` });
+      }
+      if (scenario.id && !SIMULATION_LIMITS.SCENARIO_ID_REGEX.test(scenario.id)) {
+        issues.push({ path: `${pathPrefix}.id`, message: "ID must start with a letter/number and contain only letters, numbers, hyphens, and underscores." });
+      }
+      if (scenario.id && scenario.id.length > SIMULATION_LIMITS.MAX_SCENARIO_ID_LENGTH) {
+        issues.push({ path: `${pathPrefix}.id`, message: `ID must be under ${SIMULATION_LIMITS.MAX_SCENARIO_ID_LENGTH} characters.` });
+      }
+      if (scenario.description && scenario.description.length > SIMULATION_LIMITS.MAX_SCENARIO_DESCRIPTION_LENGTH) {
+        issues.push({ path: `${pathPrefix}.description`, message: `Description must be under ${SIMULATION_LIMITS.MAX_SCENARIO_DESCRIPTION_LENGTH} characters.` });
+      }
+      if (scenario.forecastWeeks > SIMULATION_LIMITS.MAX_FORECAST_PERIODS) {
+        issues.push({ path: `${pathPrefix}.forecastPeriods`, message: `Cannot forecast more than ${SIMULATION_LIMITS.MAX_FORECAST_PERIODS} periods.` });
+      }
+    };
+
+    checkScenario(baseline, "baseline");
+    scenarios.forEach((s, idx) => checkScenario(s, `scenarios[${idx}]`));
+
+    // Check for duplicate IDs
+    const ids = new Set<string>();
+    const checkDuplicateId = (scenario: ScenarioInputs, pathPrefix: string) => {
+      const id = scenario.id || scenario.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+      if (ids.has(id)) {
+        issues.push({ path: `${pathPrefix}.id`, message: `Duplicate scenario ID: ${id}. Ensure names or IDs are unique.` });
+      }
+      ids.add(id);
+    };
+    checkDuplicateId(baseline, "baseline");
+    scenarios.forEach((s, idx) => checkDuplicateId(s, `scenarios[${idx}]`));
+
+    if (issues.length > 0) {
+      setError("Please fix the validation errors before running the simulation.");
+      setValidationIssues(issues);
+      return;
+    }
+
     try {
       setIsRunning(true);
       setError(null);
@@ -403,36 +471,53 @@ export default function NewSimulationPage() {
                 {baseline.name || "Baseline"}
               </button>
               {scenarios.map((s, i) => (
-                <div key={i} className="flex items-center gap-1 shrink-0">
+                <div key={i} className="flex items-center gap-1 shrink-0 group">
                   <button
                     onClick={() => handleTabChange(i)}
+                    disabled={isRunning}
                     className={cn(
                     "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150",
                     activeTab === i
                       ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/20"
-                      : "text-gray-500 hover:text-gray-300"
+                      : "text-gray-500 hover:text-gray-300",
+                    isRunning && "opacity-50 cursor-not-allowed"
                   )}
                 >
                   {s.name || `Scenario ${String.fromCharCode(65 + i)}`}
                 </button>
-                {scenarios.length > 1 && (
+                <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={() => duplicateScenario(i)}
+                    disabled={isRunning}
+                    className="p-1 text-gray-700 hover:text-emerald-400 transition-colors disabled:opacity-50"
+                    title="Duplicate scenario"
+                  >
+                    <Plus size={12} className="rotate-0" />
+                  </button>
                   <button
                     onClick={() => removeScenario(i)}
-                    className="p-1 text-gray-700 hover:text-rose-400 transition-colors"
+                    disabled={isRunning}
+                    className="p-1 text-gray-700 hover:text-rose-400 transition-colors disabled:opacity-50"
                     title="Remove scenario"
                   >
                     <Trash2 size={12} />
                   </button>
-                )}
+                </div>
               </div>
             ))}
-            <button
-              onClick={addScenario}
-              className="shrink-0 flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs text-gray-500 hover:text-cyan-400 transition-colors"
-            >
-              <Plus size={14} />
-              Add
-            </button>
+            {scenarios.length === 0 && (
+              <span className="text-xs text-gray-600 px-2 italic">No custom scenarios</span>
+            )}
+            {scenarios.length < SIMULATION_LIMITS.MAX_RUN_SCENARIOS && (
+              <button
+                onClick={addScenario}
+                disabled={isRunning}
+                className="shrink-0 flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs text-gray-500 hover:text-cyan-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Plus size={14} />
+                Add
+              </button>
+            )}
           </div>
 
           {/* Input Form */}

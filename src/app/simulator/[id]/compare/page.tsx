@@ -109,6 +109,9 @@ export default function ComparisonPage({
             riskChange={recommended.summary.riskScore - baseline.summary.riskScore}
             firstDivergenceWeek={comparison.firstDivergenceWeek}
             reason={comparison.recommendationReason}
+            summary={comparison.recommendationSummary}
+            reasons={comparison.recommendationReasons}
+            tradeoffs={comparison.recommendationTradeoffs}
           />
         </div>
       )}

@@ -13,7 +13,10 @@ interface RecommendationPanelProps {
   marginImprovement: number;
   riskChange: number;
   firstDivergenceWeek: number;
-  reason: string;
+  reason?: string;
+  summary?: string;
+  reasons?: string[];
+  tradeoffs?: string[];
   className?: string;
 }
 
@@ -23,6 +26,9 @@ export default function RecommendationPanel({
   riskChange,
   firstDivergenceWeek,
   reason,
+  summary,
+  reasons,
+  tradeoffs,
   className,
 }: RecommendationPanelProps) {
   const marginPositive = marginImprovement >= 0;
@@ -109,10 +115,43 @@ export default function RecommendationPanel({
               </div>
             </div>
 
-            {/* Reason */}
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              {reason}
-            </p>
+            {/* Reason Details */}
+            <div className="space-y-4 mt-2">
+              {summary && (
+                <p className="text-sm text-foreground/90 font-medium">
+                  {summary}
+                </p>
+              )}
+              {reasons && reasons.length > 0 && (
+                <div>
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Why this path?</h4>
+                  <ul className="space-y-1.5">
+                    {reasons.map((r, i) => (
+                      <li key={i} className="text-xs text-muted-foreground flex gap-2">
+                        <span className="text-emerald-400 shrink-0">✓</span> {r}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {tradeoffs && tradeoffs.length > 0 && (
+                <div>
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 mt-3">Known Tradeoffs</h4>
+                  <ul className="space-y-1.5">
+                    {tradeoffs.map((t, i) => (
+                      <li key={i} className="text-xs text-muted-foreground flex gap-2">
+                        <span className="text-amber-400 shrink-0">!</span> {t}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {!summary && !reasons?.length && !tradeoffs?.length && reason && (
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {reason}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </CardContent>

@@ -188,17 +188,50 @@ export default function ScenarioInputPanel({
   return (
     <div className={cn("space-y-6", className)}>
       {/* Scenario Name */}
-      <div className="space-y-2">
-        <Label htmlFor="scenario-name" className="text-sm text-gray-300">
-          Scenario Name
-        </Label>
-        <Input
-          id="scenario-name"
-          type="text"
-          value={values.name}
-          onChange={e => update("name", e.target.value)}
-          placeholder="Enter scenario name..."
-        />
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="scenario-name" className="text-sm text-gray-300">
+            Scenario Name
+          </Label>
+          <Input
+            id="scenario-name"
+            type="text"
+            value={values.name}
+            onChange={e => update("name", e.target.value)}
+            placeholder="e.g. Q2 Baseline"
+            maxLength={120}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="scenario-id" className="text-sm text-gray-300 flex items-center justify-between">
+            <span>Scenario ID <span className="text-gray-500 font-normal">(optional)</span></span>
+          </Label>
+          <Input
+            id="scenario-id"
+            type="text"
+            value={values.id || ""}
+            onChange={e => update("id", e.target.value)}
+            placeholder="e.g. q2_baseline"
+            maxLength={64}
+            className="font-mono text-sm"
+          />
+          <p className="text-[10px] text-gray-500">Only letters, numbers, hyphens, and underscores. If left blank, it will be auto-generated.</p>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="scenario-desc" className="text-sm text-gray-300 flex items-center justify-between">
+            <span>Description <span className="text-gray-500 font-normal">(optional)</span></span>
+          </Label>
+          <textarea
+            id="scenario-desc"
+            value={values.description || ""}
+            onChange={e => update("description", e.target.value)}
+            placeholder="Add context for why you are making these assumptions..."
+            maxLength={500}
+            className="flex min-h-[60px] w-full rounded-md border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-colors duration-150 placeholder:text-gray-500 resize-none"
+          />
+        </div>
       </div>
 
       <Separator className="bg-white/[0.06]" />

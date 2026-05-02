@@ -60,6 +60,21 @@ averageOrderValue: 85
 grossMarginRate: 0.42
 ```
 
+## Frontend Validation & API Limits
+
+The frontend mirrors backend API limits locally to prevent unnecessary network requests and to provide immediate user feedback. These constants live in `constants.ts`:
+
+- `MAX_RUN_SCENARIOS`: 8
+- `MAX_COMPARE_SCENARIOS`: 12 
+- `MAX_FORECAST_PERIODS`: 52
+- `MAX_TIMELINE_POINTS`: 52
+- `MAX_SCENARIO_ID_LENGTH`: 64
+- `MAX_SCENARIO_NAME_LENGTH`: 120
+- `MAX_SCENARIO_DESCRIPTION_LENGTH`: 500
+- `SCENARIO_ID_REGEX`: `/^[a-zA-Z0-9][a-zA-Z0-9_-]*$/`
+
+When saving scenarios, names and IDs are validated against these rules. If an ID is left blank, `slugify` will auto-generate one from the name.
+
 ## Files
 
 | File | Responsibility |

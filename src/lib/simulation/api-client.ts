@@ -355,8 +355,9 @@ function toBackendRunRequest(request: RunSimulationRequest) {
 
 function toBackendScenarioInput(inputs: ScenarioInputs): BackendScenarioInput {
   return {
-    id: slugify(inputs.name),
+    id: inputs.id || slugify(inputs.name),
     name: inputs.name,
+    description: inputs.description,
     assumptions: toBackendAssumptions(inputs),
   };
 }
@@ -508,6 +509,9 @@ function toComparisonResult(
       ...(recommendation?.reasons ?? []),
       ...(recommendation?.tradeoffs ?? []).map(tradeoff => `Tradeoff: ${tradeoff}`),
     ].filter(Boolean).join(" "),
+    recommendationSummary: recommendation?.summary,
+    recommendationReasons: recommendation?.reasons ?? [],
+    recommendationTradeoffs: recommendation?.tradeoffs ?? [],
     firstDivergenceWeek: 1,
   };
 }
