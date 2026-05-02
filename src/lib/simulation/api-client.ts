@@ -582,7 +582,7 @@ function toFrontendSimulationFromReuxRun(
   const comparison = toComparisonResultFromReuxRun(response.run, baseline, scenarios);
 
   return {
-    id: `live_${Date.now()}`,
+    id: `sim_${Date.now()}`,
     name,
     createdAt,
     updatedAt: response.generatedAt,
@@ -839,7 +839,7 @@ function toFrontendSimulation(name: string, response: BackendRunResponse): Simul
   const comparison = toComparisonResult(response.comparison, baseline, scenarios);
 
   return {
-    id: `live_${Date.now()}`,
+    id: `sim_${Date.now()}`,
     name,
     createdAt,
     updatedAt: response.generatedAt,

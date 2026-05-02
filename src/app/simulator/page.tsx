@@ -301,17 +301,40 @@ function timeAgo(date: string): string {
   return `${diffDays}d ago`;
 }
 
+function expiryLabel(expiresAt: string): { text: string; isExpired: boolean } {
+  const now = new Date();
+  const expiry = new Date(expiresAt);
+  const diffMs = expiry.getTime() - now.getTime();
+
+  if (diffMs <= 0) {
+    return { text: "Expired", isExpired: true };
+  }
+
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  if (diffMins < 60) return { text: `Expires in ${diffMins}m`, isExpired: false };
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return { text: `Expires in ${diffHours}h`, isExpired: false };
+  const diffDays = Math.floor(diffHours / 24);
+  return { text: `Expires in ${diffDays}d`, isExpired: false };
+}
+
 function RecentRunCard({ run }: { run: SavedRunSummary }) {
+  const expiry = run.expiresAt ? expiryLabel(run.expiresAt) : null;
+
   return (
     <Link href={`/simulator/${run.id}`}>
       <Card
         className={cn(
-          "border-none ring-white/[0.06] bg-card/50 hover:ring-cyan-500/20 hover:bg-card/80 transition-all duration-200 cursor-pointer group"
+          "border-none ring-white/[0.06] bg-card/50 hover:ring-cyan-500/20 hover:bg-card/80 transition-all duration-200 cursor-pointer group",
+          expiry?.isExpired && "opacity-50"
         )}
       >
         <CardHeader>
           <div className="flex items-center gap-2 pr-8 min-w-0 flex-1">
-            <div className="w-2 h-2 rounded-full shrink-0 bg-cyan-500" />
+            <div className={cn(
+              "w-2 h-2 rounded-full shrink-0",
+              expiry?.isExpired ? "bg-gray-500" : "bg-cyan-500"
+            )} />
             <CardTitle className="text-sm font-semibold text-foreground truncate">
               {run.name}
             </CardTitle>
@@ -359,9 +382,12 @@ function RecentRunCard({ run }: { run: SavedRunSummary }) {
               <Clock size={12} />
               <span className="text-[11px]">{timeAgo(run.createdAt)}</span>
             </div>
-            {run.expiresAt && (
-              <span className="text-[10px] text-amber-500/70">
-                Expires {timeAgo(run.expiresAt)}
+            {expiry && (
+              <span className={cn(
+                "text-[10px]",
+                expiry.isExpired ? "text-rose-400/70" : "text-amber-500/70"
+              )}>
+                {expiry.text}
               </span>
             )}
           </div>
