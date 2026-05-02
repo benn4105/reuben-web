@@ -8,7 +8,7 @@ import ReuxModelCatalog from "@/components/simulator/ReuxModelCatalog";
 import { EmptyState } from "@/components/simulator/EmptyState";
 import { LoadingCards, LoadingMetrics } from "@/components/simulator/LoadingState";
 import { SimulatorOnboarding } from "@/components/simulator/SimulatorOnboarding";
-import { listSimulations, deleteSimulation } from "@/lib/simulation/mock-service";
+import { listSimulations, deleteSimulation, renameSimulation } from "@/lib/simulation/mock-service";
 import type { SimulationSummary } from "@/lib/simulation/types";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,17 @@ export default function SimulatorDashboard() {
       setSimulations((prev) => prev.filter((s) => s.id !== id));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to delete simulation");
+    }
+  }
+
+  async function handleRename(id: string, newName: string) {
+    try {
+      await renameSimulation(id, newName);
+      setSimulations((prev) => 
+        prev.map((s) => (s.id === id ? { ...s, name: newName } : s))
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to rename simulation");
     }
   }
 
@@ -227,7 +238,7 @@ export default function SimulatorDashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
             {simulations.map(sim => (
-              <SimulationCard key={sim.id} simulation={sim} onDelete={handleDelete} />
+              <SimulationCard key={sim.id} simulation={sim} onDelete={handleDelete} onRename={handleRename} />
             ))}
           </div>
         )}

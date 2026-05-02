@@ -1,17 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { SimulationSummary } from "@/lib/simulation/types";
-import { ArrowRight, Clock, GitBranch, Trash2 } from "lucide-react";
+import { ArrowRight, Clock, GitBranch, Trash2, Edit2 } from "lucide-react";
 
 // shadcn / Radix components
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardAction } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 interface SimulationCardProps {
   simulation: SimulationSummary;
   className?: string;
   onDelete?: (id: string) => void;
+  onRename?: (id: string, newName: string) => void;
 }
 
 function formatCurrency(value: number): string {
@@ -45,44 +48,88 @@ export default function SimulationCard({
   simulation,
   className,
   onDelete,
+  onRename,
 }: SimulationCardProps) {
-  return (
-    <Link href={`/simulator/${simulation.id}`}>
-      <Card
-        className={cn(
-          "border-none ring-white/[0.06] bg-card/50 hover:ring-white/[0.14] hover:bg-card/80 transition-all duration-200 cursor-pointer group",
-          className
-        )}
-      >
-        <CardHeader>
-          <div className="flex items-center gap-2 pr-8">
-            <div className={cn("w-2 h-2 rounded-full shrink-0", STATUS_COLORS[simulation.status])} />
-            <CardTitle className="text-sm font-semibold text-foreground truncate">
-              {simulation.name}
-            </CardTitle>
-          </div>
-          <CardAction className="flex items-center gap-2">
-            {onDelete && (
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  onDelete(simulation.id);
-                }}
-                className="text-muted-foreground/30 hover:text-rose-400 transition-colors p-1"
-                title="Delete simulation"
-              >
-                <Trash2 size={14} />
-              </button>
-            )}
-            <ArrowRight
-              size={16}
-              className="text-muted-foreground/30 group-hover:text-muted-foreground group-hover:translate-x-0.5 transition-all"
-            />
-          </CardAction>
-        </CardHeader>
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [renameValue, setRenameValue] = useState(simulation.name);
 
-        <CardContent>
+  const handleRenameSubmit = () => {
+    if (renameValue.trim() && renameValue !== simulation.name) {
+      onRename?.(simulation.id, renameValue.trim());
+    }
+    setIsRenaming(false);
+  };
+
+  return (
+    <div className="relative group">
+      <Link href={`/simulator/${simulation.id}`} className={cn(isRenaming && "pointer-events-none")}>
+        <Card
+          className={cn(
+            "border-none ring-white/[0.06] bg-card/50 hover:ring-white/[0.14] hover:bg-card/80 transition-all duration-200 cursor-pointer group-hover:ring-white/[0.14] group-hover:bg-card/80",
+            className
+          )}
+        >
+          <CardHeader>
+            <div className="flex items-center gap-2 pr-12 min-w-0 flex-1">
+              <div className={cn("w-2 h-2 rounded-full shrink-0", STATUS_COLORS[simulation.status])} />
+              {isRenaming ? (
+                <div onClick={(e) => e.preventDefault()} className="flex-1 mr-2 pointer-events-auto">
+                  <Input
+                    value={renameValue}
+                    onChange={(e) => setRenameValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleRenameSubmit();
+                      if (e.key === "Escape") {
+                        setRenameValue(simulation.name);
+                        setIsRenaming(false);
+                      }
+                    }}
+                    onBlur={handleRenameSubmit}
+                    autoFocus
+                    className="h-7 text-sm font-semibold bg-black/50 border-white/20 focus-visible:ring-1 focus-visible:ring-white/30 px-2"
+                  />
+                </div>
+              ) : (
+                <CardTitle className="text-sm font-semibold text-foreground truncate">
+                  {simulation.name}
+                </CardTitle>
+              )}
+            </div>
+            <CardAction className={cn("flex items-center gap-1", isRenaming && "hidden")}>
+              {onRename && !isRenaming && (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsRenaming(true);
+                  }}
+                  className="text-muted-foreground/30 hover:text-white transition-colors p-1 pointer-events-auto"
+                  title="Rename simulation"
+                >
+                  <Edit2 size={14} />
+                </button>
+              )}
+              {onDelete && !isRenaming && (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onDelete(simulation.id);
+                  }}
+                  className="text-muted-foreground/30 hover:text-rose-400 transition-colors p-1 pointer-events-auto"
+                  title="Delete simulation"
+                >
+                  <Trash2 size={14} />
+                </button>
+              )}
+              <ArrowRight
+                size={16}
+                className="text-muted-foreground/30 group-hover:text-muted-foreground group-hover:translate-x-0.5 transition-all ml-1"
+              />
+            </CardAction>
+          </CardHeader>
+
+          <CardContent>
           <div className="grid grid-cols-3 gap-3">
             <div>
               <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">
@@ -125,5 +172,6 @@ export default function SimulationCard({
         </CardFooter>
       </Card>
     </Link>
+    </div>
   );
 }

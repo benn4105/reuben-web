@@ -224,6 +224,17 @@ export async function deleteSimulation(id: string): Promise<void> {
   return mockDeleteSimulation(id);
 }
 
+export async function renameSimulation(id: string, name: string): Promise<void> {
+  // Mock service rename
+  await delay(300);
+  const sim = simulations.find(s => s.id === id);
+  if (!sim) {
+    throw new Error(`Simulation not found: ${id}`);
+  }
+  sim.name = name;
+  sim.updatedAt = new Date().toISOString();
+}
+
 export async function compareScenarios(request: CompareRequest): Promise<CompareResponse> {
   if (liveApi.hasLiveApi()) {
     try {

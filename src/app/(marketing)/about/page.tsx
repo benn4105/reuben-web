@@ -135,7 +135,7 @@ export default function AboutPage() {
               <p className="text-gray-400 mb-8 max-w-md">
                 We&apos;re always looking for exceptional engineers who want to push the boundaries of what&apos;s possible in software.
               </p>
-              <AnimatedButton href="mailto:careers@reuben.inc" variant="primary">
+              <AnimatedButton href="/contact" variant="primary">
                 View Open Roles
               </AnimatedButton>
             </div>

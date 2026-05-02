@@ -195,7 +195,7 @@ export default function PlosPage() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <AnimatedButton href="mailto:interest@reuben.inc?subject=PLOS%20Early%20Interest" variant="primary">
+            <AnimatedButton href="/contact" variant="primary">
               Express Interest
             </AnimatedButton>
             <AnimatedButton href="/projects/reux/roadmap" variant="secondary">

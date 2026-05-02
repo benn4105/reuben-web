@@ -20,6 +20,17 @@ import {
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import CodeComparison from "@/components/ui/CodeComparison";
 import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+const TOOLTIP_DATA: Record<string, string> = {
+  "module": "A self-contained namespace for related logic and data models.",
+  "simulate": "Declares a block that sets up variables for the Monte Carlo forecasting engine.",
+  "dimension": "Tags the simulation for categorization and aggregate reporting.",
+  "formula": "A reactive computed value that updates when inputs change.",
+  "objective": "Tells the Reux engine what to solve for (e.g. maximize margin, minimize risk).",
+  "scenario": "A specific variation of inputs to run against the baseline.",
+  "forecast": "The time horizon the simulation engine should project out.",
+};
 
 const codeSnippet = `module operations
 
@@ -48,6 +59,47 @@ simulate operations_throughput {
   forecast 12 weeks
 }
 `;
+
+function InteractiveCodeSnippet() {
+  const lines = codeSnippet.split("\n");
+  
+  return (
+    <TooltipProvider delayDuration={100}>
+      <pre className="font-mono text-sm leading-relaxed text-gray-300 relative z-10 whitespace-pre-wrap">
+        {lines.map((line, i) => {
+          const tokens = line.split(/(\b(?:module|simulate|dimension|formula|objective|scenario|forecast|maximize|minimize|operations_throughput|process_improvement|count|orders|percent|weeks)\b|\s+|[^\w\s]+)/).filter(Boolean);
+          
+          return (
+            <div key={i} className="min-h-[1.5em]">
+              {tokens.map((token, j) => {
+                if (TOOLTIP_DATA[token]) {
+                  return (
+                    <Tooltip key={j}>
+                      <TooltipTrigger asChild>
+                        <span className="text-pink-400 cursor-help underline decoration-pink-400/40 underline-offset-4 decoration-dashed">{token}</span>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="bg-[#0A0A0A] border-white/20 text-white max-w-[220px] text-xs p-3">
+                        {TOOLTIP_DATA[token]}
+                      </TooltipContent>
+                    </Tooltip>
+                  );
+                } else if (["maximize", "minimize"].includes(token)) {
+                  return <span key={j} className="text-blue-400">{token}</span>;
+                } else if (["operations_throughput", "process_improvement"].includes(token)) {
+                  return <span key={j} className="text-green-400">{token}</span>;
+                } else if (["count", "orders", "percent", "weeks"].includes(token)) {
+                  return <span key={j} className="text-yellow-300">{token}</span>;
+                }
+                return <span key={j}>{token}</span>;
+              })}
+            </div>
+          );
+        })}
+      </pre>
+    </TooltipProvider>
+  );
+}
+
 
 const roadmapMilestones = [
   {
@@ -206,16 +258,8 @@ export default function ReuxPage() {
             </div>
             <div className="p-6 bg-[#0A0A0A]/80 overflow-x-auto relative">
               {/* Optional glowing effect behind code */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#00F0FF]/5 to-[#8A2BE2]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <pre className="font-mono text-sm leading-relaxed text-gray-300 relative z-10">
-                <code dangerouslySetInnerHTML={{
-                  __html: codeSnippet
-                    .replace(/module|simulate|dimension|formula|objective|scenario|forecast/g, '<span class="text-pink-400">$&</span>')
-                    .replace(/maximize|minimize/g, '<span class="text-blue-400">$&</span>')
-                    .replace(/operations_throughput|process_improvement/g, '<span class="text-green-400">$&</span>')
-                    .replace(/\b(count|orders|percent|weeks)\b/g, '<span class="text-yellow-300">$&</span>')
-                }} />
-              </pre>
+              <div className="absolute inset-0 bg-gradient-to-br from-[#00F0FF]/5 to-[#8A2BE2]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              <InteractiveCodeSnippet />
             </div>
           </motion.div>
         </div>
