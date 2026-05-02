@@ -10,6 +10,7 @@ import { calculateMetrics, generateReuxSnippet } from "@/lib/simulation/engine";
 import { runSimulation, getOperationsDecision } from "@/lib/simulation/mock-service";
 import { SimulationApiError, type ValidationErrorIssue } from "@/lib/simulation/api-client";
 import { decodeShareLink, encodeShareLink, copyToClipboard } from "@/lib/simulation/share";
+import { saveDraft, loadDraft, clearDraft, formatDraftAge } from "@/lib/simulation/drafts";
 import type { SimulationTemplate } from "@/lib/simulation/templates";
 import type { ScenarioInputs, MetricSnapshot } from "@/lib/simulation/types";
 import { Plus, Trash2, Wand2, Share2, Check } from "lucide-react";
@@ -121,6 +122,7 @@ export default function NewSimulationPage() {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   const [shareState, setShareState] = useState<"idle" | "copied">("idle");
   const [showTemplates, setShowTemplates] = useState(false);
+  const [restoredDraftInfo, setRestoredDraftInfo] = useState<string | null>(null);
 
   function loadPreset(presetKey: PresetKey) {
     const preset = buildGuidedPreset(presetKey);
@@ -166,7 +168,7 @@ export default function NewSimulationPage() {
         setError(null);
         const { baseline: defaultBaseline, scenarios: defaultScenarios } = await getOperationsDecision();
 
-        // Priority: share link > URL preset > defaults
+        // Priority: share link > local draft > URL preset > defaults
         const sharedConfig = typeof window !== "undefined" 
           ? decodeShareLink(window.location.search) 
           : null;
@@ -178,24 +180,36 @@ export default function NewSimulationPage() {
           setLiveMetrics(calculateMetrics(sharedConfig.baseline));
           setLiveSnippet(generateReuxSnippet(sharedConfig.baseline));
         } else {
-          const guidedPreset = guidedPresetFromSearch();
-          if (guidedPreset) {
-            const preset = buildGuidedPreset(guidedPreset);
-            setSimulationName(preset.name);
-            setBaseline(preset.baseline);
-            setScenarios(preset.scenarios);
-            setSelectedPreset(guidedPreset);
-            setLiveMetrics(calculateMetrics(preset.baseline));
-            setLiveSnippet(generateReuxSnippet(preset.baseline));
+          const draft = typeof window !== "undefined" ? loadDraft() : null;
+          if (draft) {
+            setSimulationName(draft.name);
+            setBaseline(draft.baseline);
+            setScenarios(draft.scenarios);
+            setRestoredDraftInfo(`Restored draft from ${formatDraftAge(draft.savedAt)}`);
+            setLiveMetrics(calculateMetrics(draft.baseline));
+            setLiveSnippet(generateReuxSnippet(draft.baseline));
+            // Auto-hide the draft restored message after 5 seconds
+            setTimeout(() => setRestoredDraftInfo(null), 5000);
           } else {
-            setBaseline(defaultBaseline);
-            if (defaultScenarios && defaultScenarios.length > 0) {
-              setScenarios([{ ...defaultScenarios[0], name: "Scenario A" }]);
+            const guidedPreset = guidedPresetFromSearch();
+            if (guidedPreset) {
+              const preset = buildGuidedPreset(guidedPreset);
+              setSimulationName(preset.name);
+              setBaseline(preset.baseline);
+              setScenarios(preset.scenarios);
+              setSelectedPreset(guidedPreset);
+              setLiveMetrics(calculateMetrics(preset.baseline));
+              setLiveSnippet(generateReuxSnippet(preset.baseline));
             } else {
-              setScenarios([{ ...defaultBaseline, name: "Scenario A" }]);
+              setBaseline(defaultBaseline);
+              if (defaultScenarios && defaultScenarios.length > 0) {
+                setScenarios([{ ...defaultScenarios[0], name: "Scenario A" }]);
+              } else {
+                setScenarios([{ ...defaultBaseline, name: "Scenario A" }]);
+              }
+              setLiveMetrics(calculateMetrics(defaultBaseline));
+              setLiveSnippet(generateReuxSnippet(defaultBaseline));
             }
-            setLiveMetrics(calculateMetrics(defaultBaseline));
-            setLiveSnippet(generateReuxSnippet(defaultBaseline));
           }
         }
       } catch (err) {
@@ -207,6 +221,17 @@ export default function NewSimulationPage() {
     }
     fetchDefaults();
   }, []);
+
+  // Auto-save draft whenever configuration changes
+  useEffect(() => {
+    if (baseline && scenarios && typeof window !== "undefined") {
+      // Small debounce to avoid thrashing localStorage on rapid typing
+      const timeoutId = setTimeout(() => {
+        saveDraft(simulationName, baseline, scenarios);
+      }, 500);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [simulationName, baseline, scenarios]);
 
   const activeInputs = activeTab === "baseline" ? baseline : scenarios[activeTab];
 
@@ -327,6 +352,10 @@ export default function NewSimulationPage() {
         baseline,
         scenarios,
       });
+
+      // Clear the draft upon successful run
+      clearDraft();
+      
       router.push(`/simulator/${response.simulation.id}`);
     } catch (err: unknown) {
       console.error("Simulation failed:", err);
@@ -357,9 +386,16 @@ export default function NewSimulationPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
-            Build Simulation
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-white tracking-tight">
+              Build Simulation
+            </h1>
+            {restoredDraftInfo && (
+              <span className="text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full animate-in fade-in zoom-in duration-300">
+                {restoredDraftInfo}
+              </span>
+            )}
+          </div>
           <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
             Define a <strong>Baseline</strong>, create alternative <strong>Scenarios</strong>, and let the Reux engine compare them to recommend the safest path.
           </p>

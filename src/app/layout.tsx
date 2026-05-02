@@ -10,6 +10,21 @@ const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono"
 export const metadata: Metadata = {
   title: "Reuben | Engineering the Future of Systems",
   description: "Reuben builds data-aware tools for backend systems, simulation products, and developer infrastructure. Powered by the Reux prototype engine.",
+  openGraph: {
+    title: "Reuben | Engineering the Future of Systems",
+    description: "Reuben builds data-aware tools for backend systems, simulation products, and developer infrastructure. Powered by the Reux prototype engine.",
+    url: "https://reuben.inc",
+    siteName: "Reuben",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Reuben | Engineering the Future of Systems",
+    description: "Reuben builds data-aware tools for backend systems, simulation products, and developer infrastructure.",
+    images: ["/og-image.jpg"],
+  },
 };
 
 export default function RootLayout({
