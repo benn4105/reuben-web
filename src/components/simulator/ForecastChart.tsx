@@ -107,13 +107,15 @@ export default function ForecastChart({
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-white/[0.06] bg-white/[0.01]">
-        <svg
-          width={width}
-          height={CHART_HEIGHT}
-          className="min-w-full"
-          onMouseLeave={() => setHoveredWeek(null)}
-        >
+      <div className="relative">
+        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#0A0A0A] to-transparent z-10 pointer-events-none sm:hidden rounded-r-lg" />
+        <div className="overflow-x-auto rounded-lg border border-white/[0.06] bg-white/[0.01] scrollbar-none">
+          <svg
+            width={width}
+            height={CHART_HEIGHT}
+            className="min-w-full"
+            onMouseLeave={() => setHoveredWeek(null)}
+          >
           {/* Grid lines */}
           {yTicks.map(tick => (
             <g key={tick.value}>
@@ -258,6 +260,7 @@ export default function ForecastChart({
             </g>
           )}
         </svg>
+        </div>
       </div>
     </div>
   );
