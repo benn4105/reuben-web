@@ -23,6 +23,7 @@ async function main() {
   await checkApiHealth();
   await checkReuxCatalog();
   await checkOperationsRun();
+  await checkBusinessSimulatorSavedRun();
 
   console.log("");
   for (const check of checks) {
@@ -125,6 +126,87 @@ async function checkOperationsRun() {
     name: "operations_decision execution",
     ok: response.simulation?.name === "operations_decision" && periods.length === 12 && Boolean(finalPeriod?.metrics?.margin),
     detail: finalPeriod ? `final margin ${Math.round(finalPeriod.metrics.margin)}` : "missing final scenario period",
+  });
+}
+
+async function checkBusinessSimulatorSavedRun() {
+  const sessionId = `livecheck${Date.now().toString(36).slice(-6)}`;
+  const headers = {
+    "content-type": "application/json",
+    "x-reux-demo-session": sessionId,
+  };
+  const run = await fetchJson(`${apiUrl}/api/simulations/run`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      name: "Live Check Business Simulation",
+      simulationId: "operations-decision",
+      baseline: {
+        employees: 50,
+        averageHourlyCost: 28,
+        weeklyDemand: 1200,
+        averageOrderValue: 85,
+        grossMarginRate: 0.42,
+        productivityGainRate: 0,
+        overtimeReductionRate: 0,
+        supplierDelayRiskRate: 0.15,
+        defectRate: 0.04,
+        forecastPeriods: 12,
+        forecastUnit: "week",
+      },
+      scenarios: [
+        {
+          id: "process-improvement",
+          name: "Process Improvement",
+          assumptions: {
+            productivityGainRate: 0.12,
+            overtimeReductionRate: 0.18,
+          },
+        },
+      ],
+      options: {
+        includeTimeline: true,
+        includeReuxSource: true,
+      },
+    }),
+  });
+
+  const runId = run.run?.id;
+  const runSummaryOk = Boolean(
+    runId &&
+    run.run?.name === "Live Check Business Simulation" &&
+    typeof run.run?.bestMargin === "number" &&
+    Array.isArray(run.run?.riskRange) &&
+    run.run?.recommendedScenarioId === "process-improvement"
+  );
+
+  checks.push({
+    name: "business simulator saved run",
+    ok: runSummaryOk,
+    detail: runId ? `${runId}, best margin ${Math.round(run.run.bestMargin ?? 0)}` : "missing run id",
+  });
+
+  if (!runId) return;
+
+  const [saved, list] = await Promise.all([
+    fetchJson(`${apiUrl}/api/simulation-runs/${encodeURIComponent(runId)}`, {
+      headers: { "x-reux-demo-session": sessionId },
+    }),
+    fetchJson(`${apiUrl}/api/simulation-runs`, {
+      headers: { "x-reux-demo-session": sessionId },
+    }),
+  ]);
+
+  checks.push({
+    name: "business simulator saved run reload",
+    ok: saved.run?.id === runId && saved.run?.response?.run?.id === runId && saved.run?.response?.comparison?.recommendedScenarioId === "process-improvement",
+    detail: saved.run?.expiresAt ? `expires ${saved.run.expiresAt}` : "missing expiry",
+  });
+
+  checks.push({
+    name: "business simulator recent run list",
+    ok: Array.isArray(list.runs) && list.runs.some((candidate) => candidate.id === runId && candidate.name === "Live Check Business Simulation"),
+    detail: Array.isArray(list.runs) ? `${list.runs.length} session run(s)` : "missing runs array",
   });
 }
 

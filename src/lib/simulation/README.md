@@ -27,39 +27,41 @@ Do not include a trailing slash.
 
 ## Hosted Backend Contract
 
-The live Reux demo exposes two compatible simulator paths:
+The live Reux demo exposes two compatible simulator paths. The public Business Simulator uses the product-specific adapter as its primary path because that route persists shareable result runs while still executing Reux-backed decision logic.
 
-### Generic Reux Simulation API
+### Business Simulator Adapter API
 
-This is the primary path for the public Business Simulator because it proves the UI is running against executable Reux models, not only a product-specific adapter.
+This is the primary path for `/simulator`.
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |
 | `GET` | `/api/health` | Check deployment health and available executable models. |
-| `GET` | `/api/reux/simulations` | List executable Reux models for the website catalog. |
-| `GET` | `/api/reux/simulations/:name` | Load one model's dimensions, assumptions, objectives, metrics, and scenarios. |
-| `POST` | `/api/reux/simulations/:name/run` | Execute a model with runtime assumption/scenario overrides. |
+| `GET` | `/api/simulations` | List available simulation templates. |
+| `GET` | `/api/simulations/operations-decision` | Load default assumptions and starter scenarios. |
+| `POST` | `/api/simulations/run` | Run a baseline and scenario set, persist a temporary saved run, and return metrics/recommendations. |
+| `GET` | `/api/simulation-runs` | List recent saved runs for the current visitor session. |
+| `GET` | `/api/simulation-runs/:id` | Reload a known saved run for shareable result pages. |
+| `POST` | `/api/scenarios/compare` | Compare already-run scenario results. |
 
 For the Business Simulator, `api-client.ts` runs:
 
 ```text
-POST /api/reux/simulations/operations_decision/run
+POST /api/simulations/run
 ```
 
-The generic response is normalized back into the shared UI shape used by the dashboard, charts, recommendation panel, and Reux transparency panel.
+The response is normalized back into the shared UI shape used by the dashboard, charts, recommendation panel, and Reux transparency panel. If the server returns `run.id`, the website routes to `/simulator/live_...`, which can be reloaded or shared until the temporary saved run expires.
 
-### Business Simulator Adapter API
+### Generic Reux Simulation API
 
-This route remains as a compatibility fallback and a product-specific adapter contract.
+This route powers the Reux model catalog and remains a fallback execution path if the adapter is temporarily unavailable.
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |
-| `GET` | `/api/simulations` | List available simulation templates. |
-| `GET` | `/api/simulations/operations-decision` | Load default assumptions and starter scenarios. |
-| `POST` | `/api/simulations/run` | Run a baseline and scenario set. |
-| `POST` | `/api/scenarios/compare` | Compare already-run scenario results. |
+| `GET` | `/api/reux/simulations` | List executable Reux models for the website catalog. |
+| `GET` | `/api/reux/simulations/:name` | Load one model's dimensions, assumptions, objectives, metrics, and scenarios. |
+| `POST` | `/api/reux/simulations/:name/run` | Execute a model with runtime assumption/scenario overrides. |
 
-New simulations are cached in browser `localStorage` under `reux_business_simulations` after the live response is normalized. If the live backend is unavailable, `mock-service.ts` falls back to the local mock engine so the UI remains usable during local development.
+New simulations are cached in browser `localStorage` under `reux_business_simulations` after the live response is normalized. The API client also stores a stable anonymous visitor id under `reux_demo_session_id` and sends it as `x-reux-demo-session` so recent run lists are isolated per browser session. If the live backend is unavailable, `mock-service.ts` falls back to the local mock engine so the UI remains usable during local development.
 
 ## Shape Mapping
 
@@ -118,3 +120,10 @@ npm run build
 ```
 
 For a live smoke test, set `NEXT_PUBLIC_REUX_DEMO_URL` and create a simulation from `/simulator/new`.
+The repository also includes:
+
+```bash
+npm run check:live-demo
+```
+
+That script checks the hosted website, hosted Reux catalog, adapter execution, saved-run reload, and session-scoped recent-run listing.
