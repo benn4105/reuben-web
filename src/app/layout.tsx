@@ -8,6 +8,7 @@ const geistSans = Geist({ subsets: ["latin"], variable: "--font-sans" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://reuben.inc"),
   title: "Reuben | Engineering the Future of Systems",
   description: "Reuben builds data-aware tools for backend systems, simulation products, and developer infrastructure. Powered by the Reux prototype engine.",
   openGraph: {
