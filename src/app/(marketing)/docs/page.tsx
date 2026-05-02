@@ -141,8 +141,8 @@ export default function DocsPage() {
               <AnimatedButton href="/simulator" variant="primary">
                 Try Business Simulator
               </AnimatedButton>
-              <AnimatedButton href="/projects/reux" variant="secondary">
-                View Reux Project
+              <AnimatedButton href="#run-from-source" variant="secondary">
+                Run From Source
               </AnimatedButton>
             </div>
           </section>
