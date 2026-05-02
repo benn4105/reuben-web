@@ -5,11 +5,14 @@ import { useRouter } from "next/navigation";
 import ScenarioInputPanel from "@/components/simulator/ScenarioInputPanel";
 import MetricCard from "@/components/simulator/MetricCard";
 import ReuxSnippetPanel from "@/components/simulator/ReuxSnippetPanel";
+import TemplatePicker from "@/components/simulator/TemplatePicker";
 import { calculateMetrics, generateReuxSnippet } from "@/lib/simulation/engine";
 import { runSimulation, getOperationsDecision } from "@/lib/simulation/mock-service";
 import { SimulationApiError, type ValidationErrorIssue } from "@/lib/simulation/api-client";
+import { decodeShareLink, encodeShareLink, copyToClipboard } from "@/lib/simulation/share";
+import type { SimulationTemplate } from "@/lib/simulation/templates";
 import type { ScenarioInputs, MetricSnapshot } from "@/lib/simulation/types";
-import { Plus, Trash2, Wand2 } from "lucide-react";
+import { Plus, Trash2, Wand2, Share2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { SIMULATION_LIMITS } from "@/lib/simulation/constants";
@@ -115,6 +118,9 @@ export default function NewSimulationPage() {
   const [error, setError] = useState<string | null>(null);
   const [validationIssues, setValidationIssues] = useState<ValidationErrorIssue[] | null>(null);
   const [selectedPreset, setSelectedPreset] = useState<PresetKey | null>(null);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+  const [shareState, setShareState] = useState<"idle" | "copied">("idle");
+  const [showTemplates, setShowTemplates] = useState(false);
 
   function loadPreset(presetKey: PresetKey) {
     const preset = buildGuidedPreset(presetKey);
@@ -122,11 +128,35 @@ export default function NewSimulationPage() {
     setBaseline(preset.baseline);
     setScenarios(preset.scenarios);
     setSelectedPreset(presetKey);
+    setSelectedTemplateId(null);
     setError(null);
     setValidationIssues(null);
     setActiveTab("baseline");
     setLiveMetrics(calculateMetrics(preset.baseline));
     setLiveSnippet(generateReuxSnippet(preset.baseline));
+  }
+
+  function loadTemplate(template: SimulationTemplate) {
+    setSimulationName(template.name);
+    setBaseline(template.baseline);
+    setScenarios(template.scenarios);
+    setSelectedTemplateId(template.id);
+    setSelectedPreset(null);
+    setError(null);
+    setValidationIssues(null);
+    setActiveTab("baseline");
+    setLiveMetrics(calculateMetrics(template.baseline));
+    setLiveSnippet(generateReuxSnippet(template.baseline));
+  }
+
+  async function handleShare() {
+    if (!baseline) return;
+    const url = encodeShareLink(simulationName, baseline, scenarios);
+    const ok = await copyToClipboard(url);
+    if (ok) {
+      setShareState("copied");
+      setTimeout(() => setShareState("idle"), 2500);
+    }
   }
 
   useEffect(() => {
@@ -136,24 +166,37 @@ export default function NewSimulationPage() {
         setError(null);
         const { baseline: defaultBaseline, scenarios: defaultScenarios } = await getOperationsDecision();
 
-        const guidedPreset = guidedPresetFromSearch();
-        if (guidedPreset) {
-          const preset = buildGuidedPreset(guidedPreset);
-          setSimulationName(preset.name);
-          setBaseline(preset.baseline);
-          setScenarios(preset.scenarios);
-          setSelectedPreset(guidedPreset);
-          setLiveMetrics(calculateMetrics(preset.baseline));
-          setLiveSnippet(generateReuxSnippet(preset.baseline));
+        // Priority: share link > URL preset > defaults
+        const sharedConfig = typeof window !== "undefined" 
+          ? decodeShareLink(window.location.search) 
+          : null;
+
+        if (sharedConfig) {
+          setSimulationName(sharedConfig.name);
+          setBaseline(sharedConfig.baseline);
+          setScenarios(sharedConfig.scenarios);
+          setLiveMetrics(calculateMetrics(sharedConfig.baseline));
+          setLiveSnippet(generateReuxSnippet(sharedConfig.baseline));
         } else {
-          setBaseline(defaultBaseline);
-          if (defaultScenarios && defaultScenarios.length > 0) {
-            setScenarios([{ ...defaultScenarios[0], name: "Scenario A" }]);
+          const guidedPreset = guidedPresetFromSearch();
+          if (guidedPreset) {
+            const preset = buildGuidedPreset(guidedPreset);
+            setSimulationName(preset.name);
+            setBaseline(preset.baseline);
+            setScenarios(preset.scenarios);
+            setSelectedPreset(guidedPreset);
+            setLiveMetrics(calculateMetrics(preset.baseline));
+            setLiveSnippet(generateReuxSnippet(preset.baseline));
           } else {
-            setScenarios([{ ...defaultBaseline, name: "Scenario A" }]);
+            setBaseline(defaultBaseline);
+            if (defaultScenarios && defaultScenarios.length > 0) {
+              setScenarios([{ ...defaultScenarios[0], name: "Scenario A" }]);
+            } else {
+              setScenarios([{ ...defaultBaseline, name: "Scenario A" }]);
+            }
+            setLiveMetrics(calculateMetrics(defaultBaseline));
+            setLiveSnippet(generateReuxSnippet(defaultBaseline));
           }
-          setLiveMetrics(calculateMetrics(defaultBaseline));
-          setLiveSnippet(generateReuxSnippet(defaultBaseline));
         }
       } catch (err) {
         console.error("Failed to load defaults", err);
@@ -312,21 +355,46 @@ export default function NewSimulationPage() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">
-          Build Simulation
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-          Define a <strong>Baseline</strong>, create alternative <strong>Scenarios</strong>, and let the Reux engine compare them to recommend the safest path.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">
+            Build Simulation
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+            Define a <strong>Baseline</strong>, create alternative <strong>Scenarios</strong>, and let the Reux engine compare them to recommend the safest path.
+          </p>
+        </div>
+        {baseline && (
+          <Button
+            onClick={handleShare}
+            variant="outline"
+            size="sm"
+            className="gap-2 shrink-0 border-white/[0.08] text-gray-400 hover:text-white"
+          >
+            {shareState === "copied" ? (
+              <><Check size={14} className="text-emerald-400" /> Link Copied</>
+            ) : (
+              <><Share2 size={14} /> Share Config</>
+            )}
+          </Button>
+        )}
       </div>
 
       {/* Presets and Simulation Name */}
       <div className="flex flex-col gap-6">
-        <div className="space-y-3">
-          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-            Guided Demo Presets
-          </label>
+        {/* Template Picker */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Quick Presets
+            </label>
+            <button
+              onClick={() => setShowTemplates(!showTemplates)}
+              className="text-xs text-gray-500 hover:text-cyan-400 transition-colors"
+            >
+              {showTemplates ? "Hide templates" : "Browse industry templates"}
+            </button>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button
               onClick={() => loadPreset("expansion")}
@@ -377,6 +445,15 @@ export default function NewSimulationPage() {
               <div className="mt-3 text-[11px] font-semibold text-rose-400/80 uppercase tracking-wider">Best for: Stress Testing</div>
             </button>
           </div>
+
+          {showTemplates && (
+            <div className="pt-2 border-t border-white/[0.06]">
+              <TemplatePicker
+                onSelect={loadTemplate}
+                selectedId={selectedTemplateId}
+              />
+            </div>
+          )}
         </div>
 
         <div className="space-y-2 max-w-md">

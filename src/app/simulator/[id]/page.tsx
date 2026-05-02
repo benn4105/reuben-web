@@ -14,6 +14,8 @@ import { getSimulation } from "@/lib/simulation/api-client";
 import type { Simulation } from "@/lib/simulation/types";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { encodeShareLink, copyToClipboard } from "@/lib/simulation/share";
+import { Share2, Check } from "lucide-react";
 
 const CHART_COLORS = [
   "#64748b", // slate (baseline)
@@ -45,6 +47,21 @@ export default function SimulationResultsPage({
   const [activeMetric, setActiveMetric] = useState<
     "margin" | "revenue" | "operatingCost" | "productivity" | "riskScore" | "workforceLoad"
   >("margin");
+  const [shareState, setShareState] = useState<"idle" | "copied">("idle");
+
+  async function handleShare() {
+    if (!simulation) return;
+    const url = encodeShareLink(
+      simulation.name,
+      simulation.baselineInputs,
+      simulation.scenarios.slice(1).map(s => s.inputs)
+    );
+    const ok = await copyToClipboard(url);
+    if (ok) {
+      setShareState("copied");
+      setTimeout(() => setShareState("idle"), 2500);
+    }
+  }
 
   const loadSimulation = useCallback(async () => {
     try {
@@ -138,6 +155,18 @@ export default function SimulationResultsPage({
           </p>
         </div>
         <div className="flex gap-2 shrink-0">
+          <Button
+            onClick={handleShare}
+            variant="outline"
+            size="sm"
+            className="gap-2 border-white/[0.08] text-gray-400 hover:text-white"
+          >
+            {shareState === "copied" ? (
+              <><Check size={14} className="text-emerald-400" /> Copied</>
+            ) : (
+              <><Share2 size={14} /> Share</>
+            )}
+          </Button>
           <Button
             onClick={() => router.push("/simulator/new")}
             variant="outline"
