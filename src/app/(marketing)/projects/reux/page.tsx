@@ -188,6 +188,86 @@ export default function ReuxPage() {
           </div>
         </motion.div>
 
+        <motion.section
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="mb-24 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03]"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="p-6 md:p-10 lg:p-12">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-emerald-300">
+                Sellable prototype
+              </div>
+              <h2 className="mb-5 text-3xl font-black tracking-tight text-white md:text-5xl">
+                Business Simulator
+              </h2>
+              <p className="mb-6 max-w-2xl text-lg leading-relaxed text-gray-300">
+                A public decision simulator for operators who want to test staffing, pricing, demand, capacity, and process changes before committing real money.
+              </p>
+              <p className="mb-8 max-w-2xl text-base leading-relaxed text-gray-400">
+                The frontend is a normal modern web app. Reux powers the backend simulation model: assumptions, forecast rules, scenario comparison, recommendation logic, and the transparency layer that shows what was evaluated.
+              </p>
+
+              <div className="mb-8 grid gap-3 sm:grid-cols-2">
+                {[
+                  "Compare operational scenarios in minutes",
+                  "Forecast margin, cost, risk, and workforce load",
+                  "Get a recommended path with tradeoffs",
+                  "Share temporary result links with a team",
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-3 rounded-xl border border-white/8 bg-black/20 p-3">
+                    <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#00F0FF]" />
+                    <span className="text-sm leading-relaxed text-gray-300">{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <AnimatedButton href="/simulator" variant="primary">
+                  Try the Live Demo
+                </AnimatedButton>
+                <AnimatedButton href="/contact" variant="secondary">
+                  Bring One Spreadsheet Decision
+                </AnimatedButton>
+              </div>
+            </div>
+
+            <div className="border-t border-white/10 bg-[#050507] p-6 md:p-10 lg:border-l lg:border-t-0">
+              <div className="mb-6">
+                <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#00F0FF]">
+                  Best fit
+                </div>
+                <h3 className="text-2xl font-bold text-white">Teams making expensive operational calls</h3>
+              </div>
+              <div className="space-y-4">
+                {[
+                  {
+                    label: "Who it is for",
+                    copy: "Founders, operators, department leads, and analysts who need a fast way to pressure-test business decisions.",
+                  },
+                  {
+                    label: "Decisions it helps test",
+                    copy: "Hiring plans, overtime reductions, pricing changes, demand spikes, quality risk, and capacity planning.",
+                  },
+                  {
+                    label: "Why Reux matters",
+                    copy: "The decision logic is explicit and inspectable instead of hidden inside one-off spreadsheet formulas or scattered app code.",
+                  },
+                ].map((item) => (
+                  <div key={item.label} className="rounded-2xl border border-white/8 bg-white/[0.03] p-5">
+                    <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                      {item.label}
+                    </div>
+                    <p className="text-sm leading-relaxed text-gray-300">{item.copy}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}

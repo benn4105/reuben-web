@@ -6,8 +6,8 @@ import ProjectCard from "@/components/ui/ProjectCard";
 const liveProjects = [
   {
     title: "Business Simulator",
-    description: "A live public demo for modeling workforce, cost, and productivity scenarios. Compare forecasted outcomes and see the Reux prototype engine evaluate each path.",
-    tags: ["Live Demo", "Simulation", "Decision Logic"],
+    description: "A live public product demo for testing staffing, pricing, capacity, and process changes before committing real money. Reux powers the forecast, recommendation, and transparency layer.",
+    tags: ["Live Demo", "Sellable Prototype", "Decision Logic"],
     href: "/simulator",
     featured: true,
   },
@@ -16,7 +16,7 @@ const liveProjects = [
 const prototypeProjects = [
   {
     title: "Reux Language",
-    description: "A prototype backend language for schemas, transactions, migrations, simulations, and decision logic. Reux is prototype-complete and moving toward public beta.",
+    description: "A prototype backend language for schemas, transactions, migrations, simulations, and decision logic. Its first public proof point is the Business Simulator.",
     tags: ["Prototype Complete", "Backend Language", "Simulation"],
     href: "/projects/reux",
     featured: false,
