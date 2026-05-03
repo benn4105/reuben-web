@@ -1,12 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+function getInitialContactContext() {
+  const params = new URLSearchParams(window.location.search);
+  const requestedTopic = params.get("topic");
+  const source = params.get("source");
+  const simulation = params.get("simulation");
+
+  if (requestedTopic === "business-simulator") {
+    return {
+      topic: "business-simulator",
+      message: `I want to explore a Business Simulator pilot${simulation ? ` based on "${simulation}"` : ""}. I can provide one spreadsheet decision and a few scenarios to model.`,
+    };
+  }
+
+  if (source === "simulator-result") {
+    return { topic: "enterprise", message: "" };
+  }
+
+  return { topic: "reux", message: "" };
+}
+
 export default function ContactPage() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [topic, setTopic] = useState("reux");
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      const context = getInitialContactContext();
+      setTopic(context.topic);
+      setMessage(context.message);
+    }, 0);
+
+    return () => window.clearTimeout(id);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,7 +64,7 @@ export default function ContactPage() {
             Get in Touch
           </h1>
           <p className="text-xl text-gray-400">
-            Have questions about Reux, PLOS, or enterprise simulation capabilities? We would love to hear from you.
+            Have questions about Reux, the Business Simulator, PLOS, or enterprise simulation capabilities? We would love to hear from you.
           </p>
         </motion.div>
 
@@ -73,8 +105,11 @@ export default function ContactPage() {
                 <label htmlFor="topic" className="text-sm font-medium text-gray-300">Topic</label>
                 <select 
                   id="topic" 
+                  value={topic}
+                  onChange={(event) => setTopic(event.target.value)}
                   className="w-full h-10 px-3 py-2 rounded-md bg-black/50 border border-white/10 text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20"
                 >
+                  <option value="business-simulator">Business Simulator Pilot</option>
                   <option value="reux">Reux / Developer Preview</option>
                   <option value="enterprise">Enterprise Simulation</option>
                   <option value="plos">PLOS Early Access</option>
@@ -87,6 +122,8 @@ export default function ContactPage() {
                   id="message" 
                   required 
                   rows={5}
+                  value={message}
+                  onChange={(event) => setMessage(event.target.value)}
                   placeholder="How can we help?"
                   className="w-full px-3 py-2 rounded-md bg-black/50 border border-white/10 text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20 resize-none"
                 />
