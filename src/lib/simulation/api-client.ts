@@ -111,6 +111,32 @@ export class SimulationApiError extends Error {
   }
 }
 
+export interface PilotRequestPayload {
+  name: string;
+  email: string;
+  decision: string;
+  company?: string;
+  role?: string;
+  phone?: string;
+  sourceRunId?: string;
+  pageUrl?: string;
+}
+
+export interface PilotRequestResponse {
+  ok: true;
+  request: {
+    id: string;
+    receivedAt: string;
+  };
+  delivery: {
+    status: "sent" | "disabled";
+    channel: "resend" | "none";
+    providerId?: string;
+    fallbackEmail?: string;
+    mailto?: string;
+  };
+}
+
 interface FetchOptions extends RequestInit {
   retries?: number;
 }
@@ -410,6 +436,14 @@ export async function runReuxSimulationModel(
     method: "POST",
     body: JSON.stringify({ simulationName: name, ...request }),
     retries: 3,
+  });
+}
+
+export async function submitPilotRequest(request: PilotRequestPayload): Promise<PilotRequestResponse> {
+  return fetchWithRetry<PilotRequestResponse>("/api/pilot-requests", {
+    method: "POST",
+    body: JSON.stringify(request),
+    retries: 1,
   });
 }
 

@@ -18,7 +18,7 @@ Vercel must have:
 
 ```env
 NEXT_PUBLIC_REUX_DEMO_URL=https://reux-pilot-demo-production.up.railway.app
-NEXT_PUBLIC_CONTACT_EMAIL=stevent0522@gmail.com
+NEXT_PUBLIC_CONTACT_EMAIL=buildreuben.dev@gmail.com
 ```
 
 Rules:
@@ -42,6 +42,14 @@ CONTACT_FROM_EMAIL=Reuben <hello@yourdomain.com>
 ```
 
 If neither server-side intake option is configured, or if configured delivery fails, the contact form opens a prefilled email draft using `NEXT_PUBLIC_CONTACT_EMAIL`.
+
+The simulator Founder Pilot panels submit directly to the Railway `/api/pilot-requests` endpoint when `NEXT_PUBLIC_REUX_DEMO_URL` is configured. Until a branded sending domain is verified in Resend, Railway should keep:
+
+```env
+REUX_PILOT_REQUEST_FALLBACK_EMAIL=buildreuben.dev@gmail.com
+```
+
+That keeps the visible pilot request forms working through a prepared email handoff.
 
 Railway must have:
 
@@ -67,9 +75,9 @@ Then manually confirm:
 - `/simulator` shows `Live Connected`, not `Local Mock`.
 - `/simulator/new` loads all four templates.
 - A guided demo can run without login, admin token, or private data.
-- The result page shows recommendation, forecast chart, scenario comparison, Reux transparency, and pilot CTA.
-- The pilot CTA opens `/contact` with `Business Simulator Pilot` selected and a prefilled message.
-- Submitting the contact form either delivers through webhook/email or opens the mail fallback.
+- The result page shows recommendation, forecast chart, scenario comparison, Reux transparency, and the Founder Pilot request form.
+- The `/projects/reux/demo` page shows the Founder Pilot request form below the embedded demo.
+- Submitting the Founder Pilot form either returns a Railway request ID or opens a prepared email to `NEXT_PUBLIC_CONTACT_EMAIL`.
 
 ## Deployment Checklist
 
@@ -83,7 +91,7 @@ Then manually confirm:
    - Run the simulation.
    - Copy the saved result link.
    - Open the result link in a new tab.
-   - Click `Start Pilot` and verify the contact form prefill.
+   - Submit the Founder Pilot form and verify the success state or prepared email handoff.
 
 ## Smoke Check Details
 
@@ -111,7 +119,7 @@ node scripts/check-live-demo.mjs --site https://your-preview.vercel.app --api ht
 - Templates use sample assumptions only.
 - Saved result links are temporary.
 - Configuration links remain useful even if a saved run expires.
-- Contact/pilot CTA is the conversion path for real business data.
+- Founder Pilot forms are the conversion path for real business data.
 
 ## Common Failure Modes
 

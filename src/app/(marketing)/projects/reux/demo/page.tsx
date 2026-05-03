@@ -1,6 +1,7 @@
 import { ExternalLink, Rocket } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import DemoIframe from "@/components/ui/DemoIframe";
+import PilotRequestPanel from "@/components/simulator/PilotRequestPanel";
 import { reuxDemoUrl } from "@/lib/demo";
 
 interface ReuxDemoPageProps {
@@ -65,6 +66,10 @@ export default async function ReuxDemoPage({ searchParams }: ReuxDemoPageProps) 
             </AnimatedButton>
           </div>
         )}
+
+        <div className="mt-6">
+          <PilotRequestPanel />
+        </div>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import ForecastChart from "@/components/simulator/ForecastChart";
 import RecommendationPanel from "@/components/simulator/RecommendationPanel";
 import ScenarioComparisonTable from "@/components/simulator/ScenarioComparisonTable";
 import ReuxSnippetPanel from "@/components/simulator/ReuxSnippetPanel";
+import PilotRequestPanel from "@/components/simulator/PilotRequestPanel";
 import { LoadingMetrics, LoadingChart } from "@/components/simulator/LoadingState";
 import { ErrorState } from "@/components/simulator/EmptyState";
 import { getSimulation } from "@/lib/simulation/mock-service";
@@ -23,7 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { encodeShareLink, copyToClipboard } from "@/lib/simulation/share";
 import { exportToCsv, exportToPdf } from "@/lib/simulation/export";
-import { Share2, Check, Download, FileText, FileSpreadsheet, Link2, Clock, MessageSquare, ArrowRight, BarChart3, ClipboardList, DatabaseZap, Presentation } from "lucide-react";
+import { Share2, Check, Download, FileText, FileSpreadsheet, Link2, Clock, MessageSquare, ArrowRight, BarChart3 } from "lucide-react";
 
 const CHART_COLORS = [
   "#64748b", // slate (baseline)
@@ -454,71 +455,9 @@ export default function SimulationResultsPage({
         />
       </div>
 
-      {/* Sales CTA */}
+      {/* Founder Pilot Request */}
       <div className="pt-6 border-t border-white/[0.06]">
-        <div className="overflow-hidden rounded-xl border border-cyan-500/20 bg-cyan-500/[0.04]">
-          <div className="grid gap-0 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="p-5 sm:p-6">
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-cyan-500/25 bg-cyan-500/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-cyan-200">
-                Pilot-ready workflow
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Want this with your business data?</h3>
-              <p className="max-w-2xl text-sm leading-relaxed text-gray-400">
-                Send one real spreadsheet decision, and we can turn it into a custom Reux-backed simulator: your assumptions, your scenarios, your recommendation logic.
-              </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                <Button asChild size="sm" className="gap-1.5 bg-white text-black hover:bg-gray-200">
-                  <Link href={`/contact?topic=business-simulator&source=simulator-result&simulation=${encodeURIComponent(simulation.name)}`}>
-                    <MessageSquare size={14} /> Start Pilot Conversation
-                  </Link>
-                </Button>
-                {isShareableRun && (
-                  <Button
-                    onClick={handleCopyLink}
-                    variant="outline"
-                    size="sm"
-                    className="gap-1.5 border-white/[0.08] text-gray-300 hover:text-white"
-                  >
-                    {linkCopyState === "copied" ? (
-                      <><Check size={14} className="text-emerald-400" /> Link Copied</>
-                    ) : (
-                      <><Link2 size={14} /> Copy Result Link</>
-                    )}
-                  </Button>
-                )}
-              </div>
-            </div>
-            <div className="border-t border-white/[0.06] bg-black/20 p-5 sm:p-6 lg:border-l lg:border-t-0">
-              <div className="grid gap-3">
-                {[
-                  {
-                    icon: ClipboardList,
-                    title: "1. Bring one decision",
-                    copy: "A staffing, pricing, capacity, or process-change spreadsheet is enough to start.",
-                  },
-                  {
-                    icon: DatabaseZap,
-                    title: "2. Model it in Reux",
-                    copy: "We turn the assumptions into explicit forecast and recommendation logic.",
-                  },
-                  {
-                    icon: Presentation,
-                    title: "3. Review a pilot demo",
-                    copy: "You get a focused simulator your team can test before any larger build.",
-                  },
-                ].map((step) => (
-                  <div key={step.title} className="flex gap-3 rounded-lg border border-white/[0.06] bg-white/[0.03] p-3">
-                    <step.icon className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />
-                    <div>
-                      <p className="text-xs font-semibold text-white">{step.title}</p>
-                      <p className="mt-1 text-xs leading-relaxed text-gray-500">{step.copy}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <PilotRequestPanel sourceRunId={id} simulationName={simulation.name} />
       </div>
 
       {/* Next Steps */}

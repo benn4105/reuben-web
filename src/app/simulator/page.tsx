@@ -5,6 +5,7 @@ import Link from "next/link";
 import MetricCard from "@/components/simulator/MetricCard";
 import SimulationCard from "@/components/simulator/SimulationCard";
 import ReuxModelCatalog from "@/components/simulator/ReuxModelCatalog";
+import PilotRequestPanel from "@/components/simulator/PilotRequestPanel";
 import { EmptyState } from "@/components/simulator/EmptyState";
 import { LoadingCards, LoadingMetrics } from "@/components/simulator/LoadingState";
 import { SimulatorOnboarding } from "@/components/simulator/SimulatorOnboarding";
@@ -173,6 +174,8 @@ export default function SimulatorDashboard() {
           </p>
         </div>
       </section>
+
+      <PilotRequestPanel />
 
       <ReuxModelCatalog />
 
