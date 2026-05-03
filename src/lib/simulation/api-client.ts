@@ -29,6 +29,7 @@ const STORAGE_KEY = "reux_business_simulations";
 const SESSION_STORAGE_KEY = "reux_demo_session_id";
 const DEFAULT_AVERAGE_ORDER_VALUE = 85;
 const DEFAULT_GROSS_MARGIN_RATE = 0.42;
+const DEFAULT_BUSINESS_SIMULATION_ID = "operations-decision";
 const OPERATIONS_SIMULATION_NAME = "operations_decision";
 
 export function hasLiveApi(): boolean {
@@ -193,8 +194,18 @@ interface BackendComparison {
     scenarioName: string;
     score: number;
     summary: string;
+    decisionSummary?: string;
+    recommendedAction?: string;
+    confidence?: "low" | "medium" | "high";
+    confidenceSummary?: string;
+    whyThisWon?: string;
+    whatChangedFromBaseline?: string[];
+    keyMetricDeltas?: BackendMetricDelta[];
+    riskSummary?: string;
+    tradeoffSummary?: string;
     reasons: string[];
     tradeoffs: string[];
+    watchouts?: string[];
   };
 }
 
@@ -217,6 +228,9 @@ interface BackendRunResponse {
     name: string;
     createdAt: string;
     expiresAt?: string;
+    storage?: "postgres" | "memory";
+    persistenceWarning?: string;
+    expiryNote?: string;
   };
 }
 
@@ -237,6 +251,12 @@ interface BackendSavedRunRecord {
   riskRange?: [number, number];
   recommendedScenarioId?: string;
   recommendedScenarioName?: string;
+  displayTitle?: string;
+  displaySubtitle?: string;
+  resultSummary?: string;
+  expiryNote?: string;
+  storage?: "postgres" | "memory";
+  persistenceWarning?: string;
   request: unknown;
   response: BackendRunResponse;
 }
@@ -400,7 +420,7 @@ export async function runSimulation(request: RunSimulationRequest): Promise<RunS
       body: JSON.stringify(toBackendRunRequest(request)),
       retries: 2,
     });
-    const simulation = toFrontendSimulation(request.name, backendResponse);
+    const simulation = toFrontendSimulation(request.name, backendResponse, request.simulationId);
     const runMeta = backendResponse.run
       ? toSavedRunMeta(backendResponse.run, request.name)
       : undefined;
@@ -445,6 +465,12 @@ export async function listSavedRuns(): Promise<ListSavedRunsResponse> {
   interface BackendRunSummary {
     id: string;
     name?: string;
+    displayTitle?: string;
+    displaySubtitle?: string;
+    resultSummary?: string;
+    expiryNote?: string;
+    storage?: "postgres" | "memory";
+    persistenceWarning?: string;
     simulationId?: string;
     createdAt: string;
     scenarioCount: number;
@@ -463,6 +489,12 @@ export async function listSavedRuns(): Promise<ListSavedRunsResponse> {
     runs: data.runs.map((r): SavedRunSummary => ({
       id: r.id,
       name: r.name ?? r.simulationId ?? "Saved Business Simulation",
+      displayTitle: r.displayTitle,
+      displaySubtitle: r.displaySubtitle,
+      resultSummary: r.resultSummary,
+      expiryNote: r.expiryNote,
+      storage: r.storage,
+      persistenceWarning: r.persistenceWarning,
       createdAt: r.createdAt,
       scenarioCount: r.scenarioCount,
       bestMargin: r.bestMargin ?? 0,
@@ -473,6 +505,21 @@ export async function listSavedRuns(): Promise<ListSavedRunsResponse> {
   };
 }
 
+export async function getBusinessSimulationTemplate(id = DEFAULT_BUSINESS_SIMULATION_ID): Promise<{ baseline: ScenarioInputs; scenarios: ScenarioInputs[] }> {
+  const template = await fetchWithRetry<BackendTemplateResponse>(`/api/simulations/${encodeURIComponent(id)}`);
+  const baseline = toFrontendInputs("Current Plan", template.defaultAssumptions);
+
+  return {
+    baseline,
+    scenarios: template.exampleScenarios.map(scenario =>
+      toFrontendInputs(scenario.name, {
+        ...template.defaultAssumptions,
+        ...scenario.assumptions,
+      }, scenario.id, scenario.description)
+    ),
+  };
+}
+
 export async function getSavedRun(id: string): Promise<GetSavedRunResponse> {
   const data = await fetchWithRetry<{ run: BackendSavedRunRecord }>(`/api/simulation-runs/${encodeURIComponent(id)}`, {
     method: "GET",
@@ -480,8 +527,23 @@ export async function getSavedRun(id: string): Promise<GetSavedRunResponse> {
   });
 
   const response = data.run.response;
-  const simulation = toFrontendSimulation(data.run.name ?? response.simulation.name, response);
-  return { simulation: { ...simulation, id } };
+  const simulation = toFrontendSimulation(data.run.name ?? response.simulation.name, response, data.run.simulationId);
+  return {
+    simulation: {
+      ...simulation,
+      id,
+      savedRun: {
+        ...simulation.savedRun,
+        id,
+        name: simulation.savedRun?.name ?? data.run.name ?? response.simulation.name,
+        createdAt: simulation.savedRun?.createdAt ?? data.run.createdAt,
+        expiresAt: simulation.savedRun?.expiresAt ?? data.run.expiresAt,
+        storage: simulation.savedRun?.storage ?? data.run.storage,
+        persistenceWarning: simulation.savedRun?.persistenceWarning ?? data.run.persistenceWarning,
+        expiryNote: simulation.savedRun?.expiryNote ?? data.run.expiryNote,
+      },
+    },
+  };
 }
 
 export async function compareScenarios(request: CompareRequest): Promise<CompareResponse> {
@@ -521,18 +583,7 @@ export async function compareScenarios(request: CompareRequest): Promise<Compare
 
 export async function getOperationsDecision(): Promise<{ baseline: ScenarioInputs; scenarios: ScenarioInputs[] }> {
   try {
-    const template = await fetchWithRetry<BackendTemplateResponse>("/api/simulations/operations-decision");
-    const baseline = toFrontendInputs("Current Operations", template.defaultAssumptions);
-
-    return {
-      baseline,
-      scenarios: template.exampleScenarios.map(scenario =>
-        toFrontendInputs(scenario.name, {
-          ...template.defaultAssumptions,
-          ...scenario.assumptions,
-        })
-      ),
-    };
+    return await getBusinessSimulationTemplate(DEFAULT_BUSINESS_SIMULATION_ID);
   } catch {
     const response = await runReuxSimulationModel(OPERATIONS_SIMULATION_NAME);
     const baseline = toFrontendInputsFromReuxAssumptions(
@@ -571,8 +622,8 @@ function toReuxAssumptionOverrides(inputs: ScenarioInputs): Record<string, ReuxS
     employees: inputs.employees,
     averageHourlyCost: inputs.avgHourlyCost,
     weeklyDemand: inputs.weeklyDemand,
-    averageOrderValue: DEFAULT_AVERAGE_ORDER_VALUE,
-    grossMarginRate: DEFAULT_GROSS_MARGIN_RATE,
+    averageOrderValue: inputs.averageOrderValue || DEFAULT_AVERAGE_ORDER_VALUE,
+    grossMarginRate: (inputs.grossMarginPct || DEFAULT_GROSS_MARGIN_RATE * 100) / 100,
     productivityGainRate: inputs.productivityGainPct / 100,
     overtimeReductionRate: inputs.overtimeReductionPct / 100,
     supplierDelayRiskRate: inputs.supplierDelayRiskPct / 100,
@@ -730,6 +781,8 @@ function toFrontendInputsFromReuxAssumptions(
     employees: numberAssumption(assumptions.employees, 50),
     avgHourlyCost: numberAssumption(assumptions.averageHourlyCost, 32),
     weeklyDemand: numberAssumption(assumptions.weeklyDemand, 1200),
+    averageOrderValue: numberAssumption(assumptions.averageOrderValue, DEFAULT_AVERAGE_ORDER_VALUE),
+    grossMarginPct: numberAssumption(assumptions.grossMarginRate, DEFAULT_GROSS_MARGIN_RATE) * 100,
     productivityGainPct: numberAssumption(assumptions.productivityGainRate, 0) * 100,
     overtimeReductionPct: numberAssumption(assumptions.overtimeReductionRate, 0) * 100,
     supplierDelayRiskPct: numberAssumption(assumptions.supplierDelayRiskRate, 0) * 100,
@@ -784,7 +837,7 @@ function labelFromId(value: string): string {
 function toBackendRunRequest(request: RunSimulationRequest) {
   return {
     name: request.name,
-    simulationId: "operations-decision",
+    simulationId: request.simulationId ?? DEFAULT_BUSINESS_SIMULATION_ID,
     baseline: toBackendAssumptions(request.baseline),
     scenarios: request.scenarios.map(toBackendScenarioInput),
     options: {
@@ -799,6 +852,9 @@ function toSavedRunMeta(run: BackendRunResponse["run"], fallbackName: string): S
   return {
     id: run.id,
     name: run.name ?? fallbackName,
+    storage: run.storage,
+    persistenceWarning: run.persistenceWarning,
+    expiryNote: run.expiryNote,
     createdAt: run.createdAt,
     expiresAt: run.expiresAt,
   };
@@ -809,7 +865,17 @@ function toBackendScenarioInput(inputs: ScenarioInputs): BackendScenarioInput {
     id: inputs.id || slugify(inputs.name),
     name: inputs.name,
     description: inputs.description,
-    assumptions: toBackendAssumptions(inputs),
+    assumptions: {
+      employees: inputs.employees,
+      averageHourlyCost: inputs.avgHourlyCost,
+      weeklyDemand: inputs.weeklyDemand,
+      averageOrderValue: inputs.averageOrderValue || DEFAULT_AVERAGE_ORDER_VALUE,
+      grossMarginRate: (inputs.grossMarginPct || DEFAULT_GROSS_MARGIN_RATE * 100) / 100,
+      productivityGainRate: inputs.productivityGainPct / 100,
+      overtimeReductionRate: inputs.overtimeReductionPct / 100,
+      supplierDelayRiskRate: inputs.supplierDelayRiskPct / 100,
+      defectRate: inputs.errorDefectRatePct / 100,
+    },
   };
 }
 
@@ -818,8 +884,8 @@ function toBackendAssumptions(inputs: ScenarioInputs): BackendAssumptions {
     employees: inputs.employees,
     averageHourlyCost: inputs.avgHourlyCost,
     weeklyDemand: inputs.weeklyDemand,
-    averageOrderValue: DEFAULT_AVERAGE_ORDER_VALUE,
-    grossMarginRate: DEFAULT_GROSS_MARGIN_RATE,
+    averageOrderValue: inputs.averageOrderValue || DEFAULT_AVERAGE_ORDER_VALUE,
+    grossMarginRate: (inputs.grossMarginPct || DEFAULT_GROSS_MARGIN_RATE * 100) / 100,
     productivityGainRate: inputs.productivityGainPct / 100,
     overtimeReductionRate: inputs.overtimeReductionPct / 100,
     supplierDelayRiskRate: inputs.supplierDelayRiskPct / 100,
@@ -865,21 +931,25 @@ function toBackendMetricSnapshot(inputs: ScenarioInputs, metrics: MetricSnapshot
   };
 }
 
-function toFrontendSimulation(name: string, response: BackendRunResponse): Simulation {
+function toFrontendSimulation(name: string, response: BackendRunResponse, templateId = response.simulation.id): Simulation {
   const createdAt = response.generatedAt;
   const baseline = toScenarioResult(response.baseline, response.reuxSource);
   const scenarios = response.scenarios.map(scenario => toScenarioResult(scenario, response.reuxSource));
   const comparison = toComparisonResult(response.comparison, baseline, scenarios);
+  const savedRun = toSavedRunMeta(response.run, name);
 
   return {
     id: `sim_${Date.now()}`,
     name,
+    templateId,
+    templateName: response.simulation.name,
     createdAt,
     updatedAt: response.generatedAt,
     status: "completed",
     baselineInputs: baseline.inputs,
     scenarios: [baseline, ...scenarios],
     comparison,
+    ...(savedRun ? { savedRun } : {}),
   };
 }
 
@@ -895,12 +965,16 @@ function toScenarioResult(result: BackendScenarioResult, reuxSource?: string): S
   };
 }
 
-function toFrontendInputs(name: string, assumptions: BackendAssumptions): ScenarioInputs {
+function toFrontendInputs(name: string, assumptions: BackendAssumptions, id?: string, description?: string): ScenarioInputs {
   return {
+    ...(id ? { id } : {}),
     name,
+    ...(description ? { description } : {}),
     employees: assumptions.employees,
     avgHourlyCost: assumptions.averageHourlyCost,
     weeklyDemand: assumptions.weeklyDemand,
+    averageOrderValue: assumptions.averageOrderValue,
+    grossMarginPct: assumptions.grossMarginRate * 100,
     productivityGainPct: assumptions.productivityGainRate * 100,
     overtimeReductionPct: assumptions.overtimeReductionRate * 100,
     supplierDelayRiskPct: assumptions.supplierDelayRiskRate * 100,
@@ -956,11 +1030,22 @@ function toComparisonResult(
     ),
     recommendedId,
     recommendationReason: [
+      recommendation?.decisionSummary,
       recommendation?.summary,
       ...(recommendation?.reasons ?? []),
       ...(recommendation?.tradeoffs ?? []).map(tradeoff => `Tradeoff: ${tradeoff}`),
     ].filter(Boolean).join(" "),
     recommendationSummary: recommendation?.summary,
+    decisionSummary: recommendation?.decisionSummary,
+    recommendedAction: recommendation?.recommendedAction,
+    confidence: recommendation?.confidence,
+    confidenceSummary: recommendation?.confidenceSummary,
+    whyThisWon: recommendation?.whyThisWon,
+    whatChangedFromBaseline: recommendation?.whatChangedFromBaseline ?? [],
+    keyMetricDeltas: recommendation?.keyMetricDeltas?.map(toMetricDelta) ?? [],
+    riskSummary: recommendation?.riskSummary,
+    tradeoffSummary: recommendation?.tradeoffSummary,
+    watchouts: recommendation?.watchouts ?? [],
     recommendationReasons: recommendation?.reasons ?? [],
     recommendationTradeoffs: recommendation?.tradeoffs ?? [],
     firstDivergenceWeek: 1,

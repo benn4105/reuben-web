@@ -24,6 +24,7 @@ interface ScenarioInputPanelProps {
   onChange?: (values: ScenarioInputs) => void;
   onRun?: (values: ScenarioInputs) => void;
   isRunning?: boolean;
+  fieldErrors?: Partial<Record<keyof ScenarioInputs, string>>;
   className?: string;
 }
 
@@ -100,6 +101,7 @@ function NumberField({
   step = 1,
   prefix = "",
   tooltip,
+  error,
 }: {
   id: string;
   label: string;
@@ -110,6 +112,7 @@ function NumberField({
   step?: number;
   prefix?: string;
   tooltip?: string;
+  error?: string;
 }) {
   const labelContent = (
     <Label htmlFor={id} className="text-sm text-gray-300">
@@ -143,10 +146,12 @@ function NumberField({
           onChange={e => onChange(parseFloat(e.target.value) || 0)}
           className={cn(
             "font-mono tabular-nums",
-            prefix && "pl-7"
+            prefix && "pl-7",
+            error && "border-amber-500/50 focus:border-amber-500/70 focus:ring-amber-500/20"
           )}
         />
       </div>
+      {error && <p className="text-[11px] text-amber-400">{error}</p>}
     </div>
   );
 }
@@ -156,10 +161,11 @@ export default function ScenarioInputPanel({
   onChange,
   onRun,
   isRunning = false,
+  fieldErrors = {},
   className,
 }: ScenarioInputPanelProps) {
   const [values, setValues] = useState<ScenarioInputs>(
-    initialValues || DEFAULT_SCENARIO_INPUTS
+    normalizeInputs(initialValues || DEFAULT_SCENARIO_INPUTS)
   );
 
   // Notify parent of changes via useEffect (avoids setState during render)
@@ -252,6 +258,7 @@ export default function ScenarioInputPanel({
             min={1}
             max={500}
             tooltip="Total number of employees in the workforce"
+            error={fieldErrors.employees}
           />
           <NumberField
             id="hourly-cost"
@@ -262,6 +269,7 @@ export default function ScenarioInputPanel({
             max={200}
             prefix="$"
             tooltip="Average cost per employee per hour"
+            error={fieldErrors.avgHourlyCost}
           />
         </div>
         <div className="mt-4">
@@ -274,6 +282,31 @@ export default function ScenarioInputPanel({
             max={10000}
             step={50}
             tooltip="Expected number of orders per week"
+            error={fieldErrors.weeklyDemand}
+          />
+        </div>
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <NumberField
+            id="average-order-value"
+            label="Avg Order Value"
+            value={values.averageOrderValue}
+            onChange={v => update("averageOrderValue", v)}
+            min={1}
+            max={10000}
+            prefix="$"
+            tooltip="Average revenue per order or unit of demand"
+            error={fieldErrors.averageOrderValue}
+          />
+          <NumberField
+            id="gross-margin"
+            label="Gross Margin"
+            value={values.grossMarginPct}
+            onChange={v => update("grossMarginPct", v)}
+            min={0}
+            max={100}
+            step={0.5}
+            tooltip="Gross margin percentage before operating costs"
+            error={fieldErrors.grossMarginPct}
           />
         </div>
       </div>
@@ -390,4 +423,12 @@ export default function ScenarioInputPanel({
       </div>
     </div>
   );
+}
+
+function normalizeInputs(inputs: ScenarioInputs): ScenarioInputs {
+  return {
+    ...inputs,
+    averageOrderValue: inputs.averageOrderValue ?? 85,
+    grossMarginPct: inputs.grossMarginPct ?? 42,
+  };
 }

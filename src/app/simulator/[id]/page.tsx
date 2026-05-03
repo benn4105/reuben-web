@@ -287,6 +287,29 @@ export default function SimulationResultsPage({
         </div>
       </div>
 
+      {simulation.savedRun && (
+        <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/[0.05] p-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-white">
+                Shareable result saved
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                {simulation.savedRun.expiryNote || "This is a temporary public-demo result. Share links can expire automatically."}
+              </p>
+              {simulation.savedRun.persistenceWarning && (
+                <p className="text-xs text-amber-300 mt-1">{simulation.savedRun.persistenceWarning}</p>
+              )}
+            </div>
+            {simulation.savedRun.storage && (
+              <span className="w-fit rounded-full border border-white/[0.08] bg-white/[0.05] px-2.5 py-1 text-[11px] uppercase tracking-wider text-gray-300">
+                {simulation.savedRun.storage} storage
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Baseline Metrics */}
       <div>
         <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
@@ -342,6 +365,14 @@ export default function SimulationResultsPage({
             firstDivergenceWeek={comparison.firstDivergenceWeek}
             reason={comparison.recommendationReason}
             summary={comparison.recommendationSummary}
+            decisionSummary={comparison.decisionSummary}
+            recommendedAction={comparison.recommendedAction}
+            confidence={comparison.confidence}
+            confidenceSummary={comparison.confidenceSummary}
+            whatChangedFromBaseline={comparison.whatChangedFromBaseline}
+            riskSummary={comparison.riskSummary}
+            tradeoffSummary={comparison.tradeoffSummary}
+            watchouts={comparison.watchouts}
             reasons={comparison.recommendationReasons}
             tradeoffs={comparison.recommendationTradeoffs}
           />

@@ -7,7 +7,7 @@ import MetricCard from "@/components/simulator/MetricCard";
 import ReuxSnippetPanel from "@/components/simulator/ReuxSnippetPanel";
 import TemplatePicker from "@/components/simulator/TemplatePicker";
 import { calculateMetrics, generateReuxSnippet } from "@/lib/simulation/engine";
-import { runSimulation, getOperationsDecision } from "@/lib/simulation/mock-service";
+import { runSimulation, getOperationsDecision, getBusinessSimulationTemplate } from "@/lib/simulation/mock-service";
 import { SimulationApiError, type ValidationErrorIssue } from "@/lib/simulation/api-client";
 import { decodeShareLink, encodeShareLink, copyToClipboard } from "@/lib/simulation/share";
 import { saveDraft, loadDraft, clearDraft, formatDraftAge } from "@/lib/simulation/drafts";
@@ -40,6 +40,8 @@ function buildGuidedPreset(presetKey: PresetKey): GuidedPreset {
     employees: 50,
     avgHourlyCost: 28,
     weeklyDemand: 1200,
+    averageOrderValue: 85,
+    grossMarginPct: 42,
     productivityGainPct: 0,
     overtimeReductionPct: 0,
     supplierDelayRiskPct: 15,
@@ -57,6 +59,8 @@ function buildGuidedPreset(presetKey: PresetKey): GuidedPreset {
           employees: 65,
           avgHourlyCost: 28,
           weeklyDemand: 1500,
+          averageOrderValue: baseline.averageOrderValue,
+          grossMarginPct: baseline.grossMarginPct,
           productivityGainPct: 5,
           overtimeReductionPct: 20,
           supplierDelayRiskPct: 15,
@@ -77,6 +81,8 @@ function buildGuidedPreset(presetKey: PresetKey): GuidedPreset {
           employees: 50,
           avgHourlyCost: 28,
           weeklyDemand: 1350,
+          averageOrderValue: baseline.averageOrderValue,
+          grossMarginPct: baseline.grossMarginPct,
           productivityGainPct: 18,
           overtimeReductionPct: 50,
           supplierDelayRiskPct: 10,
@@ -96,6 +102,8 @@ function buildGuidedPreset(presetKey: PresetKey): GuidedPreset {
         employees: 50,
         avgHourlyCost: 35,
         weeklyDemand: 1800,
+        averageOrderValue: baseline.averageOrderValue,
+        grossMarginPct: baseline.grossMarginPct,
         productivityGainPct: 0,
         overtimeReductionPct: 0,
         supplierDelayRiskPct: 25,
@@ -104,6 +112,38 @@ function buildGuidedPreset(presetKey: PresetKey): GuidedPreset {
       },
     ],
   };
+}
+
+function fieldErrorsForActiveTab(
+  issues: ValidationErrorIssue[],
+  activeTab: "baseline" | number,
+): Partial<Record<keyof ScenarioInputs, string>> {
+  const prefix = activeTab === "baseline" ? "$.baseline" : `$.scenarios[${activeTab}].assumptions`;
+  const directPrefix = activeTab === "baseline" ? "baseline" : `scenarios[${activeTab}]`;
+  const map: Partial<Record<keyof ScenarioInputs, string>> = {};
+  const fieldMap: Record<string, keyof ScenarioInputs> = {
+    employees: "employees",
+    averageHourlyCost: "avgHourlyCost",
+    weeklyDemand: "weeklyDemand",
+    averageOrderValue: "averageOrderValue",
+    grossMarginRate: "grossMarginPct",
+    productivityGainRate: "productivityGainPct",
+    overtimeReductionRate: "overtimeReductionPct",
+    supplierDelayRiskRate: "supplierDelayRiskPct",
+    defectRate: "errorDefectRatePct",
+    forecastPeriods: "forecastWeeks",
+  };
+
+  for (const issue of issues) {
+    const normalized = issue.path.replace(/^\$/, "$");
+    if (!normalized.startsWith(prefix) && !normalized.startsWith(directPrefix)) continue;
+    const backendField = Object.keys(fieldMap).find((field) => normalized.endsWith(`.${field}`));
+    if (backendField) {
+      map[fieldMap[backendField]] = issue.message;
+    }
+  }
+
+  return map;
 }
 
 export default function NewSimulationPage() {
@@ -130,7 +170,7 @@ export default function NewSimulationPage() {
     setBaseline(preset.baseline);
     setScenarios(preset.scenarios);
     setSelectedPreset(presetKey);
-    setSelectedTemplateId(null);
+    setSelectedTemplateId("operations-decision");
     setError(null);
     setValidationIssues(null);
     setActiveTab("baseline");
@@ -138,17 +178,35 @@ export default function NewSimulationPage() {
     setLiveSnippet(generateReuxSnippet(preset.baseline));
   }
 
-  function loadTemplate(template: SimulationTemplate) {
-    setSimulationName(template.name);
-    setBaseline(template.baseline);
-    setScenarios(template.scenarios);
-    setSelectedTemplateId(template.id);
-    setSelectedPreset(null);
-    setError(null);
-    setValidationIssues(null);
-    setActiveTab("baseline");
-    setLiveMetrics(calculateMetrics(template.baseline));
-    setLiveSnippet(generateReuxSnippet(template.baseline));
+  async function loadTemplate(template: SimulationTemplate) {
+    try {
+      setIsLoadingDefaults(true);
+      const liveTemplate = await getBusinessSimulationTemplate(template.id);
+      setSimulationName(template.name);
+      setBaseline(liveTemplate.baseline);
+      setScenarios(liveTemplate.scenarios);
+      setSelectedTemplateId(template.id);
+      setSelectedPreset(null);
+      setError(null);
+      setValidationIssues(null);
+      setActiveTab("baseline");
+      setLiveMetrics(calculateMetrics(liveTemplate.baseline));
+      setLiveSnippet(generateReuxSnippet(liveTemplate.baseline));
+      setShowTemplates(false);
+    } catch {
+      setSimulationName(template.name);
+      setBaseline(template.baseline);
+      setScenarios(template.scenarios);
+      setSelectedTemplateId(template.id);
+      setSelectedPreset(null);
+      setError(null);
+      setValidationIssues(null);
+      setActiveTab("baseline");
+      setLiveMetrics(calculateMetrics(template.baseline));
+      setLiveSnippet(generateReuxSnippet(template.baseline));
+    } finally {
+      setIsLoadingDefaults(false);
+    }
   }
 
   async function handleShare() {
@@ -198,10 +256,12 @@ export default function NewSimulationPage() {
               setBaseline(preset.baseline);
               setScenarios(preset.scenarios);
               setSelectedPreset(guidedPreset);
+              setSelectedTemplateId("operations-decision");
               setLiveMetrics(calculateMetrics(preset.baseline));
               setLiveSnippet(generateReuxSnippet(preset.baseline));
             } else {
               setBaseline(defaultBaseline);
+              setSelectedTemplateId("operations-decision");
               if (defaultScenarios && defaultScenarios.length > 0) {
                 setScenarios([{ ...defaultScenarios[0], name: "Scenario A" }]);
               } else {
@@ -234,6 +294,7 @@ export default function NewSimulationPage() {
   }, [simulationName, baseline, scenarios]);
 
   const activeInputs = activeTab === "baseline" ? baseline : scenarios[activeTab];
+  const activeFieldErrors = fieldErrorsForActiveTab(validationIssues ?? [], activeTab);
 
   const handleInputChange = useCallback(
     (values: ScenarioInputs) => {
@@ -349,6 +410,7 @@ export default function NewSimulationPage() {
       setValidationIssues(null);
       const response = await runSimulation({
         name: simulationName,
+        simulationId: selectedTemplateId ?? "operations-decision",
         baseline,
         scenarios,
       });
@@ -644,6 +706,7 @@ export default function NewSimulationPage() {
               onChange={handleInputChange}
               onRun={handleRun}
               isRunning={isRunning}
+              fieldErrors={activeFieldErrors}
             />
           </div>
         </div>

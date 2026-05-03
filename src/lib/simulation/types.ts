@@ -9,6 +9,8 @@ export interface ScenarioInputs {
   employees: number;
   avgHourlyCost: number;
   weeklyDemand: number;
+  averageOrderValue: number;
+  grossMarginPct: number;
   productivityGainPct: number;    // 0–100
   overtimeReductionPct: number;   // 0–100
   supplierDelayRiskPct: number;   // 0–100
@@ -64,6 +66,16 @@ export interface ComparisonResult {
   recommendedId: string;
   recommendationReason: string; // Keep for backwards compatibility
   recommendationSummary?: string;
+  decisionSummary?: string;
+  recommendedAction?: string;
+  confidence?: "low" | "medium" | "high";
+  confidenceSummary?: string;
+  whyThisWon?: string;
+  whatChangedFromBaseline?: string[];
+  keyMetricDeltas?: MetricDelta[];
+  riskSummary?: string;
+  tradeoffSummary?: string;
+  watchouts?: string[];
   recommendationReasons?: string[];
   recommendationTradeoffs?: string[];
   firstDivergenceWeek: number;
@@ -72,12 +84,15 @@ export interface ComparisonResult {
 export interface Simulation {
   id: string;
   name: string;
+  templateId?: string;
+  templateName?: string;
   createdAt: string;
   updatedAt: string;
   status: "draft" | "running" | "completed" | "error";
   baselineInputs: ScenarioInputs;
   scenarios: ScenarioResult[];
   comparison?: ComparisonResult;
+  savedRun?: SavedRunMeta;
 }
 
 export interface SimulationSummary {
@@ -96,6 +111,7 @@ export interface SimulationSummary {
 
 export interface RunSimulationRequest {
   name: string;
+  simulationId?: string;
   baseline: ScenarioInputs;
   scenarios: ScenarioInputs[];
 }
@@ -164,6 +180,9 @@ export interface GetReuxSimulationResponse {
 export interface SavedRunMeta {
   id: string;          // "live_..." id
   name: string;
+  storage?: "postgres" | "memory";
+  persistenceWarning?: string;
+  expiryNote?: string;
   createdAt: string;
   expiresAt?: string;  // ISO timestamp — when the backend will garbage-collect the run
 }
@@ -171,6 +190,12 @@ export interface SavedRunMeta {
 export interface SavedRunSummary {
   id: string;
   name: string;
+  displayTitle?: string;
+  displaySubtitle?: string;
+  resultSummary?: string;
+  expiryNote?: string;
+  storage?: "postgres" | "memory";
+  persistenceWarning?: string;
   createdAt: string;
   scenarioCount: number;
   bestMargin: number;

@@ -23,6 +23,8 @@ interface CompactScenario {
   e: number;        // employees
   h: number;        // avgHourlyCost
   d: number;        // weeklyDemand
+  a: number;        // averageOrderValue
+  g: number;        // grossMarginPct
   p: number;        // productivityGainPct
   o: number;        // overtimeReductionPct
   s: number;        // supplierDelayRiskPct
@@ -36,6 +38,8 @@ function toCompact(inputs: ScenarioInputs): CompactScenario {
     e: inputs.employees,
     h: inputs.avgHourlyCost,
     d: inputs.weeklyDemand,
+    a: inputs.averageOrderValue,
+    g: inputs.grossMarginPct,
     p: inputs.productivityGainPct,
     o: inputs.overtimeReductionPct,
     s: inputs.supplierDelayRiskPct,
@@ -50,6 +54,8 @@ function fromCompact(compact: CompactScenario): ScenarioInputs {
     employees: compact.e,
     avgHourlyCost: compact.h,
     weeklyDemand: compact.d,
+    averageOrderValue: compact.a ?? 85,
+    grossMarginPct: compact.g ?? 42,
     productivityGainPct: compact.p,
     overtimeReductionPct: compact.o,
     supplierDelayRiskPct: compact.s,

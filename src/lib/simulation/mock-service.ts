@@ -13,6 +13,7 @@ import type {
 import { runScenario, findRecommendation } from "./engine";
 import { MOCK_SIMULATIONS } from "./mock-data";
 import * as liveApi from "./api-client";
+import { SIMULATION_TEMPLATES } from "./templates";
 
 let simulations: Simulation[] = [...MOCK_SIMULATIONS];
 
@@ -79,6 +80,7 @@ async function mockRunSimulation(request: RunSimulationRequest): Promise<RunSimu
   const simulation: Simulation = {
     id: `sim_${Date.now()}`,
     name: request.name,
+    templateId: request.simulationId,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     status: "completed",
@@ -303,5 +305,22 @@ export async function getOperationsDecision(): Promise<{ baseline: ScenarioInput
   return {
     baseline: { ...BASELINE_INPUTS, name: "Current Operations" },
     scenarios: SCENARIO_PRESETS.map((p) => ({ ...BASELINE_INPUTS, ...p })),
+  };
+}
+
+export async function getBusinessSimulationTemplate(id: string): Promise<{ baseline: ScenarioInputs; scenarios: ScenarioInputs[] }> {
+  if (liveApi.hasLiveApi()) {
+    try {
+      return await liveApi.getBusinessSimulationTemplate(id);
+    } catch (error) {
+      console.warn(`Live Reux template ${id} failed; falling back to local template.`, error);
+    }
+  }
+
+  await delay(200);
+  const template = SIMULATION_TEMPLATES.find((candidate) => candidate.id === id) ?? SIMULATION_TEMPLATES[0];
+  return {
+    baseline: template.baseline,
+    scenarios: template.scenarios,
   };
 }

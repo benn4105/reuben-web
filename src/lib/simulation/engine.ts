@@ -7,7 +7,6 @@ import type { ScenarioInputs, MetricSnapshot, ForecastPoint, ScenarioResult } fr
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const HOURS_PER_WEEK = 40;
-const BASE_REVENUE_PER_ORDER = 85;          // $ per order fulfilled
 const BASE_UNITS_PER_EMPLOYEE_PER_WEEK = 25;
 const OVERTIME_COST_MULTIPLIER = 1.5;
 const DEFECT_COST_PER_UNIT = 12;
@@ -33,6 +32,8 @@ export function calculateMetrics(inputs: ScenarioInputs): MetricSnapshot {
   const overtimeReduction = inputs.overtimeReductionPct / 100;
   const supplierRisk = inputs.supplierDelayRiskPct / 100;
   const defectRate = inputs.errorDefectRatePct / 100;
+  const averageOrderValue = inputs.averageOrderValue || 85;
+  const grossMarginRate = (inputs.grossMarginPct || 42) / 100;
 
   // Productivity
   const unitsPerEmployee = BASE_UNITS_PER_EMPLOYEE_PER_WEEK * productivityMultiplier;
@@ -59,8 +60,8 @@ export function calculateMetrics(inputs: ScenarioInputs): MetricSnapshot {
 
   // Totals
   const operatingCost = baseLaborCost + overtimeCost + defectCost + supplierDelayCost;
-  const revenue = actualOutput * BASE_REVENUE_PER_ORDER;
-  const margin = revenue - operatingCost;
+  const revenue = actualOutput * averageOrderValue;
+  const margin = (revenue * grossMarginRate) - operatingCost;
   const marginPct = revenue > 0 ? (margin / revenue) * 100 : 0;
 
   // Risk score (weighted composite)
@@ -122,8 +123,8 @@ simulate operations_decision {
   employees = ${inputs.employees}
   averageHourlyCost = ${inputs.avgHourlyCost} USD
   weeklyDemand = ${inputs.weeklyDemand}
-  averageOrderValue = 85 USD
-  grossMarginRate = 42 percent
+  averageOrderValue = ${inputs.averageOrderValue || 85} USD
+  grossMarginRate = ${inputs.grossMarginPct || 42} percent
   productivityGainRate = ${(inputs.productivityGainPct / 100).toFixed(2)}
   overtimeReductionRate = ${(inputs.overtimeReductionPct / 100).toFixed(2)}
   supplierDelayRiskRate = ${(inputs.supplierDelayRiskPct / 100).toFixed(2)}

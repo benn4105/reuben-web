@@ -15,6 +15,14 @@ interface RecommendationPanelProps {
   firstDivergenceWeek: number;
   reason?: string;
   summary?: string;
+  decisionSummary?: string;
+  recommendedAction?: string;
+  confidence?: "low" | "medium" | "high";
+  confidenceSummary?: string;
+  whatChangedFromBaseline?: string[];
+  riskSummary?: string;
+  tradeoffSummary?: string;
+  watchouts?: string[];
   reasons?: string[];
   tradeoffs?: string[];
   className?: string;
@@ -27,6 +35,14 @@ export default function RecommendationPanel({
   firstDivergenceWeek,
   reason,
   summary,
+  decisionSummary,
+  recommendedAction,
+  confidence,
+  confidenceSummary,
+  whatChangedFromBaseline,
+  riskSummary,
+  tradeoffSummary,
+  watchouts,
   reasons,
   tradeoffs,
   className,
@@ -57,6 +73,11 @@ export default function RecommendationPanel({
               <Badge className="bg-amber-500/20 text-amber-400 text-[10px] border-none">
                 RECOMMENDED
               </Badge>
+              {confidence && (
+                <Badge className="bg-white/[0.06] text-gray-300 text-[10px] border-none uppercase">
+                  {confidence} confidence
+                </Badge>
+              )}
             </div>
 
             {/* Scenario Name */}
@@ -117,10 +138,49 @@ export default function RecommendationPanel({
 
             {/* Reason Details */}
             <div className="space-y-4 mt-2">
-              {summary && (
+              {(decisionSummary || summary) && (
                 <p className="text-sm text-foreground/90 font-medium">
-                  {summary}
+                  {decisionSummary || summary}
                 </p>
+              )}
+              {recommendedAction && (
+                <div className="rounded-lg border border-white/[0.08] bg-white/[0.04] p-3">
+                  <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-1">Recommended action</h4>
+                  <p className="text-sm text-gray-300">{recommendedAction}</p>
+                </div>
+              )}
+              {confidenceSummary && (
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {confidenceSummary}
+                </p>
+              )}
+              {whatChangedFromBaseline && whatChangedFromBaseline.length > 0 && (
+                <div>
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">What changed from baseline</h4>
+                  <ul className="grid gap-1.5 sm:grid-cols-2">
+                    {whatChangedFromBaseline.map((change, i) => (
+                      <li key={i} className="text-xs text-muted-foreground flex gap-2">
+                        <span className="text-cyan-400 shrink-0">-</span> {change}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {(riskSummary || tradeoffSummary) && (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {riskSummary && (
+                    <div className="rounded-lg border border-white/[0.06] bg-black/20 p-3">
+                      <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Risk summary</h4>
+                      <p className="text-xs text-gray-300">{riskSummary}</p>
+                    </div>
+                  )}
+                  {tradeoffSummary && (
+                    <div className="rounded-lg border border-white/[0.06] bg-black/20 p-3">
+                      <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Tradeoff summary</h4>
+                      <p className="text-xs text-gray-300">{tradeoffSummary}</p>
+                    </div>
+                  )}
+                </div>
               )}
               {reasons && reasons.length > 0 && (
                 <div>
@@ -134,11 +194,11 @@ export default function RecommendationPanel({
                   </ul>
                 </div>
               )}
-              {tradeoffs && tradeoffs.length > 0 && (
+              {((watchouts && watchouts.length > 0) || (tradeoffs && tradeoffs.length > 0)) && (
                 <div>
                   <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 mt-3">Tradeoffs to watch</h4>
                   <ul className="space-y-1.5">
-                    {tradeoffs.map((t, i) => (
+                    {(watchouts && watchouts.length > 0 ? watchouts : tradeoffs ?? []).map((t, i) => (
                       <li key={i} className="text-xs text-muted-foreground flex gap-2">
                         <span className="text-amber-400 shrink-0">!</span> {t}
                       </li>

@@ -110,6 +110,14 @@ export default function ComparisonPage({
             firstDivergenceWeek={comparison.firstDivergenceWeek}
             reason={comparison.recommendationReason}
             summary={comparison.recommendationSummary}
+            decisionSummary={comparison.decisionSummary}
+            recommendedAction={comparison.recommendedAction}
+            confidence={comparison.confidence}
+            confidenceSummary={comparison.confidenceSummary}
+            whatChangedFromBaseline={comparison.whatChangedFromBaseline}
+            riskSummary={comparison.riskSummary}
+            tradeoffSummary={comparison.tradeoffSummary}
+            watchouts={comparison.watchouts}
             reasons={comparison.recommendationReasons}
             tradeoffs={comparison.recommendationTradeoffs}
           />
