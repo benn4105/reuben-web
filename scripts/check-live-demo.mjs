@@ -24,6 +24,7 @@ async function main() {
   await checkReuxCatalog();
   await checkOperationsRun();
   await checkBusinessSimulatorSavedRun();
+  await checkPilotRequestRoute();
   await checkContactIntakeRoute();
 
   console.log("");
@@ -147,6 +148,31 @@ async function checkContactIntakeRoute() {
     name: "contact intake route",
     ok: response.ok === true && response.spamFiltered === true,
     detail: response.spamFiltered ? "honeypot accepted without delivery" : "unexpected response",
+  });
+}
+
+async function checkPilotRequestRoute() {
+  const response = await fetchJson(`${apiUrl}/api/pilot-requests`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      name: "Smoke Test",
+      email: "smoke@example.com",
+      decision: "Smoke check that the Founder Pilot route accepts a public intake request.",
+      pageUrl: `${siteUrl}/projects/reux/demo`,
+    }),
+  });
+
+  const accepted = response.ok === true && Boolean(response.request?.id);
+  const deliveryStatus = response.delivery?.status ?? "unknown";
+  const fallbackEmail = response.delivery?.fallbackEmail;
+
+  checks.push({
+    name: "founder pilot intake route",
+    ok: accepted && (deliveryStatus === "sent" || fallbackEmail === "buildreuben.dev@gmail.com"),
+    detail: accepted
+      ? `${response.request.id}, delivery ${deliveryStatus}${fallbackEmail ? `, fallback ${fallbackEmail}` : ""}`
+      : "missing request id",
   });
 }
 

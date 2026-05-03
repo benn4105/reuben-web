@@ -2,6 +2,8 @@
 
 This runbook is for keeping the public Business Simulator demo deliverable and safe to share.
 
+For the customer-delivery process after a request arrives, use the [Founder Pilot Delivery Playbook](founder-pilot-delivery.md).
+
 ## Production URLs
 
 | Surface | URL | Purpose |
@@ -104,6 +106,7 @@ Then manually confirm:
 - Business Simulator saved-run creation works.
 - Saved-run reload works.
 - Recent run listing works for the current demo session.
+- Founder Pilot intake accepts a smoke request through Railway.
 - Contact intake route is online and filters honeypot spam without delivery.
 
 To test a preview deployment:
@@ -120,6 +123,7 @@ node scripts/check-live-demo.mjs --site https://your-preview.vercel.app --api ht
 - Saved result links are temporary.
 - Configuration links remain useful even if a saved run expires.
 - Founder Pilot forms are the conversion path for real business data.
+- Founder Pilot requests should be handled with the [Founder Pilot Delivery Playbook](founder-pilot-delivery.md).
 
 ## Common Failure Modes
 
@@ -207,6 +211,28 @@ Fix:
 3. If using Resend, confirm `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, and `CONTACT_FROM_EMAIL`.
 4. Submit a test form from `/contact`.
 5. Run `npm run check:production` to confirm the intake route itself is online.
+
+### Founder Pilot Form Does Not Submit
+
+Likely causes:
+
+- `NEXT_PUBLIC_REUX_DEMO_URL` is missing or wrong in Vercel.
+- Railway `/api/pilot-requests` is unavailable.
+- Railway write rate limits are exhausted.
+- CORS settings no longer allow the website origin.
+
+Expected public behavior:
+
+- Visitors should see the Founder Pilot form on `/simulator`, `/simulator/[id]`, and `/projects/reux/demo`.
+- If Railway accepts the request without Resend configured, the visitor should see a prepared email handoff to `buildreuben.dev@gmail.com`.
+
+Fix:
+
+1. Open Railway `/api/health` and confirm `pilotRequests.fallbackEmail` is `buildreuben.dev@gmail.com`.
+2. Run `npm run check:production`.
+3. Submit a manual test from `/projects/reux/demo`.
+4. Confirm the response creates a Railway pilot request ID or opens the prepared email.
+5. If the request is accepted, handle the lead using the [Founder Pilot Delivery Playbook](founder-pilot-delivery.md).
 
 ## Quick Incident Checklist
 

@@ -28,7 +28,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ```env
 NEXT_PUBLIC_REUX_DEMO_URL=https://reux-pilot-demo-production.up.railway.app
-NEXT_PUBLIC_CONTACT_EMAIL=stevent0522@gmail.com
+NEXT_PUBLIC_CONTACT_EMAIL=buildreuben.dev@gmail.com
 ```
 
 Do not include a trailing slash.
@@ -133,9 +133,10 @@ Visitor-facing behavior:
 - The demo uses sample assumptions only.
 - Saved run links are temporary and can expire.
 - Users can share a re-runnable config link even if a saved run expires.
-- The contact CTA is the conversion path for real business data or custom pilots.
+- The Founder Pilot form is the conversion path for real business data or custom pilots.
 
 Full operational checklist: [Business Simulator runbook](docs/business-simulator-runbook.md).
+Lead handling checklist: [Founder Pilot Delivery Playbook](docs/founder-pilot-delivery.md).
 
 Production verification shortcut:
 
