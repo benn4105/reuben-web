@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "stevent0522@gmail.com";
+
 function getInitialContactContext() {
   const params = new URLSearchParams(window.location.search);
   const requestedTopic = params.get("topic");
@@ -29,6 +31,7 @@ export default function ContactPage() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [topic, setTopic] = useState("reux");
   const [message, setMessage] = useState("");
+  const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -43,10 +46,47 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("submitting");
-    // Mocking an API call
-    setTimeout(() => {
+    setFeedback("");
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const payload = {
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      topic,
+      message,
+      source: new URLSearchParams(window.location.search).get("source") ?? undefined,
+      simulation: new URLSearchParams(window.location.search).get("simulation") ?? undefined,
+      companyWebsite: String(formData.get("companyWebsite") ?? ""),
+    };
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || result.ok !== true) {
+        throw new Error(result.error || "Unable to send message.");
+      }
+
+      if (result.delivered === false && result.configured === false) {
+        openMailFallback(payload);
+        setFeedback("Your email app should open with a prefilled message. Send that email to complete the intake.");
+      } else {
+        setFeedback("Your message was delivered.");
+      }
+
       setStatus("success");
-    }, 1200);
+      form.reset();
+      setMessage("");
+      setTopic("reux");
+    } catch (error) {
+      setStatus("error");
+      setFeedback(error instanceof Error ? error.message : "Unable to send message.");
+    }
   };
 
   return (
@@ -71,6 +111,33 @@ export default function ContactPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.05 }}
+          className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3"
+        >
+          {[
+            {
+              title: "Pilot starting point",
+              copy: "One spreadsheet decision with baseline assumptions and two or three scenarios.",
+            },
+            {
+              title: "What you get back",
+              copy: "A focused simulator flow with forecast metrics, recommendation logic, and a Reux transparency layer.",
+            },
+            {
+              title: "Best first use",
+              copy: "Staffing, pricing, capacity, overtime, quality risk, or process-change decisions.",
+            },
+          ].map((item) => (
+            <div key={item.title} className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+              <h2 className="mb-2 text-sm font-semibold text-white">{item.title}</h2>
+              <p className="text-sm leading-relaxed text-gray-500">{item.copy}</p>
+            </div>
+          ))}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
           className="glass-card p-8 rounded-2xl border border-white/10"
         >
@@ -83,7 +150,7 @@ export default function ContactPage() {
               </div>
               <h2 className="text-2xl font-bold mb-4">Message Sent</h2>
               <p className="text-gray-400 mb-8">
-                Thanks for reaching out. We will get back to you shortly.
+                {feedback || "Thanks for reaching out. We will get back to you shortly."}
               </p>
               <Button onClick={() => setStatus("idle")} variant="outline">
                 Send another message
@@ -91,14 +158,23 @@ export default function ContactPage() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
+              {status === "error" && (
+                <div className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
+                  {feedback}
+                </div>
+              )}
+              <div className="hidden">
+                <label htmlFor="companyWebsite">Company website</label>
+                <input id="companyWebsite" name="companyWebsite" tabIndex={-1} autoComplete="off" />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label htmlFor="name" className="text-sm font-medium text-gray-300">Name</label>
-                  <Input id="name" required placeholder="John Doe" className="bg-black/50 border-white/10 text-white placeholder:text-gray-600" />
+                  <Input id="name" name="name" required placeholder="John Doe" className="bg-black/50 border-white/10 text-white placeholder:text-gray-600" />
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="email" className="text-sm font-medium text-gray-300">Email</label>
-                  <Input id="email" type="email" required placeholder="john@example.com" className="bg-black/50 border-white/10 text-white placeholder:text-gray-600" />
+                  <Input id="email" name="email" type="email" required placeholder="john@example.com" className="bg-black/50 border-white/10 text-white placeholder:text-gray-600" />
                 </div>
               </div>
               <div className="space-y-2">
@@ -141,4 +217,30 @@ export default function ContactPage() {
       </div>
     </div>
   );
+}
+
+function openMailFallback(payload: {
+  name: string;
+  email: string;
+  topic: string;
+  message: string;
+  source?: string;
+  simulation?: string;
+}) {
+  const subject = encodeURIComponent(`Reuben contact: ${payload.topic}`);
+  const body = encodeURIComponent(
+    [
+      `Name: ${payload.name}`,
+      `Email: ${payload.email}`,
+      `Topic: ${payload.topic}`,
+      payload.source ? `Source: ${payload.source}` : null,
+      payload.simulation ? `Simulation: ${payload.simulation}` : null,
+      "",
+      payload.message,
+    ]
+      .filter((line): line is string => line !== null)
+      .join("\n")
+  );
+
+  window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
 }

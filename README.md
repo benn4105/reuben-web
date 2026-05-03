@@ -18,11 +18,17 @@ Open [http://localhost:3000](http://localhost:3000).
 | Variable | Required | Description |
 |---|---|---|
 | `NEXT_PUBLIC_REUX_DEMO_URL` | For live demo | URL of the hosted Reux pilot demo service. When unset, the simulator falls back to the local mock engine. |
+| `CONTACT_WEBHOOK_URL` | For real intake | Optional webhook URL for pilot/contact leads. Use a Zapier, Make, Slack-compatible, or custom webhook endpoint. |
+| `RESEND_API_KEY` | For email intake | Optional Resend API key for contact email delivery. |
+| `CONTACT_TO_EMAIL` | For email intake | Destination inbox for contact leads when using Resend. |
+| `CONTACT_FROM_EMAIL` | For email intake | Verified sender address for Resend. Defaults to Resend onboarding sender if unset. |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | Fallback | Public email address used by the contact form's mail fallback when no server delivery is configured. |
 
 **Production value:**
 
 ```env
 NEXT_PUBLIC_REUX_DEMO_URL=https://reux-pilot-demo-production.up.railway.app
+NEXT_PUBLIC_CONTACT_EMAIL=stevent0522@gmail.com
 ```
 
 Do not include a trailing slash.
@@ -104,7 +110,7 @@ The smoke check verifies:
 Override targets when testing preview deploys:
 
 ```bash
-npm run check:live-demo -- --site https://your-preview.vercel.app --api https://your-railway-service.up.railway.app
+node scripts/check-live-demo.mjs --site https://your-preview.vercel.app --api https://your-railway-service.up.railway.app
 ```
 
 ## Public Demo Handoff

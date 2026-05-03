@@ -24,6 +24,7 @@ async function main() {
   await checkReuxCatalog();
   await checkOperationsRun();
   await checkBusinessSimulatorSavedRun();
+  await checkContactIntakeRoute();
 
   console.log("");
   for (const check of checks) {
@@ -126,6 +127,26 @@ async function checkOperationsRun() {
     name: "operations_decision execution",
     ok: response.simulation?.name === "operations_decision" && periods.length === 12 && Boolean(finalPeriod?.metrics?.margin),
     detail: finalPeriod ? `final margin ${Math.round(finalPeriod.metrics.margin)}` : "missing final scenario period",
+  });
+}
+
+async function checkContactIntakeRoute() {
+  const response = await fetchJson(`${siteUrl}/api/contact`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      name: "Smoke Test",
+      email: "smoke@example.com",
+      topic: "business-simulator",
+      message: "This honeypot payload should be accepted without delivery.",
+      companyWebsite: "https://spam.invalid",
+    }),
+  });
+
+  checks.push({
+    name: "contact intake route",
+    ok: response.ok === true && response.spamFiltered === true,
+    detail: response.spamFiltered ? "honeypot accepted without delivery" : "unexpected response",
   });
 }
 

@@ -18,6 +18,7 @@ Vercel must have:
 
 ```env
 NEXT_PUBLIC_REUX_DEMO_URL=https://reux-pilot-demo-production.up.railway.app
+NEXT_PUBLIC_CONTACT_EMAIL=stevent0522@gmail.com
 ```
 
 Rules:
@@ -25,6 +26,22 @@ Rules:
 - Do not include a trailing slash.
 - Set it for Production and Preview if preview deploys should use the live backend.
 - If this value is missing, the simulator intentionally falls back to local mock data and the header shows `Local Mock`.
+
+Contact intake should have at least one of these configured:
+
+```env
+CONTACT_WEBHOOK_URL=https://your-intake-webhook.example.com
+```
+
+or:
+
+```env
+RESEND_API_KEY=...
+CONTACT_TO_EMAIL=you@example.com
+CONTACT_FROM_EMAIL=Reuben <hello@yourdomain.com>
+```
+
+If neither server-side intake option is configured, the contact form opens a prefilled email draft using `NEXT_PUBLIC_CONTACT_EMAIL`.
 
 Railway must have:
 
@@ -52,6 +69,7 @@ Then manually confirm:
 - A guided demo can run without login, admin token, or private data.
 - The result page shows recommendation, forecast chart, scenario comparison, Reux transparency, and pilot CTA.
 - The pilot CTA opens `/contact` with `Business Simulator Pilot` selected and a prefilled message.
+- Submitting the contact form either delivers through webhook/email or opens the mail fallback.
 
 ## Deployment Checklist
 
@@ -78,11 +96,12 @@ Then manually confirm:
 - Business Simulator saved-run creation works.
 - Saved-run reload works.
 - Recent run listing works for the current demo session.
+- Contact intake route is online and filters honeypot spam without delivery.
 
 To test a preview deployment:
 
 ```bash
-npm run check:live-demo -- --site https://your-preview.vercel.app --api https://your-railway-service.up.railway.app
+node scripts/check-live-demo.mjs --site https://your-preview.vercel.app --api https://your-railway-service.up.railway.app
 ```
 
 ## Expected Public Behavior
@@ -158,6 +177,23 @@ Fix:
 2. Run `npm run check:production`.
 3. Check recent commits touching `src/lib/simulation/api-client.ts`, `src/lib/simulation/templates.ts`, or backend simulation schemas.
 4. Align frontend request shape with backend validation errors.
+
+### Contact Form Does Not Deliver
+
+Likely causes:
+
+- No `CONTACT_WEBHOOK_URL` is configured.
+- Resend environment variables are missing or invalid.
+- `CONTACT_FROM_EMAIL` is not a verified sender.
+- The webhook endpoint is down.
+
+Fix:
+
+1. Confirm at least one intake path is configured in Vercel.
+2. If using webhook delivery, test the webhook URL from the provider dashboard.
+3. If using Resend, confirm `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, and `CONTACT_FROM_EMAIL`.
+4. Submit a test form from `/contact`.
+5. Run `npm run check:production` to confirm the intake route itself is online.
 
 ## Quick Incident Checklist
 
