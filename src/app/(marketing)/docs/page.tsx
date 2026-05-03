@@ -3,7 +3,21 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
-import { Terminal, Download, Code2, Eye, Code, AlertTriangle, Copy, Check } from "lucide-react";
+import {
+  Terminal,
+  Download,
+  Code2,
+  Eye,
+  Code,
+  AlertTriangle,
+  Copy,
+  Check,
+  SlidersHorizontal,
+  PlayCircle,
+  BarChart3,
+  Share2,
+  MessageSquare,
+} from "lucide-react";
 import IdeMockup from "@/components/ui/IdeMockup";
 import { copyToClipboard } from "@/lib/simulation/share";
 
@@ -144,6 +158,90 @@ export default function DocsPage() {
               <AnimatedButton href="#run-from-source" variant="secondary">
                 Run From Source
               </AnimatedButton>
+            </div>
+          </section>
+
+          {/* Business Simulator User Guide */}
+          <section className="mb-16" id="business-simulator-guide">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-lg bg-cyan-500/10">
+                <BarChart3 className="text-cyan-400" size={24} />
+              </div>
+              <h2 className="text-2xl font-bold">How to Use the Business Simulator</h2>
+            </div>
+
+            <p className="text-gray-400 mb-6 leading-relaxed">
+              The Business Simulator is the fastest public way to see Reux working. You do not need an account, admin token, private data, or developer setup. Pick a template, adjust sample assumptions, run the forecast, and review the recommended path.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              {[
+                {
+                  icon: SlidersHorizontal,
+                  title: "1. Choose a template",
+                  description: "Start with operations, capacity, staffing, or pricing. Each template loads a baseline and a few realistic scenarios.",
+                },
+                {
+                  icon: SlidersHorizontal,
+                  title: "2. Edit assumptions",
+                  description: "Change employees, demand, margin, productivity, supplier risk, defects, or forecast length. The live preview updates immediately.",
+                },
+                {
+                  icon: PlayCircle,
+                  title: "3. Run the scenario",
+                  description: "The backend evaluates the baseline and scenario paths, then returns forecast metrics and a recommendation.",
+                },
+                {
+                  icon: BarChart3,
+                  title: "4. Interpret the result",
+                  description: "Focus on margin, risk score, workforce load, and the recommendation panel. The best path is not always the highest revenue path.",
+                },
+                {
+                  icon: Share2,
+                  title: "5. Share or rerun",
+                  description: "Copy the saved result link for short-term review, or share the configuration link so someone else can rerun the assumptions.",
+                },
+                {
+                  icon: MessageSquare,
+                  title: "6. Bring your own decision",
+                  description: "If the demo maps to a real business problem, use the pilot CTA to start with one spreadsheet decision and a few scenarios.",
+                },
+              ].map((step) => (
+                <div key={step.title} className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+                  <step.icon className="mb-4 h-6 w-6 text-[#00F0FF]" />
+                  <h3 className="text-sm font-bold text-white mb-2">{step.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{step.description}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              {[
+                {
+                  title: "Margin",
+                  description: "Shows whether the scenario improves weekly profitability after operating costs.",
+                },
+                {
+                  title: "Risk score",
+                  description: "Summarizes supplier delay, defect pressure, workforce load, and operational complexity.",
+                },
+                {
+                  title: "Reux transparency",
+                  description: "Shows the model source that produced the forecast, so the decision logic is inspectable.",
+                },
+              ].map((item) => (
+                <div key={item.title} className="rounded-xl border border-cyan-500/10 bg-cyan-500/[0.03] p-5">
+                  <h3 className="text-sm font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{item.description}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="rounded-lg border border-amber-500/20 bg-amber-500/[0.04] px-5 py-4">
+              <h3 className="text-sm font-bold text-amber-300 mb-2">Public demo note</h3>
+              <p className="text-sm text-amber-500/80 leading-relaxed">
+                The public simulator uses sample assumptions. Saved result links are temporary and may expire. For a real pilot, start with one spreadsheet decision and use the contact CTA after a result.
+              </p>
             </div>
           </section>
 
@@ -316,7 +414,7 @@ export default function DocsPage() {
             </ul>
           </section>
 
-          {/* Continue Exploring — Developer CTA Cards */}
+          {/* Continue Exploring */}
           <section className="pb-8 border-t border-white/5 pt-12">
             <h2 className="text-2xl font-bold mb-2 text-white">Continue Exploring</h2>
             <p className="text-gray-400 mb-8 max-w-xl">
@@ -329,35 +427,35 @@ export default function DocsPage() {
                   description: "Run a live simulation in your browser. No account, no install.",
                   href: "/simulator",
                   color: "border-cyan-500/20 hover:border-cyan-500/40",
-                  icon: "🎮",
+                  icon: "01",
                 },
                 {
                   title: "Run From Source",
                   description: "Clone the repo, install deps, and run the onboarding smoke test locally.",
                   href: "#run-from-source",
                   color: "border-violet-500/20 hover:border-violet-500/40",
-                  icon: "💻",
+                  icon: "02",
                 },
                 {
                   title: "Browse Syntax Examples",
                   description: "Jump to simulate blocks, transaction functions, and generated TypeScript.",
                   href: "#examples",
                   color: "border-white/10 hover:border-white/20",
-                  icon: "📝",
+                  icon: "03",
                 },
                 {
                   title: "View Roadmap",
                   description: "See what is available now, in beta, next, and future.",
                   href: "/projects/reux/roadmap",
                   color: "border-amber-500/20 hover:border-amber-500/40",
-                  icon: "🗺️",
+                  icon: "04",
                 },
                 {
                   title: "GitHub Repository",
                   description: "Browse source code, examples, and open issues.",
                   href: "https://github.com/benn4105/Reux",
                   color: "border-white/10 hover:border-white/20",
-                  icon: "🔗",
+                  icon: "05",
                   external: true,
                 },
                 {
@@ -365,7 +463,7 @@ export default function DocsPage() {
                   description: "Features, use cases, live pilots, and the full product story.",
                   href: "/projects/reux",
                   color: "border-white/10 hover:border-white/20",
-                  icon: "📄",
+                  icon: "06",
                 },
               ].map((card) => (
                 <a
@@ -374,7 +472,9 @@ export default function DocsPage() {
                   {...(card.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   className={`group flex gap-4 p-5 rounded-xl border ${card.color} bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-200`}
                 >
-                  <span className="text-2xl shrink-0">{card.icon}</span>
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-xs font-bold text-[#00F0FF]">
+                    {card.icon}
+                  </span>
                   <div>
                     <h3 className="text-sm font-bold text-white mb-1 group-hover:text-[#00F0FF] transition-colors">{card.title}</h3>
                     <p className="text-xs text-gray-500 leading-relaxed">{card.description}</p>
