@@ -50,8 +50,20 @@ Check these before each deployment:
 | `/projects/reux/demo` | Live Reux demos | Requires `NEXT_PUBLIC_REUX_DEMO_URL` |
 | `/operator/pilot-requests` | Founder Pilot operator view | Requires the Railway demo admin token |
 | `/projects/plos` | PLOS product page | Planned product; no live features |
-| `/docs` | Developer preview | Syntax examples, editor support, run-from-source |
+| `/docs` | Developer preview | Onboarding steps, syntax examples, editor support, run-from-source |
 | `/about` | About Reuben | Vision, ecosystem diagram, team |
+
+## Developer Preview
+
+The `/docs` page provides a structured onboarding path for technical users who want to try Reux locally:
+
+1. Clone the [Reux repo](https://github.com/benn4105/Reux)
+2. `npm install`
+3. `npm run onboarding:smoke` — proves the compiler, CLI, and simulation runner work locally (no database needed)
+4. Install the VS Code extension from `editors/vscode/`
+5. Run a simulation example
+
+The public npm package and VS Code Marketplace listing are not yet available. See the [roadmap](/projects/reux/roadmap) for current status.
 
 ## Simulator API Limits
 

@@ -121,10 +121,10 @@ const roadmapMilestones = [
   {
     phase: "Beta",
     title: "Public Developer Access",
-    status: "Planned",
+    status: "In Progress",
     description:
-      "Turn the local package and editor tooling into a cleaner beta path for technical users who want to try Reux in their own projects.",
-    items: ["Package-name decision", "npm beta publish", "VS Code installer", "Getting-started docs"],
+      "Making it easy for technical users to try Reux locally: onboarding steps, VS Code support from source, syntax examples, and honest status of what is packaged vs what is not.",
+    items: ["✓ Run-from-source onboarding", "✓ VS Code extension (from .vsix)", "✓ Developer preview docs", "→ npm beta package", "→ VS Code Marketplace publish", "→ Hosted cloud execution"],
   },
   {
     phase: "Scale",
@@ -502,6 +502,8 @@ export default function ReuxPage() {
                     "rounded-full px-3 py-1 text-xs font-medium",
                     milestone.status === "Completed" || milestone.status === "100% prototype"
                       ? "border border-emerald-500/30 text-emerald-400 bg-emerald-500/10"
+                      : milestone.status === "In Progress"
+                      ? "border border-amber-500/30 text-amber-400 bg-amber-500/10"
                       : "border border-white/10 text-gray-400"
                   )}>
                     {milestone.status}

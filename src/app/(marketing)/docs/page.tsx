@@ -5,7 +5,6 @@ import { useState } from "react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import {
   Terminal,
-  Download,
   Code2,
   Eye,
   Code,
@@ -17,15 +16,16 @@ import {
   BarChart3,
   Share2,
   MessageSquare,
+  GitBranch,
+  Package,
+  MonitorSmartphone,
+  Cloud,
+  CheckCircle2,
+  CircleDashed,
 } from "lucide-react";
 import IdeMockup from "@/components/ui/IdeMockup";
 import { copyToClipboard } from "@/lib/simulation/share";
 
-const INSTALL_CMD = "npm install @reux/cli -g";
-const SOURCE_INSTALL_CMD = `git clone https://github.com/benn4105/Reux.git
-cd Reux
-npm install
-npm run onboarding:smoke`;
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
@@ -109,6 +109,54 @@ async function checkout(orderId: string, amount: string) {
   }
 ];
 
+const ONBOARDING_STEPS = [
+  {
+    step: 1,
+    title: "Clone the repository",
+    command: "git clone https://github.com/benn4105/Reux.git && cd Reux",
+    description: "The Reux source repository is public. Clone it and enter the project directory.",
+  },
+  {
+    step: 2,
+    title: "Install dependencies",
+    command: "npm install",
+    description: "Standard Node.js install. No native binaries or exotic toolchains required.",
+  },
+  {
+    step: 3,
+    title: "Run the onboarding smoke test",
+    command: "npm run onboarding:smoke",
+    description: "Proves the compiler, CLI, examples, seed checks, SQL emitters, and simulation runner all work locally. No database needed.",
+  },
+  {
+    step: 4,
+    title: "Install VS Code language support",
+    command: "code --install-extension ./editors/vscode/reux-lang-*.vsix",
+    description: "Adds syntax highlighting, diagnostics, formatting, completions, and hover info for .reux and .dl files.",
+  },
+  {
+    step: 5,
+    title: "Run a simulation example",
+    command: "npx reux run examples/simulations/business_simulator.reux",
+    description: "Executes a simulation model and prints the forecast output. This is the same syntax the live Business Simulator uses.",
+  },
+];
+
+const AVAILABLE_NOW = [
+  { label: "Syntax examples", icon: Code2 },
+  { label: "CLI from source", icon: Terminal },
+  { label: "VS Code highlighting & support", icon: Code },
+  { label: "Simulation examples", icon: BarChart3 },
+  { label: "Generated TypeScript integration", icon: GitBranch },
+  { label: "PostgreSQL-backed transactions", icon: Package },
+];
+
+const NOT_YET_PACKAGED = [
+  { label: "Public npm package", icon: Package },
+  { label: "One-click VS Code Marketplace install", icon: MonitorSmartphone },
+  { label: "Hosted cloud execution", icon: Cloud },
+];
+
 export default function DocsPage() {
   return (
     <div className="pt-32 pb-24 min-h-screen relative overflow-hidden">
@@ -155,8 +203,117 @@ export default function DocsPage() {
               <AnimatedButton href="/simulator" variant="primary">
                 Try Business Simulator
               </AnimatedButton>
-              <AnimatedButton href="#run-from-source" variant="secondary">
-                Run From Source
+              <AnimatedButton href="#start-locally" variant="secondary">
+                Start Using Reux Locally
+              </AnimatedButton>
+            </div>
+          </section>
+
+          {/* ─── START USING REUX LOCALLY ─── */}
+          <section className="mb-16" id="start-locally">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-lg bg-violet-500/10">
+                <Terminal className="text-violet-400" size={24} />
+              </div>
+              <h2 className="text-2xl font-bold">Start Using Reux Locally</h2>
+            </div>
+
+            <p className="text-gray-400 mb-8 leading-relaxed">
+              Follow these five steps to get Reux running on your machine. No database, no account, no API key needed to start.
+            </p>
+
+            <div className="space-y-4">
+              {ONBOARDING_STEPS.map((s) => (
+                <div
+                  key={s.step}
+                  className="rounded-xl border border-white/10 bg-white/[0.02] overflow-hidden"
+                >
+                  <div className="flex items-start gap-4 p-5">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-500/15 text-sm font-bold text-violet-400 border border-violet-500/20">
+                      {s.step}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-sm font-bold text-white mb-1">{s.title}</h3>
+                      <p className="text-sm text-gray-500 leading-relaxed mb-3">{s.description}</p>
+                      <div className="rounded-lg bg-[#0A0A0A] border border-white/5 px-4 py-2.5 flex items-center justify-between gap-3 overflow-x-auto">
+                        <code className="font-mono text-sm text-cyan-400 whitespace-nowrap">{s.command}</code>
+                        <CopyButton text={s.command} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 rounded-lg border border-amber-500/20 bg-amber-500/[0.04] px-5 py-4">
+              <p className="text-sm text-amber-500/80 leading-relaxed">
+                <strong className="text-amber-300">Developer preview:</strong>{" "}
+                This is the from-source path. The standard <code className="text-cyan-400 font-mono">npm install @reux/cli</code> package is still being prepared — syntax and APIs may change before the public beta.
+              </p>
+            </div>
+
+            <div className="mt-6 flex flex-col sm:flex-row gap-4">
+              <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
+                Open GitHub Repository
+              </AnimatedButton>
+              <AnimatedButton href="/projects/reux/roadmap" variant="secondary">
+                View Roadmap
+              </AnimatedButton>
+            </div>
+          </section>
+
+          {/* ─── DEVELOPER PREVIEW STATUS ─── */}
+          <section className="mb-16" id="developer-preview-status">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-lg bg-cyan-500/10">
+                <Package className="text-cyan-400" size={24} />
+              </div>
+              <h2 className="text-2xl font-bold">Developer Preview Status</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Available now */}
+              <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.03] p-6">
+                <div className="flex items-center gap-2 mb-5">
+                  <CheckCircle2 size={18} className="text-emerald-400" />
+                  <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wider">Available now</h3>
+                </div>
+                <ul className="space-y-3">
+                  {AVAILABLE_NOW.map((item) => (
+                    <li key={item.label} className="flex items-center gap-3">
+                      <item.icon size={16} className="text-emerald-400/70 shrink-0" />
+                      <span className="text-sm text-gray-300">{item.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Not yet packaged */}
+              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
+                <div className="flex items-center gap-2 mb-5">
+                  <CircleDashed size={18} className="text-gray-500" />
+                  <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider">Not yet packaged</h3>
+                </div>
+                <ul className="space-y-3">
+                  {NOT_YET_PACKAGED.map((item) => (
+                    <li key={item.label} className="flex items-center gap-3">
+                      <item.icon size={16} className="text-gray-600 shrink-0" />
+                      <span className="text-sm text-gray-500">{item.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-col sm:flex-row gap-4">
+              <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
+                GitHub Repository
+              </AnimatedButton>
+              <AnimatedButton href="/projects/reux/roadmap" variant="secondary">
+                Reux Roadmap
+              </AnimatedButton>
+              <AnimatedButton href="/simulator" variant="secondary">
+                Business Simulator
               </AnimatedButton>
             </div>
           </section>
@@ -242,105 +399,6 @@ export default function DocsPage() {
               <p className="text-sm text-amber-500/80 leading-relaxed">
                 The public simulator uses sample assumptions. Saved result links are temporary and may expire. For a real pilot, start with one spreadsheet decision and use the contact CTA after a result.
               </p>
-            </div>
-          </section>
-
-          {/* Run From Source */}
-          <section className="mb-16">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-lg bg-violet-500/10">
-                <Terminal className="text-violet-400" size={24} />
-              </div>
-              <h2 className="text-2xl font-bold" id="run-from-source">Run From Source</h2>
-            </div>
-            
-            <p className="text-gray-400 mb-6 leading-relaxed">
-              Reux is available from source today. Clone the public repo, install dependencies, and run the onboarding smoke test to prove the compiler, CLI, examples, seed checks, SQL emitters, and simulation runner are working locally. The standard <code className="text-cyan-400 font-mono">npm install</code> package path will come later when the public beta package name and API stability are finalized.
-            </p>
-
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-violet-500/10 rounded-xl blur-sm transition-opacity opacity-0 group-hover:opacity-100" />
-              <div className="relative glass border border-white/10 rounded-xl p-4 flex items-center justify-between opacity-50 cursor-not-allowed">
-                <div className="flex items-center gap-3">
-                  <Download className="text-violet-400" size={20} />
-                  <code className="text-cyan-400 font-mono text-sm sm:text-base">
-                    {INSTALL_CMD}
-                  </code>
-                </div>
-                <span className="text-xs text-gray-500 uppercase tracking-wide shrink-0 ml-4">Planned</span>
-              </div>
-            </div>
-
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {[
-                { label: "Public repo", value: "Available" },
-                { label: "Local CLI", value: "Available" },
-                { label: "npm beta", value: "Planned" },
-              ].map((item) => (
-                <div key={item.label} className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-                  <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">{item.label}</div>
-                  <div className="text-sm font-semibold text-white">{item.value}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 rounded-xl overflow-hidden glass border border-white/10">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-black/50">
-                <span className="text-xs text-gray-500 font-mono">run from source today</span>
-                <div className="flex items-center gap-3">
-                  <CopyButton text={SOURCE_INSTALL_CMD} />
-                  <span className="text-xs text-emerald-400">Available</span>
-                </div>
-              </div>
-              <div className="p-5 bg-[#0A0A0A]/80 overflow-x-auto">
-                <pre className="font-mono text-sm leading-relaxed text-gray-300">
-                  <code>{SOURCE_INSTALL_CMD}</code>
-                </pre>
-              </div>
-            </div>
-
-            <div className="mt-6 flex flex-col sm:flex-row gap-4">
-              <AnimatedButton href="https://github.com/benn4105/Reux" variant="secondary" external>
-                Open GitHub Repository
-              </AnimatedButton>
-              <AnimatedButton href="/projects/reux/roadmap" variant="secondary">
-                View Beta Roadmap
-              </AnimatedButton>
-            </div>
-          </section>
-
-          {/* Developer Access Checklist */}
-          <section className="mb-16">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-lg bg-cyan-500/10">
-                <Terminal className="text-cyan-400" size={24} />
-              </div>
-              <h2 className="text-2xl font-bold">Developer Access Checklist</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                {
-                  title: "1. Run the smoke path",
-                  description: "Use onboarding:smoke first. It is database-free and proves the local toolchain works.",
-                },
-                {
-                  title: "2. Read examples",
-                  description: "Start with examples/simulations/business_simulator.reux and examples/pilot_reux.dl.",
-                },
-                {
-                  title: "3. Enable editor support",
-                  description: "Use editors/vscode for file associations, syntax highlighting, diagnostics, formatting, and completions.",
-                },
-                {
-                  title: "4. Try PostgreSQL later",
-                  description: "Only set DATABASE_URL when you want runtime checks, migrations, seeds, or the local hosted demo.",
-                },
-              ].map((item) => (
-                <div key={item.title} className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
-                  <h3 className="text-sm font-bold text-white mb-2">{item.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{item.description}</p>
-                </div>
-              ))}
             </div>
           </section>
 
@@ -430,9 +488,9 @@ export default function DocsPage() {
                   icon: "01",
                 },
                 {
-                  title: "Run From Source",
-                  description: "Clone the repo, install deps, and run the onboarding smoke test locally.",
-                  href: "#run-from-source",
+                  title: "Start Using Reux Locally",
+                  description: "Clone the repo, install deps, and run examples on your machine.",
+                  href: "#start-locally",
                   color: "border-violet-500/20 hover:border-violet-500/40",
                   icon: "02",
                 },
@@ -475,7 +533,7 @@ export default function DocsPage() {
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-xs font-bold text-[#00F0FF]">
                     {card.icon}
                   </span>
-                  <div>
+                  <div className="min-w-0">
                     <h3 className="text-sm font-bold text-white mb-1 group-hover:text-[#00F0FF] transition-colors">{card.title}</h3>
                     <p className="text-xs text-gray-500 leading-relaxed">{card.description}</p>
                   </div>

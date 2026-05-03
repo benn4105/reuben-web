@@ -3,6 +3,7 @@
 import { motion, Variants } from "framer-motion";
 import { CheckCircle2, CircleDashed, ArrowRightCircle } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
+import { cn } from "@/lib/utils";
 
 export default function RoadmapPage() {
   const availableNow = [
@@ -23,20 +24,33 @@ export default function RoadmapPage() {
     "Operations dashboard for cross-domain queue and worker health",
     "PostgreSQL-backed saved simulation runs for result pages and sharing",
     "Responsive, accessible demo UI with mobile layout polish",
+    "Developer onboarding path: clone → install → smoke test → VS Code → run examples",
   ];
 
   const nextMilestones = [
     {
       title: "Package & Release Polish",
-      description: "Finalize package distribution, publish the public beta, and improve developer onboarding paths."
+      description: "Finalize package distribution, publish the public beta, and improve developer onboarding paths.",
+      done: [
+        "Run-from-source onboarding",
+        "VS Code extension from .vsix",
+        "Developer preview docs on /docs",
+        "Syntax examples and simulation walkthroughs",
+      ],
+      next: [
+        "npm beta package publish",
+        "VS Code Marketplace listing",
+        "Hosted cloud execution environment",
+        "Public API stability freeze",
+      ],
     },
     {
       title: "Richer Simulation Semantics",
-      description: "Expand Reux syntax with deeper assumption modeling and forecasting capabilities."
+      description: "Expand Reux syntax with deeper assumption modeling and forecasting capabilities.",
     },
     {
       title: "More Product Pilots",
-      description: "Build additional domain-specific pilots to stress-test Reux in new environments."
+      description: "Build additional domain-specific pilots to stress-test Reux in new environments.",
     }
   ];
 
@@ -210,14 +224,50 @@ export default function RoadmapPage() {
             <motion.div 
               key={idx} 
               variants={itemVariants}
-              className="p-6 rounded-2xl glass border border-white/10 hover:border-orange-400/30 transition-all duration-300 hover:-translate-y-1 group"
+              className={cn(
+                "p-6 rounded-2xl glass border border-white/10 hover:border-orange-400/30 transition-all duration-300 hover:-translate-y-1 group",
+                milestone.done && "md:col-span-2 border-orange-400/20"
+              )}
             >
-              <h3 className="text-xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors">
-                {milestone.title}
-              </h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <div className="flex items-center gap-3 mb-3">
+                <h3 className="text-xl font-bold text-white group-hover:text-orange-400 transition-colors">
+                  {milestone.title}
+                </h3>
+                {milestone.done && (
+                  <span className="rounded-full bg-orange-500/10 border border-orange-500/20 px-3 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-orange-400">
+                    In Progress
+                  </span>
+                )}
+              </div>
+              <p className="text-gray-400 text-sm leading-relaxed mb-4">
                 {milestone.description}
               </p>
+              {milestone.done && milestone.next && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="rounded-xl border border-emerald-500/15 bg-emerald-500/[0.03] p-4">
+                    <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3">Done</h4>
+                    <ul className="space-y-2">
+                      {milestone.done.map((item: string) => (
+                        <li key={item} className="flex items-center gap-2 text-sm text-gray-300">
+                          <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Next</h4>
+                    <ul className="space-y-2">
+                      {milestone.next.map((item: string) => (
+                        <li key={item} className="flex items-center gap-2 text-sm text-gray-500">
+                          <CircleDashed size={14} className="text-gray-600 shrink-0" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
             </motion.div>
           ))}
         </div>
@@ -283,6 +333,11 @@ export default function RoadmapPage() {
           <h2 className="text-3xl font-bold text-white">Recent Progress</h2>
         </div>
         <div className="space-y-6 border-l-2 border-white/10 pl-6 ml-4">
+          <div className="relative">
+            <div className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-orange-400 shadow-[0_0_10px_rgba(251,146,60,0.8)]" />
+            <h3 className="text-lg font-bold text-white mb-1">Developer Onboarding Path</h3>
+            <p className="text-gray-400 text-sm">Added structured 5-step onboarding to /docs, Developer Preview Status panel, and honest packaging status for technical users who want to try Reux locally.</p>
+          </div>
           <div className="relative">
             <div className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-[#00F0FF] shadow-[0_0_10px_rgba(0,240,255,0.8)]" />
             <h3 className="text-lg font-bold text-white mb-1">Demo Frontend Polish</h3>
