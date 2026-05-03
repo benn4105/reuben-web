@@ -161,7 +161,6 @@ export default function NewSimulationPage() {
   const [selectedPreset, setSelectedPreset] = useState<PresetKey | null>(null);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   const [shareState, setShareState] = useState<"idle" | "copied">("idle");
-  const [showTemplates, setShowTemplates] = useState(false);
   const [restoredDraftInfo, setRestoredDraftInfo] = useState<string | null>(null);
 
   function loadPreset(presetKey: PresetKey) {
@@ -192,7 +191,6 @@ export default function NewSimulationPage() {
       setActiveTab("baseline");
       setLiveMetrics(calculateMetrics(liveTemplate.baseline));
       setLiveSnippet(generateReuxSnippet(liveTemplate.baseline));
-      setShowTemplates(false);
     } catch {
       setSimulationName(template.name);
       setBaseline(template.baseline);
@@ -483,17 +481,21 @@ export default function NewSimulationPage() {
       {/* Presets and Simulation Name */}
       <div className="flex flex-col gap-6">
         {/* Template Picker */}
-        <div className="space-y-4">
+        <div className="space-y-5">
+          <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
+            <TemplatePicker
+              onSelect={loadTemplate}
+              selectedId={selectedTemplateId}
+            />
+          </div>
+
           <div className="flex items-center justify-between">
             <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Start from a Template
+              Fast demo shortcuts
             </label>
-            <button
-              onClick={() => setShowTemplates(!showTemplates)}
-              className="text-xs text-gray-500 hover:text-cyan-400 transition-colors"
-            >
-              {showTemplates ? "Hide templates" : "Browse industry templates"}
-            </button>
+            <span className="text-xs text-gray-600">
+              Optional one-click examples
+            </span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button
@@ -546,14 +548,6 @@ export default function NewSimulationPage() {
             </button>
           </div>
 
-          {showTemplates && (
-            <div className="pt-2 border-t border-white/[0.06]">
-              <TemplatePicker
-                onSelect={loadTemplate}
-                selectedId={selectedTemplateId}
-              />
-            </div>
-          )}
         </div>
 
         <div className="space-y-2 max-w-md">

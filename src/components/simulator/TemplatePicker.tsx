@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { SIMULATION_TEMPLATES, type SimulationTemplate } from "@/lib/simulation/templates";
-import { ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 interface TemplatePickerProps {
   onSelect: (template: SimulationTemplate) => void;
@@ -62,12 +61,6 @@ const COLOR_MAP: Record<string, {
 };
 
 export default function TemplatePicker({ onSelect, selectedId, className }: TemplatePickerProps) {
-  const [expanded, setExpanded] = useState(false);
-
-  // Show first 3 by default, all when expanded
-  const visibleTemplates = expanded ? SIMULATION_TEMPLATES : SIMULATION_TEMPLATES.slice(0, 3);
-  const hasMore = SIMULATION_TEMPLATES.length > 3;
-
   return (
     <div className={cn("space-y-3", className)}>
       <div className="flex items-center justify-between">
@@ -79,8 +72,8 @@ export default function TemplatePicker({ onSelect, selectedId, className }: Temp
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {visibleTemplates.map((template) => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+        {SIMULATION_TEMPLATES.map((template) => {
           const colors = COLOR_MAP[template.color] || COLOR_MAP.cyan;
           const isActive = selectedId === template.id;
 
@@ -114,7 +107,7 @@ export default function TemplatePicker({ onSelect, selectedId, className }: Temp
                   {template.industry}
                 </span>
                 <span className="text-[11px] text-gray-600">
-                  {template.scenarios.length + 1} scenarios · {template.baseline.forecastWeeks}w
+                  {template.scenarios.length + 1} scenarios / {template.baseline.forecastWeeks}w
                 </span>
               </div>
               {!isActive && (
@@ -129,18 +122,6 @@ export default function TemplatePicker({ onSelect, selectedId, className }: Temp
         })}
       </div>
 
-      {hasMore && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-300 transition-colors mx-auto"
-        >
-          {expanded ? (
-            <>Show fewer <ChevronUp size={14} /></>
-          ) : (
-            <>Show {SIMULATION_TEMPLATES.length - 3} more templates <ChevronDown size={14} /></>
-          )}
-        </button>
-      )}
     </div>
   );
 }

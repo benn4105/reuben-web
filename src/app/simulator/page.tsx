@@ -92,8 +92,7 @@ export default function SimulatorDashboard() {
             Business Simulator
           </h1>
           <p className="text-base text-gray-400 mb-6 leading-relaxed">
-            Test operational decisions—like workforce expansion or process optimization—before committing to them. 
-            This simulator uses <strong className="text-white">Reux</strong> as the backend engine to model assumptions, forecast margins, and surface risk across scenarios.
+            Test operational decisions like staffing, pricing, capacity, or process optimization before committing to them. Reux models the assumptions, forecasts margin, and returns a saved recommendation your team can revisit.
           </p>
           
           <div className="flex flex-wrap gap-3 mb-8">
@@ -108,8 +107,8 @@ export default function SimulatorDashboard() {
               </Link>
             </Button>
             <Button asChild variant="ghost" className="gap-2 text-gray-400 hover:text-white">
-              <Link href="/docs">
-                Developer Docs
+              <Link href="/contact">
+                Bring one spreadsheet decision
               </Link>
             </Button>
             <Button asChild variant="ghost" className="gap-2 text-gray-400 hover:text-white hidden sm:flex">
