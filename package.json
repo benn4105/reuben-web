@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test:e2e": "playwright test",
     "test:e2e:simulator": "playwright test tests/simulator.spec.ts --project=chromium",
-    "check:live-demo": "node scripts/check-live-demo.mjs"
+    "check:live-demo": "node scripts/check-live-demo.mjs",
+    "check:production": "node scripts/check-live-demo.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

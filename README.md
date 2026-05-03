@@ -129,6 +129,14 @@ Visitor-facing behavior:
 - Users can share a re-runnable config link even if a saved run expires.
 - The contact CTA is the conversion path for real business data or custom pilots.
 
+Full operational checklist: [Business Simulator runbook](docs/business-simulator-runbook.md).
+
+Production verification shortcut:
+
+```bash
+npm run check:production
+```
+
 ## Railway Deployment
 
 This repo includes `railway.json`. Create a Railway service from `benn4105/reuben-web` and set the `NEXT_PUBLIC_REUX_DEMO_URL` variable.
