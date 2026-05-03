@@ -73,6 +73,12 @@ export async function POST(request: NextRequest) {
     deliverToResend(lead),
   ]);
 
+  for (const result of deliveries) {
+    if (result.status === "rejected") {
+      console.error("Contact intake delivery failed", result.reason);
+    }
+  }
+
   const delivered = deliveries.some(
     (result) => result.status === "fulfilled" && result.value === true
   );

@@ -7,6 +7,16 @@ import { Input } from "@/components/ui/input";
 
 const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "stevent0522@gmail.com";
 
+class ContactSubmitError extends Error {
+  fallbackToMail: boolean;
+
+  constructor(message: string, fallbackToMail: boolean) {
+    super(message);
+    this.name = "ContactSubmitError";
+    this.fallbackToMail = fallbackToMail;
+  }
+}
+
 function getInitialContactContext() {
   const params = new URLSearchParams(window.location.search);
   const requestedTopic = params.get("topic");
@@ -69,12 +79,19 @@ export default function ContactPage() {
       const result = await response.json().catch(() => ({}));
 
       if (!response.ok || result.ok !== true) {
-        throw new Error(result.error || "Unable to send message.");
+        throw new ContactSubmitError(
+          result.error || "Unable to send message.",
+          response.status >= 500
+        );
       }
 
-      if (result.delivered === false && result.configured === false) {
+      if (result.delivered === false) {
         openMailFallback(payload);
-        setFeedback("Your email app should open with a prefilled message. Send that email to complete the intake.");
+        setFeedback(
+          result.configured === false
+            ? "Your email app should open with a prefilled message. Send that email to complete the intake."
+            : "The intake service did not confirm delivery, so your email app should open with a prefilled message."
+        );
       } else {
         setFeedback("Your message was delivered.");
       }
@@ -84,6 +101,13 @@ export default function ContactPage() {
       setMessage("");
       setTopic("reux");
     } catch (error) {
+      if (!(error instanceof ContactSubmitError) || error.fallbackToMail) {
+        openMailFallback(payload);
+        setStatus("success");
+        setFeedback("The intake service did not confirm delivery, so your email app should open with a prefilled message.");
+        return;
+      }
+
       setStatus("error");
       setFeedback(error instanceof Error ? error.message : "Unable to send message.");
     }

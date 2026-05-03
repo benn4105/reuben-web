@@ -41,7 +41,7 @@ CONTACT_TO_EMAIL=you@example.com
 CONTACT_FROM_EMAIL=Reuben <hello@yourdomain.com>
 ```
 
-If neither server-side intake option is configured, the contact form opens a prefilled email draft using `NEXT_PUBLIC_CONTACT_EMAIL`.
+If neither server-side intake option is configured, or if configured delivery fails, the contact form opens a prefilled email draft using `NEXT_PUBLIC_CONTACT_EMAIL`.
 
 Railway must have:
 
@@ -186,6 +186,11 @@ Likely causes:
 - Resend environment variables are missing or invalid.
 - `CONTACT_FROM_EMAIL` is not a verified sender.
 - The webhook endpoint is down.
+
+Expected public behavior:
+
+- Visitors should still see the prefilled email fallback if server-side delivery does not confirm.
+- Validation errors should stay in the form and should not open the fallback.
 
 Fix:
 
