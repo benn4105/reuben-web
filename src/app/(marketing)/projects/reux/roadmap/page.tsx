@@ -9,16 +9,20 @@ export default function RoadmapPage() {
     "Schema declarations for entities, enums, references, indexes, and constraints.",
     "Query declarations compiled to secure PostgreSQL SQL.",
     "Transaction functions with row locking, mutations, and after-commit hooks.",
-    "Migration planning, safety checks, and schema manifests.",
+    "Migration planning, safety checks, rollback SQL, and schema manifests.",
     "Runtime support for PostgreSQL queries, transactions, and outbox processing.",
-    "CLI tooling for formatting, checking, generation, and migrations."
+    "CLI tooling for formatting, checking, generation, and migrations.",
+    "Business Simulator with scenario comparison, forecasts, and saved runs.",
+    "VS Code syntax highlighting, diagnostics, formatting, completions, and hover text.",
+    "Simulation declarations with assumptions, scenarios, objectives, and time-series forecasting.",
+    "Public API rate limiting, request counters, and session isolation for hosted demos.",
   ];
 
   const inActiveBeta = [
-    "Business Simulator (Frontend MVP with Reux backend)",
-    "Hosted commerce and logistics pilots",
-    "Early VS Code support with syntax highlighting and diagnostics",
-    "Simulation syntax with assumptions, scenarios, and forecasts"
+    "Hosted commerce and logistics pilots with polished tester guidance",
+    "Operations dashboard for cross-domain queue and worker health",
+    "PostgreSQL-backed saved simulation runs for result pages and sharing",
+    "Responsive, accessible demo UI with mobile layout polish",
   ];
 
   const nextMilestones = [
@@ -281,8 +285,13 @@ export default function RoadmapPage() {
         <div className="space-y-6 border-l-2 border-white/10 pl-6 ml-4">
           <div className="relative">
             <div className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-[#00F0FF] shadow-[0_0_10px_rgba(0,240,255,0.8)]" />
-            <h3 className="text-lg font-bold text-white mb-1">Developer Preview Launch</h3>
-            <p className="text-gray-400 text-sm">Published detailed capability lists, syntax examples, and ecosystem documentation for the Reux engine.</p>
+            <h3 className="text-lg font-bold text-white mb-1">Demo Frontend Polish</h3>
+            <p className="text-gray-400 text-sm">Completed consistent tester guidance, next-best-action summaries, mobile responsive layout, and status sync across commerce, logistics, and simulation flows.</p>
+          </div>
+          <div className="relative">
+            <div className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-[#00F0FF] shadow-[0_0_10px_rgba(0,240,255,0.8)]" />
+            <h3 className="text-lg font-bold text-white mb-1">Business Simulator MVP</h3>
+            <p className="text-gray-400 text-sm">Launched the flagship interactive demo proving Reux&apos;s simulation and forecasting capabilities with saved runs and sharing.</p>
           </div>
           <div className="relative">
             <div className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-white/30" />
@@ -291,8 +300,8 @@ export default function RoadmapPage() {
           </div>
           <div className="relative">
             <div className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-white/30" />
-            <h3 className="text-lg font-bold text-white mb-1">Business Simulator MVP</h3>
-            <p className="text-gray-400 text-sm">Launched the flagship interactive demo proving Reux&apos;s simulation and forecasting capabilities in real-time.</p>
+            <h3 className="text-lg font-bold text-white mb-1">Developer Preview Launch</h3>
+            <p className="text-gray-400 text-sm">Published detailed capability lists, syntax examples, and ecosystem documentation for the Reux engine.</p>
           </div>
         </div>
       </motion.div>

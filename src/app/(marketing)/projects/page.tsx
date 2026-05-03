@@ -23,8 +23,8 @@ const prototypeProjects = [
   },
   {
     title: "Reux Live Demos",
-    description: "Hosted commerce and logistics pilots showing Reux-generated database workflows, transactions, state changes, and outbox processing through a public browser demo.",
-    tags: ["Public Demo", "PostgreSQL", "Transactions"],
+    description: "Hosted commerce, logistics, and Business Simulator pilots showing Reux-generated workflows, transactions, queue health, and outbox processing with guided tester flows.",
+    tags: ["Public Demo", "PostgreSQL", "Simulator"],
     href: "/projects/reux/demo",
     featured: false,
   },

@@ -142,8 +142,10 @@ const liveCapabilities = [
   "Conservative migrations with rollback notes",
   "Generated TypeScript integration",
   "Simulation declarations and scenario comparisons",
-  "Hosted public demos for commerce and logistics",
+  "Business Simulator with saved runs and sharing",
+  "Hosted commerce and logistics demos with tester guidance",
   "VS Code syntax, diagnostics, formatting, and completions",
+  "Public API rate limiting and request counters",
   "Release checks for packaging and roadmap sync",
 ];
 
