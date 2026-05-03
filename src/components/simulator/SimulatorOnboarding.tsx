@@ -9,8 +9,7 @@ export function SimulatorOnboarding() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // Only show once per session or use localStorage for real persistence
-    const hasSeenOnboarding = sessionStorage.getItem("reux_sim_onboarding");
+    const hasSeenOnboarding = window.sessionStorage.getItem("reux_sim_onboarding");
     if (!hasSeenOnboarding) {
       const id = window.setTimeout(() => setIsOpen(true), 0);
       return () => window.clearTimeout(id);
@@ -19,11 +18,20 @@ export function SimulatorOnboarding() {
 
   const handleClose = () => {
     setIsOpen(false);
-    sessionStorage.setItem("reux_sim_onboarding", "true");
+    window.sessionStorage.setItem("reux_sim_onboarding", "true");
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (open) {
+          setIsOpen(true);
+          return;
+        }
+        handleClose();
+      }}
+    >
       <DialogContent className="sm:max-w-md border-white/[0.06] bg-[#0A0A0C]">
         <DialogHeader>
           <div className="mx-auto w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500/20 to-violet-500/20 flex items-center justify-center mb-4 border border-white/[0.08]">

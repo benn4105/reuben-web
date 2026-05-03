@@ -478,6 +478,20 @@ export default function NewSimulationPage() {
         )}
       </div>
 
+      <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/[0.05] p-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold text-white">Public demo mode</p>
+            <p className="mt-1 text-xs leading-relaxed text-gray-400">
+              Start from a template, adjust sample assumptions, and run the scenario. No account, admin token, or private data is needed.
+            </p>
+          </div>
+          <span className="w-fit rounded-full border border-white/[0.08] bg-white/[0.05] px-2.5 py-1 text-[11px] uppercase tracking-wider text-cyan-200">
+            Safe sandbox
+          </span>
+        </div>
+      </div>
+
       {/* Presets and Simulation Name */}
       <div className="flex flex-col gap-6">
         {/* Template Picker */}

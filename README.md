@@ -107,6 +107,28 @@ Override targets when testing preview deploys:
 npm run check:live-demo -- --site https://your-preview.vercel.app --api https://your-railway-service.up.railway.app
 ```
 
+## Public Demo Handoff
+
+The Business Simulator is intended to be shareable with non-technical visitors at:
+
+- `https://reuben-web.vercel.app/simulator`
+- `https://reuben-web.vercel.app/simulator/new`
+
+Before sending the link publicly, confirm:
+
+- Vercel production has `NEXT_PUBLIC_REUX_DEMO_URL` set to the Railway backend URL.
+- `/simulator` shows `Live Connected`, not `Local Mock`.
+- `/simulator/new` loads all four templates without an admin token or login.
+- A guided demo run creates a results page with recommendation, charts, Reux transparency, and a copyable saved-run link.
+- `npm run check:live-demo` passes against production.
+
+Visitor-facing behavior:
+
+- The demo uses sample assumptions only.
+- Saved run links are temporary and can expire.
+- Users can share a re-runnable config link even if a saved run expires.
+- The contact CTA is the conversion path for real business data or custom pilots.
+
 ## Railway Deployment
 
 This repo includes `railway.json`. Create a Railway service from `benn4105/reuben-web` and set the `NEXT_PUBLIC_REUX_DEMO_URL` variable.
