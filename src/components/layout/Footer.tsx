@@ -39,6 +39,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/founder-pilot" className="text-gray-400 hover:text-[#00F0FF] transition-colors text-sm">
+                  Founder Pilot
+                </Link>
+              </li>
+              <li>
                 <Link href="/projects/reux" className="text-gray-400 hover:text-[#00F0FF] transition-colors text-sm">
                   Reux Language
                 </Link>

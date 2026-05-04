@@ -18,6 +18,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/projects", label: "Projects" },
   { href: "/simulator", label: "Simulator" },
+  { href: "/founder-pilot", label: "Founder Pilot" },
   { href: "/docs", label: "Developer Preview" },
   { href: "/about", label: "About" },
 ];
@@ -76,10 +77,10 @@ export default function Navbar() {
             <span>GitHub</span>
           </Link>
           <Link
-            href="/simulator/new"
+            href="/founder-pilot"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm font-semibold hover:shadow-[0_0_20px_rgba(0,200,255,0.25)] transition-shadow"
           >
-            Try Simulator
+            Request Pilot
           </Link>
         </nav>
 

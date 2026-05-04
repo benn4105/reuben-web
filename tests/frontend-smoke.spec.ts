@@ -7,6 +7,7 @@ const publicPages = [
   { path: "/projects/reux/roadmap", heading: "Reux Roadmap" },
   { path: "/projects/reux/demo", heading: /Try the Reux commerce console/i },
   { path: "/docs", heading: "Getting Started with Reux" },
+  { path: "/founder-pilot", heading: /Turn one spreadsheet decision/i },
   { path: "/simulator", heading: "Business Simulator" },
 ];
 

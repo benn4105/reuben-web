@@ -77,8 +77,8 @@ export default function Home() {
             <AnimatedButton href="/simulator" variant="primary">
               Try the Business Simulator
             </AnimatedButton>
-            <AnimatedButton href="/projects/reux" variant="secondary">
-              Explore Reux
+            <AnimatedButton href="/founder-pilot" variant="secondary">
+              Request Founder Pilot
             </AnimatedButton>
           </motion.div>
         </motion.div>
@@ -260,8 +260,8 @@ export default function Home() {
             <AnimatedButton href="/simulator" variant="primary">
               Open the Simulator
             </AnimatedButton>
-            <AnimatedButton href="/docs" variant="secondary">
-              Developer Docs
+            <AnimatedButton href="/founder-pilot" variant="secondary">
+              Request Founder Pilot
             </AnimatedButton>
           </div>
         </div>
