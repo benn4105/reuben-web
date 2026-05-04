@@ -90,8 +90,8 @@ export default function TemplatePicker({ onSelect, selectedId, className }: Temp
             >
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-lg shrink-0">{template.icon}</span>
-                  <h4 className="text-sm font-medium text-white truncate">{template.name}</h4>
+                  <span className={cn("shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded border", colors.badge)}>{template.icon}</span>
+                  <h4 className="text-sm font-medium text-white break-words">{template.name}</h4>
                 </div>
                 {isActive && (
                   <span className={cn("shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded border", colors.badge)}>
@@ -99,7 +99,7 @@ export default function TemplatePicker({ onSelect, selectedId, className }: Temp
                   </span>
                 )}
               </div>
-              <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 mb-3">
+              <p className={cn("text-xs leading-relaxed line-clamp-2 mb-3", isActive ? "text-gray-300" : "text-gray-500")}>
                 {template.description}
               </p>
               <div className="flex items-center justify-between">

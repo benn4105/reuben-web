@@ -27,6 +27,20 @@ test.describe('Simulator E2E Flow', () => {
     await expect(page).toHaveURL(/.*\/simulator\/new/);
     await expect(page.locator('h1', { hasText: 'Build Simulation' })).toBeVisible();
 
+    // Verify template cards render with titles visible
+    const templateCards = page.locator('button:has(h4)');
+    await expect(templateCards.first()).toBeVisible({ timeout: 5000 });
+    // All 4 template cards should show their titles
+    await expect(templateCards).toHaveCount(4);
+    await expect(page.locator('h4', { hasText: 'Operations Decision' })).toBeVisible();
+    await expect(page.locator('h4', { hasText: 'Capacity Planning' })).toBeVisible();
+    await expect(page.locator('h4', { hasText: 'Staffing Plan' })).toBeVisible();
+    await expect(page.locator('h4', { hasText: 'Pricing Strategy' })).toBeVisible();
+
+    // Verify no stray loading spinner after defaults load
+    await expect(page.locator('input[placeholder="e.g. Q2 Workforce Planning"]')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('text="Preparing simulation model…"')).toBeHidden();
+
     // Wait for defaults to load
     await expect(page.locator('input[placeholder="e.g. Q2 Workforce Planning"]')).toBeVisible({ timeout: 10000 });
 

@@ -583,7 +583,7 @@ export default function NewSimulationPage() {
         </div>
       </div>
 
-      {isLoadingDefaults ? (
+      {isLoadingDefaults && !baseline ? (
         <div className="flex h-64 items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.02]">
           <div className="flex flex-col items-center gap-4 text-gray-500">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-500 border-t-transparent" />
