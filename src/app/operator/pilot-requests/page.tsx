@@ -26,7 +26,7 @@ import { copyToClipboard } from "@/lib/simulation/share";
 const API_BASE_URL = process.env.NEXT_PUBLIC_REUX_DEMO_URL?.replace(/\/$/, "") ?? "";
 const TOKEN_STORAGE_KEY = "reuben_operator_token";
 
-// ─── Lead status (client-side only) ─────────────────────────────────────────
+// ─── Lead status ────────────────────────────────────────────────────────────
 
 type LeadStatus = "new" | "contacted" | "scoping" | "closed";
 
@@ -36,26 +36,6 @@ const LEAD_STATUSES: { value: LeadStatus; label: string; color: string }[] = [
   { value: "scoping", label: "Scoping", color: "border-amber-500/40 bg-amber-500/15 text-amber-300" },
   { value: "closed", label: "Closed", color: "border-emerald-500/40 bg-emerald-500/15 text-emerald-300" },
 ];
-
-function getLeadStatus(id: string): LeadStatus {
-  if (typeof window === "undefined") return "new";
-  return (localStorage.getItem(`pilot_status_${id}`) as LeadStatus) || "new";
-}
-
-function setLeadStatus(id: string, status: LeadStatus) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(`pilot_status_${id}`, status);
-}
-
-function getLeadNotes(id: string): string {
-  if (typeof window === "undefined") return "";
-  return localStorage.getItem(`pilot_notes_${id}`) ?? "";
-}
-
-function setLeadNotes(id: string, notes: string) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(`pilot_notes_${id}`, notes);
-}
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -76,6 +56,9 @@ interface PilotRequestSummary {
   fallbackEmail?: string;
   storage?: string;
   persistenceWarning?: string;
+  operatorStatus?: LeadStatus;
+  operatorNotes?: string;
+  operatorUpdatedAt?: string;
 }
 
 interface PilotRequestDetail {
@@ -155,19 +138,19 @@ export default function PilotRequestsPage() {
   const [statusMap, setStatusMap] = useState<Record<string, LeadStatus>>({});
   const [notesMap, setNotesMap] = useState<Record<string, string>>({});
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [savingOperatorIds, setSavingOperatorIds] = useState<Record<string, boolean>>({});
 
   const selectedSummary = useMemo(
     () => requests.find((r) => r.id === selectedId) ?? null,
     [requests, selectedId],
   );
 
-  // Hydrate localStorage state when requests change
-  const hydrateLocalState = useCallback((reqs: PilotRequestSummary[]) => {
+  const hydrateOperatorState = useCallback((reqs: PilotRequestSummary[]) => {
     const nextStatuses: Record<string, LeadStatus> = {};
     const nextNotes: Record<string, string> = {};
     for (const r of reqs) {
-      nextStatuses[r.id] = getLeadStatus(r.id);
-      nextNotes[r.id] = getLeadNotes(r.id);
+      nextStatuses[r.id] = normalizeLeadStatus(r.operatorStatus);
+      nextNotes[r.id] = r.operatorNotes ?? "";
     }
     setStatusMap(nextStatuses);
     setNotesMap(nextNotes);
@@ -208,7 +191,7 @@ export default function PilotRequestsPage() {
 
       const nextRequests: PilotRequestSummary[] = Array.isArray(body.requests) ? body.requests : [];
       setRequests(nextRequests);
-      hydrateLocalState(nextRequests);
+      hydrateOperatorState(nextRequests);
       setStatus("ready");
       const nextSelected = selectedId && nextRequests.some((r) => r.id === selectedId)
         ? selectedId
@@ -239,7 +222,11 @@ export default function PilotRequestsPage() {
       });
       const body = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(body.message || body.error || `Detail failed (${response.status})`);
-      setSelected(body.request ?? null);
+      const request = body.request ?? null;
+      setSelected(request);
+      if (request) {
+        applyOperatorState(request);
+      }
       setDetailStatus("ready");
     } catch (detailError) {
       setSelected(null);
@@ -248,14 +235,73 @@ export default function PilotRequestsPage() {
     }
   }
 
-  function handleStatusChange(id: string, next: LeadStatus) {
-    setLeadStatus(id, next);
+  async function updateOperatorState(id: string, patch: { status?: LeadStatus; notes?: string }) {
+    if (!API_BASE_URL) throw new Error("NEXT_PUBLIC_REUX_DEMO_URL is not configured.");
+    if (!token.trim()) throw new Error("Enter the Railway demo admin token first.");
+
+    const response = await fetch(`${API_BASE_URL}/api/pilot-requests/${encodeURIComponent(id)}/operator`, {
+      method: "PATCH",
+      headers: {
+        "x-reux-demo-token": token.trim(),
+        accept: "application/json",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(patch),
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      if (response.status === 401 || response.status === 403) {
+        throw new Error("Authentication failed. Check that the token matches REUX_DEMO_SETUP_TOKEN on your Railway service.");
+      }
+      throw new Error(body.message || body.error || `Operator update failed (${response.status})`);
+    }
+
+    const request = body.request as PilotRequestSummary | undefined;
+    if (request) {
+      setRequests((prev) => prev.map((item) => item.id === request.id ? { ...item, ...request } : item));
+      setSelected((prev) => prev && prev.id === request.id ? { ...prev, ...request } : prev);
+      applyOperatorState(request);
+    }
+    return request;
+  }
+
+  function applyOperatorState(request: PilotRequestSummary) {
+    setStatusMap((prev) => ({ ...prev, [request.id]: normalizeLeadStatus(request.operatorStatus) }));
+    setNotesMap((prev) => ({ ...prev, [request.id]: request.operatorNotes ?? "" }));
+  }
+
+  async function handleStatusChange(id: string, next: LeadStatus) {
+    const previous = statusMap[id] ?? "new";
     setStatusMap((prev) => ({ ...prev, [id]: next }));
+    setSavingOperatorIds((prev) => ({ ...prev, [id]: true }));
+    try {
+      await updateOperatorState(id, { status: next });
+      showToast("Lead status saved");
+    } catch (updateError) {
+      setStatusMap((prev) => ({ ...prev, [id]: previous }));
+      setError(updateError instanceof Error ? updateError.message : "Could not save lead status.");
+      showToast("Failed to save status", "error");
+    } finally {
+      setSavingOperatorIds((prev) => ({ ...prev, [id]: false }));
+    }
   }
 
   function handleNotesChange(id: string, notes: string) {
-    setLeadNotes(id, notes);
     setNotesMap((prev) => ({ ...prev, [id]: notes }));
+  }
+
+  async function handleNotesSave(id: string) {
+    const notes = notesMap[id] ?? "";
+    setSavingOperatorIds((prev) => ({ ...prev, [id]: true }));
+    try {
+      await updateOperatorState(id, { notes });
+      showToast("Operator notes saved");
+    } catch (updateError) {
+      setError(updateError instanceof Error ? updateError.message : "Could not save operator notes.");
+      showToast("Failed to save notes", "error");
+    } finally {
+      setSavingOperatorIds((prev) => ({ ...prev, [id]: false }));
+    }
   }
 
   async function handleCopyReply(req: PilotRequestSummary) {
@@ -381,8 +427,10 @@ export default function PilotRequestsPage() {
                   request={activeRequest}
                   leadStatus={statusMap[activeRequest.id] ?? "new"}
                   notes={notesMap[activeRequest.id] ?? ""}
+                  isSavingOperator={Boolean(savingOperatorIds[activeRequest.id])}
                   onStatusChange={(s) => handleStatusChange(activeRequest.id, s)}
                   onNotesChange={(n) => handleNotesChange(activeRequest.id, n)}
+                  onNotesSave={() => void handleNotesSave(activeRequest.id)}
                   onCopyReply={() => void handleCopyReply(activeRequest)}
                   onCopySummary={() => void handleCopySummary(activeRequest)}
                 />
@@ -414,16 +462,20 @@ function LeadDetail({
   request,
   leadStatus,
   notes,
+  isSavingOperator,
   onStatusChange,
   onNotesChange,
+  onNotesSave,
   onCopyReply,
   onCopySummary,
 }: {
   request: PilotRequestSummary & { delivery?: Record<string, unknown> };
   leadStatus: LeadStatus;
   notes: string;
+  isSavingOperator: boolean;
   onStatusChange: (s: LeadStatus) => void;
   onNotesChange: (n: string) => void;
+  onNotesSave: () => void;
   onCopyReply: () => void;
   onCopySummary: () => void;
 }) {
@@ -450,10 +502,11 @@ function LeadDetail({
         <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Lead Status</p>
         <div className="flex flex-wrap gap-1.5">
           {LEAD_STATUSES.map((s) => (
-            <button key={s.value} type="button" onClick={() => onStatusChange(s.value)}
+            <button key={s.value} type="button" onClick={() => onStatusChange(s.value)} disabled={isSavingOperator}
               className={cn(
                 "rounded-md border px-3 py-1.5 text-xs font-semibold transition-colors",
                 leadStatus === s.value ? s.color : "border-white/[0.06] bg-white/[0.02] text-gray-500 hover:text-gray-300",
+                isSavingOperator && "cursor-wait opacity-70",
               )}>
               {s.label}
             </button>
@@ -494,10 +547,18 @@ function LeadDetail({
           value={notes}
           onChange={(e) => onNotesChange(e.target.value)}
           rows={3}
-          placeholder="Internal notes — saved to localStorage only…"
+          placeholder="Internal notes saved to the Reux backend"
           className="w-full resize-y rounded-md border border-white/[0.08] bg-black/30 px-3 py-2 text-sm text-gray-300 placeholder:text-gray-600 focus:border-cyan-500/40 focus:outline-none"
         />
-        <p className="mt-1 text-[10px] text-gray-600">Not synced to the backend. Browser-local only.</p>
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <p className="text-[10px] text-gray-600">
+            {request.operatorUpdatedAt ? `Last saved ${formatDate(request.operatorUpdatedAt)}` : "Saved to the Reux backend."}
+          </p>
+          <Button type="button" variant="outline" size="sm" onClick={onNotesSave} disabled={isSavingOperator} className="h-7 gap-1.5 border-white/[0.08] px-2.5 text-[11px] text-gray-300 hover:text-white">
+            {isSavingOperator ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
+            Save Notes
+          </Button>
+        </div>
       </div>
 
       {/* Actions */}
@@ -559,4 +620,8 @@ function formatDate(value: string) {
 
 function stringValue(value: unknown) {
   return typeof value === "string" ? value : undefined;
+}
+
+function normalizeLeadStatus(value: unknown): LeadStatus {
+  return LEAD_STATUSES.some((status) => status.value === value) ? value as LeadStatus : "new";
 }

@@ -168,16 +168,17 @@ Internal view for reviewing and triaging Founder Pilot leads submitted through t
 ### Features
 
 - **Lead list** — All pilot requests from the Railway backend, sorted by submission date.
-- **Lead status** — Track each request as New → Contacted → Scoping → Closed. Persisted in `localStorage` only (not synced to backend).
-- **Operator notes** — Free-text notes per request, persisted in `localStorage` only.
+- **Lead status** — Track each request as New → Contacted → Scoping → Closed. Persisted through the Reux backend operator API.
+- **Operator notes** — Free-text notes per request, saved through the Reux backend operator API.
 - **Copy Reply** — Generates a professional reply email template with the contact's name, challenge, and suggested next steps. Copies to clipboard.
 - **Copy Summary** — Generates a Markdown summary with request ID, contact info, challenge, status, and notes. Copies to clipboard.
 - **Improved error states** — Auth errors reference `REUX_DEMO_SETUP_TOKEN`; network errors reference `NEXT_PUBLIC_REUX_DEMO_URL`.
 
-### Limitations
+### Operator API
 
-- Lead status and operator notes are stored in `localStorage` on the operator's browser. They do not persist across browsers or devices.
-- There is no backend endpoint for saving lead status or notes. A future version may add a `PATCH /api/pilot-requests/:id/status` endpoint.
+- Lead workflow updates use `PATCH /api/pilot-requests/:id/operator`.
+- The request body accepts `status`, `notes`, or both.
+- Valid statuses are `new`, `contacted`, `scoping`, and `closed`.
 
 Production verification shortcut:
 
