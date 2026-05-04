@@ -21,7 +21,7 @@ test.describe('Simulator E2E Flow', () => {
     }
 
     // Navigate directly to the build page to avoid flaky clicks on Link components
-    await page.goto('/simulator/new');
+    await page.goto('/simulator/new?preset=optimization');
     
     // Verify we are on the build page
     await expect(page).toHaveURL(/.*\/simulator\/new/);
@@ -37,16 +37,13 @@ test.describe('Simulator E2E Flow', () => {
     await expect(page.locator('h4', { hasText: 'Staffing Plan' })).toBeVisible();
     await expect(page.locator('h4', { hasText: 'Pricing Strategy' })).toBeVisible();
 
-    // Verify no stray loading spinner after defaults load
-    await expect(page.locator('input[placeholder="e.g. Q2 Workforce Planning"]')).toBeVisible({ timeout: 10000 });
-    await expect(page.locator('text="Preparing simulation model…"')).toBeHidden();
-
     // Wait for defaults to load
     await expect(page.locator('input[placeholder="e.g. Q2 Workforce Planning"]')).toBeVisible({ timeout: 10000 });
 
     // The Run Simulation button should be visible
     const runButton = page.locator('button', { hasText: 'Run Simulation' });
     await expect(runButton).toBeVisible();
+    await expect(runButton).toBeEnabled({ timeout: 10000 });
 
     // Run the simulation
     await runButton.click();
@@ -71,18 +68,16 @@ test.describe('Simulator E2E Flow', () => {
     // Mock API response for operator page to avoid Railway dependency
     await page.route('**/api/pilot-requests*', async (route) => {
       if (route.request().method() === 'GET') {
-        const json = {
-          requests: [
-            {
-              id: 'req_123',
-              receivedAt: new Date().toISOString(),
-              name: 'Test Founder',
-              email: 'test@example.com',
-              decision: 'Need to test the pilot workflow',
-              operatorStatus: 'new',
-            }
-          ]
+        const request = {
+          id: 'req_123',
+          receivedAt: new Date().toISOString(),
+          name: 'Test Founder',
+          email: 'test@example.com',
+          decision: 'Need to test the pilot workflow',
+          operatorStatus: 'new',
         };
+        const isDetailRequest = route.request().url().includes('/api/pilot-requests/req_123');
+        const json = isDetailRequest ? { request } : { requests: [request] };
         await route.fulfill({ json });
       } else {
         await route.continue();

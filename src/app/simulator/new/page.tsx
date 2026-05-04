@@ -222,7 +222,6 @@ export default function NewSimulationPage() {
       try {
         setIsLoadingDefaults(true);
         setError(null);
-        const { baseline: defaultBaseline, scenarios: defaultScenarios } = await getOperationsDecision();
 
         // Priority: share link > local draft > URL preset > defaults
         const sharedConfig = typeof window !== "undefined" 
@@ -235,41 +234,45 @@ export default function NewSimulationPage() {
           setScenarios(sharedConfig.scenarios);
           setLiveMetrics(calculateMetrics(sharedConfig.baseline));
           setLiveSnippet(generateReuxSnippet(sharedConfig.baseline));
-        } else {
-          const draft = typeof window !== "undefined" ? loadDraft() : null;
-          if (draft) {
-            setSimulationName(draft.name);
-            setBaseline(draft.baseline);
-            setScenarios(draft.scenarios);
-            setRestoredDraftInfo(`Restored draft from ${formatDraftAge(draft.savedAt)}`);
-            setLiveMetrics(calculateMetrics(draft.baseline));
-            setLiveSnippet(generateReuxSnippet(draft.baseline));
-            // Auto-hide the draft restored message after 5 seconds
-            setTimeout(() => setRestoredDraftInfo(null), 5000);
-          } else {
-            const guidedPreset = guidedPresetFromSearch();
-            if (guidedPreset) {
-              const preset = buildGuidedPreset(guidedPreset);
-              setSimulationName(preset.name);
-              setBaseline(preset.baseline);
-              setScenarios(preset.scenarios);
-              setSelectedPreset(guidedPreset);
-              setSelectedTemplateId("operations-decision");
-              setLiveMetrics(calculateMetrics(preset.baseline));
-              setLiveSnippet(generateReuxSnippet(preset.baseline));
-            } else {
-              setBaseline(defaultBaseline);
-              setSelectedTemplateId("operations-decision");
-              if (defaultScenarios && defaultScenarios.length > 0) {
-                setScenarios([{ ...defaultScenarios[0], name: "Scenario A" }]);
-              } else {
-                setScenarios([{ ...defaultBaseline, name: "Scenario A" }]);
-              }
-              setLiveMetrics(calculateMetrics(defaultBaseline));
-              setLiveSnippet(generateReuxSnippet(defaultBaseline));
-            }
-          }
+          return;
         }
+
+        const draft = typeof window !== "undefined" ? loadDraft() : null;
+        if (draft) {
+          setSimulationName(draft.name);
+          setBaseline(draft.baseline);
+          setScenarios(draft.scenarios);
+          setRestoredDraftInfo(`Restored draft from ${formatDraftAge(draft.savedAt)}`);
+          setLiveMetrics(calculateMetrics(draft.baseline));
+          setLiveSnippet(generateReuxSnippet(draft.baseline));
+          // Auto-hide the draft restored message after 5 seconds
+          setTimeout(() => setRestoredDraftInfo(null), 5000);
+          return;
+        }
+
+        const guidedPreset = guidedPresetFromSearch();
+        if (guidedPreset) {
+          const preset = buildGuidedPreset(guidedPreset);
+          setSimulationName(preset.name);
+          setBaseline(preset.baseline);
+          setScenarios(preset.scenarios);
+          setSelectedPreset(guidedPreset);
+          setSelectedTemplateId("operations-decision");
+          setLiveMetrics(calculateMetrics(preset.baseline));
+          setLiveSnippet(generateReuxSnippet(preset.baseline));
+          return;
+        }
+
+        const { baseline: defaultBaseline, scenarios: defaultScenarios } = await getOperationsDecision();
+        setBaseline(defaultBaseline);
+        setSelectedTemplateId("operations-decision");
+        if (defaultScenarios && defaultScenarios.length > 0) {
+          setScenarios([{ ...defaultScenarios[0], name: "Scenario A" }]);
+        } else {
+          setScenarios([{ ...defaultBaseline, name: "Scenario A" }]);
+        }
+        setLiveMetrics(calculateMetrics(defaultBaseline));
+        setLiveSnippet(generateReuxSnippet(defaultBaseline));
       } catch (err) {
         console.error("Failed to load defaults", err);
         setError("Could not load the simulation model. The backend may be temporarily unavailable — try refreshing the page.");

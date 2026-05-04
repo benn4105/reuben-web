@@ -162,7 +162,8 @@ export default function PilotRequestsPage() {
   }, []);
 
   async function loadRequests(nextToken = token) {
-    if (!API_BASE_URL && typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    const apiBaseUrl = getApiBaseUrl();
+    if (!apiBaseUrl) {
       setStatus("error");
       setError("NEXT_PUBLIC_REUX_DEMO_URL is not configured. Set it in your Vercel/Railway environment to point at the Reux demo service.");
       return;
@@ -178,7 +179,7 @@ export default function PilotRequestsPage() {
     window.sessionStorage.setItem(TOKEN_STORAGE_KEY, nextToken.trim());
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/pilot-requests?limit=100`, {
+      const response = await fetch(`${apiBaseUrl}/api/pilot-requests?limit=100`, {
         headers: { "x-reux-demo-token": nextToken.trim(), accept: "application/json" },
       });
       const body = await response.json().catch(() => ({}));
@@ -214,10 +215,12 @@ export default function PilotRequestsPage() {
 
   async function loadDetail(id: string, nextToken = token) {
     if (!nextToken.trim()) return;
+    const apiBaseUrl = getApiBaseUrl();
+    if (!apiBaseUrl) return;
     setSelectedId(id);
     setDetailStatus("loading");
     try {
-      const response = await fetch(`${API_BASE_URL}/api/pilot-requests/${encodeURIComponent(id)}`, {
+      const response = await fetch(`${apiBaseUrl}/api/pilot-requests/${encodeURIComponent(id)}`, {
         headers: { "x-reux-demo-token": nextToken.trim(), accept: "application/json" },
       });
       const body = await response.json().catch(() => ({}));
@@ -236,10 +239,11 @@ export default function PilotRequestsPage() {
   }
 
   async function updateOperatorState(id: string, patch: { status?: LeadStatus; notes?: string }) {
-    if (!API_BASE_URL) throw new Error("NEXT_PUBLIC_REUX_DEMO_URL is not configured.");
+    const apiBaseUrl = getApiBaseUrl();
+    if (!apiBaseUrl) throw new Error("NEXT_PUBLIC_REUX_DEMO_URL is not configured.");
     if (!token.trim()) throw new Error("Enter the Railway demo admin token first.");
 
-    const response = await fetch(`${API_BASE_URL}/api/pilot-requests/${encodeURIComponent(id)}/operator`, {
+    const response = await fetch(`${apiBaseUrl}/api/pilot-requests/${encodeURIComponent(id)}/operator`, {
       method: "PATCH",
       headers: {
         "x-reux-demo-token": token.trim(),
@@ -624,4 +628,12 @@ function stringValue(value: unknown) {
 
 function normalizeLeadStatus(value: unknown): LeadStatus {
   return LEAD_STATUSES.some((status) => status.value === value) ? value as LeadStatus : "new";
+}
+
+function getApiBaseUrl() {
+  if (API_BASE_URL) return API_BASE_URL;
+  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+    return window.location.origin;
+  }
+  return "";
 }
