@@ -64,7 +64,7 @@ export default function ComparisonPage({
   if (error || !simulation || !simulation.comparison) {
     return (
       <ErrorState
-        message={error || "Comparison data not available"}
+        message={error || "Comparison data is not available. The simulation may have expired, or the backend may be temporarily offline."}
         onRetry={loadData}
       />
     );

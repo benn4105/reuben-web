@@ -82,8 +82,8 @@ export default function PilotRequestPanel({
       setStatus("success");
       setFeedback(
         error instanceof Error
-          ? "The direct intake did not confirm delivery, so your email app should open with a prepared pilot request."
-          : "Your email app should open with a prepared pilot request.",
+          ? "We opened your email app with a prepared pilot request. Send it to complete the handoff."
+          : "Your email app should open with a prepared pilot request. Send it to complete the handoff.",
       );
     }
   }

@@ -162,7 +162,7 @@ export default function SimulationResultsPage({
   if (error || !simulation) {
     return (
       <ErrorState
-        message={error || "Simulation not found or backend unavailable. Check your connection."}
+        message={error || "Could not load simulation results. The backend may be temporarily unavailable — check your connection and try again."}
         onRetry={loadSimulation}
         secondaryAction={
           <Button asChild variant="outline" className="border-white/[0.08] text-gray-300 hover:text-white">
@@ -385,13 +385,11 @@ export default function SimulationResultsPage({
           <div>
             <h2 className="text-sm font-semibold text-white">Have a real decision to test?</h2>
             <p className="mt-1 text-xs leading-relaxed text-gray-400">
-              Bring one spreadsheet decision and we can turn this demo flow into a focused pilot using your assumptions.
+              Bring one spreadsheet decision and we can turn this demo flow into a focused pilot using your actual assumptions.
             </p>
           </div>
-          <Button asChild size="sm" className="w-fit gap-1.5 bg-white text-black hover:bg-gray-200">
-            <Link href={`/contact?topic=business-simulator&source=simulator-result&simulation=${encodeURIComponent(simulation.name)}`}>
-              <MessageSquare size={14} /> Start Pilot
-            </Link>
+          <Button size="sm" className="w-fit gap-1.5 bg-white text-black hover:bg-gray-200" onClick={() => document.getElementById('pilot-request')?.scrollIntoView({ behavior: 'smooth' })}>
+            <MessageSquare size={14} /> Request Pilot
           </Button>
         </div>
       </div>
@@ -456,7 +454,7 @@ export default function SimulationResultsPage({
       </div>
 
       {/* Founder Pilot Request */}
-      <div className="pt-6 border-t border-white/[0.06]">
+      <div id="pilot-request" className="pt-6 border-t border-white/[0.06] scroll-mt-8">
         <PilotRequestPanel sourceRunId={id} simulationName={simulation.name} />
       </div>
 

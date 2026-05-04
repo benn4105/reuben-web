@@ -44,11 +44,12 @@ export function ErrorState({
         <AlertCircle size={32} className="text-rose-400" />
       </div>
       <h3 className="text-lg font-semibold text-gray-300 mb-2">{title}</h3>
-      <p className="text-sm text-gray-500 max-w-sm mb-6">{message}</p>
+      <p className="text-sm text-gray-500 max-w-md mb-6 leading-relaxed">{message}</p>
       <div className="flex justify-center gap-3">
         {onRetry && (
           <button
             onClick={onRetry}
+            aria-label="Retry loading"
             className="px-5 py-2 text-sm font-medium rounded-lg border border-white/[0.08] text-gray-300 hover:text-white hover:border-white/[0.16] transition-colors"
           >
             Try Again

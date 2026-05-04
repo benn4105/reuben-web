@@ -107,11 +107,9 @@ export default function SimulatorDashboard() {
                 Load Guided Demo
               </Link>
             </Button>
-            <Button asChild variant="ghost" className="gap-2 text-gray-400 hover:text-white">
-              <Link href="/contact">
-                Bring one spreadsheet decision
-              </Link>
-            </Button>
+            <button type="button" onClick={() => document.getElementById('pilot-cta')?.scrollIntoView({ behavior: 'smooth' })} className="inline-flex items-center justify-center gap-2 text-gray-400 hover:text-white text-sm font-medium h-9 px-3 rounded-md transition-colors">
+              Bring one spreadsheet decision
+            </button>
             <Button asChild variant="ghost" className="gap-2 text-gray-400 hover:text-white hidden sm:flex">
               <Link href="/projects/reux/roadmap">
                 Roadmap
@@ -175,7 +173,9 @@ export default function SimulatorDashboard() {
         </div>
       </section>
 
-      <PilotRequestPanel />
+      <div id="pilot-cta" className="scroll-mt-8">
+        <PilotRequestPanel />
+      </div>
 
       <ReuxModelCatalog />
 
@@ -263,7 +263,8 @@ export default function SimulatorDashboard() {
           <LoadingCards rows={3} />
         ) : error ? (
           <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-6 text-center">
-            <p className="text-sm text-rose-400 mb-3">{error}</p>
+            <p className="text-sm text-rose-400 mb-2">{error}</p>
+            <p className="text-xs text-gray-500 mb-4 max-w-md mx-auto">The Reux demo backend may be temporarily offline. Your simulations will appear once the connection is restored.</p>
             <Button
               onClick={loadData}
               variant="ghost"
