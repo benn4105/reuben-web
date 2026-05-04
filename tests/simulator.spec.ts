@@ -62,5 +62,47 @@ test.describe('Simulator E2E Flow', () => {
     // The scenario comparison table should be visible at the bottom
     await expect(page.locator('text="Scenario Comparison"')).toBeVisible();
     await expect(page.locator('table')).toBeVisible();
+
+    // Confirm Founder Pilot CTA/form is visible
+    const pilotForm = page.locator('form[id^="pilot-"]');
+    await expect(pilotForm).toBeVisible();
+    await expect(page.locator('h2', { hasText: /Turn this result into a founder pilot|Request a founder pilot/ })).toBeVisible();
+
+    // Mock API response for operator page to avoid Railway dependency
+    await page.route('**/api/pilot-requests*', async (route) => {
+      if (route.request().method() === 'GET') {
+        const json = {
+          requests: [
+            {
+              id: 'req_123',
+              receivedAt: new Date().toISOString(),
+              name: 'Test Founder',
+              email: 'test@example.com',
+              decision: 'Need to test the pilot workflow',
+              operatorStatus: 'new',
+            }
+          ]
+        };
+        await route.fulfill({ json });
+      } else {
+        await route.continue();
+      }
+    });
+
+    // Navigate to operator page
+    await page.goto('/operator/pilot-requests');
+
+    // Confirm token input is required
+    const tokenInput = page.getByPlaceholder('REUX_DEMO_SETUP_TOKEN');
+    await expect(tokenInput).toBeVisible();
+
+    // Enter token and access dashboard
+    await tokenInput.fill('mock-token');
+    await page.getByRole('button', { name: 'Load' }).click();
+
+    // Confirm lead-management UI and mocked data render
+    await expect(page.getByText('Test Founder')).toBeVisible();
+    await expect(page.getByText('Need to test the pilot workflow')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'New' }).first()).toBeVisible();
   });
 });

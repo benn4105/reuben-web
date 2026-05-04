@@ -162,7 +162,7 @@ export default function PilotRequestsPage() {
   }, []);
 
   async function loadRequests(nextToken = token) {
-    if (!API_BASE_URL) {
+    if (!API_BASE_URL && typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
       setStatus("error");
       setError("NEXT_PUBLIC_REUX_DEMO_URL is not configured. Set it in your Vercel/Railway environment to point at the Reux demo service.");
       return;
