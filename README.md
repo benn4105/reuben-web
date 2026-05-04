@@ -48,6 +48,7 @@ Check these before each deployment:
 | `/projects/reux` | Reux product page | Features, pilots, roadmap summary |
 | `/projects/reux/roadmap` | Full roadmap | Available Now / Beta / Next / Future |
 | `/projects/reux/demo` | Live Reux demos | Requires `NEXT_PUBLIC_REUX_DEMO_URL` |
+| `/operator/pilot-requests` | Founder Pilot operator view | Requires the Railway demo admin token |
 | `/projects/plos` | PLOS product page | Planned product; no live features |
 | `/docs` | Developer preview | Syntax examples, editor support, run-from-source |
 | `/about` | About Reuben | Vision, ecosystem diagram, team |
@@ -134,6 +135,7 @@ Visitor-facing behavior:
 - Saved run links are temporary and can expire.
 - Users can share a re-runnable config link even if a saved run expires.
 - The Founder Pilot form is the conversion path for real business data or custom pilots.
+- Operators can review submitted leads at `/operator/pilot-requests` with the Railway demo admin token.
 
 Full operational checklist: [Business Simulator runbook](docs/business-simulator-runbook.md).
 Lead handling checklist: [Founder Pilot Delivery Playbook](docs/founder-pilot-delivery.md).

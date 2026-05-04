@@ -11,6 +11,7 @@ For the customer-delivery process after a request arrives, use the [Founder Pilo
 | Reuben website | `https://reuben-web.vercel.app` | Public marketing site and simulator frontend |
 | Business Simulator | `https://reuben-web.vercel.app/simulator` | Public demo entry point |
 | Scenario builder | `https://reuben-web.vercel.app/simulator/new` | Public template/scenario builder |
+| Founder Pilot operator view | `https://reuben-web.vercel.app/operator/pilot-requests` | Internal lead review view |
 | Reux backend | `https://reux-pilot-demo-production.up.railway.app` | Railway API used by the public demo |
 | Backend health | `https://reux-pilot-demo-production.up.railway.app/api/health` | API health and executable model check |
 
@@ -80,6 +81,7 @@ Then manually confirm:
 - The result page shows recommendation, forecast chart, scenario comparison, Reux transparency, and the Founder Pilot request form.
 - The `/projects/reux/demo` page shows the Founder Pilot request form below the embedded demo.
 - Submitting the Founder Pilot form either returns a Railway request ID or opens a prepared email to `NEXT_PUBLIC_CONTACT_EMAIL`.
+- `/operator/pilot-requests` loads submitted leads when the Railway demo admin token is entered.
 
 ## Deployment Checklist
 
@@ -124,6 +126,7 @@ node scripts/check-live-demo.mjs --site https://your-preview.vercel.app --api ht
 - Configuration links remain useful even if a saved run expires.
 - Founder Pilot forms are the conversion path for real business data.
 - Founder Pilot requests should be handled with the [Founder Pilot Delivery Playbook](founder-pilot-delivery.md).
+- The operator view is for internal review only and should not be linked from public navigation.
 
 ## Common Failure Modes
 
@@ -233,6 +236,24 @@ Fix:
 3. Submit a manual test from `/projects/reux/demo`.
 4. Confirm the response creates a Railway pilot request ID or opens the prepared email.
 5. If the request is accepted, handle the lead using the [Founder Pilot Delivery Playbook](founder-pilot-delivery.md).
+
+### Operator View Cannot Load Leads
+
+Likely causes:
+
+- The entered token does not match Railway `REUX_DEMO_SETUP_TOKEN`.
+- The Railway backend has not redeployed the pilot-request listing endpoint.
+- `NEXT_PUBLIC_REUX_DEMO_URL` is missing in Vercel.
+- Browser CORS preflight is blocked by Railway CORS settings.
+
+Fix:
+
+1. Confirm `/api/health` shows the expected Railway build.
+2. Confirm the same token works for demo setup/admin actions.
+3. Open `/operator/pilot-requests`.
+4. Enter the Railway demo admin token and click `Load`.
+5. If it fails with `403`, rotate or re-copy `REUX_DEMO_SETUP_TOKEN`.
+6. If it fails with a network error, confirm Railway CORS allows `x-reux-demo-token`.
 
 ## Quick Incident Checklist
 
