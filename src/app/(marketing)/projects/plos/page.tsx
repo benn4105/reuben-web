@@ -150,8 +150,8 @@ export default function PlosPage() {
                 The intended architecture is for career choices, budget changes, and habit tweaks in the PLOS UI to become Reux simulation declarations or model inputs as the runtime matures.
               </p>
               <div className="flex flex-wrap gap-3 mt-6">
-                <Link href="/projects/reux" className="text-sm font-medium text-[#00F0FF] hover:underline">Learn about Reux →</Link>
-                <Link href="/simulator" className="text-sm font-medium text-gray-400 hover:text-white hover:underline">Try the Business Simulator →</Link>
+                <Link href="/projects/reux" className="text-sm font-medium text-[#00F0FF] hover:underline">Learn about Reux -&gt;</Link>
+                <Link href="/simulator" className="text-sm font-medium text-gray-400 hover:text-white hover:underline">Try the Business Simulator -&gt;</Link>
               </div>
             </div>
             <div className="flex-1 w-full">
@@ -203,7 +203,7 @@ export default function PlosPage() {
             </AnimatedButton>
           </div>
           <p className="text-xs text-gray-500 mt-6">
-            No mailing list yet — we&apos;ll announce PLOS progress on the roadmap page.
+            No mailing list yet -- we&apos;ll announce PLOS progress on the roadmap page.
           </p>
         </motion.div>
 

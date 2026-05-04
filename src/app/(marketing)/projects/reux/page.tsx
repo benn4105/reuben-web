@@ -124,7 +124,14 @@ const roadmapMilestones = [
     status: "In Progress",
     description:
       "Making it easy for technical users to try Reux locally: onboarding steps, VS Code support from source, syntax examples, and honest status of what is packaged vs what is not.",
-    items: ["✓ Run-from-source onboarding", "✓ VS Code extension (from .vsix)", "✓ Developer preview docs", "→ npm beta package", "→ VS Code Marketplace publish", "→ Hosted cloud execution"],
+    items: [
+      "Done: run-from-source onboarding",
+      "Done: VS Code extension from .vsix",
+      "Done: developer preview docs",
+      "Next: npm beta package",
+      "Next: VS Code Marketplace publish",
+      "Next: hosted cloud execution",
+    ],
   },
   {
     phase: "Scale",

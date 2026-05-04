@@ -1,4 +1,4 @@
-import { ExternalLink, Rocket } from "lucide-react";
+import { ExternalLink, Rocket, ShieldCheck, Terminal } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import DemoIframe from "@/components/ui/DemoIframe";
 import PilotRequestPanel from "@/components/simulator/PilotRequestPanel";
@@ -56,14 +56,42 @@ export default async function ReuxDemoPage({ searchParams }: ReuxDemoPageProps) 
         {configured ? (
           <DemoIframe src={demoSrc} />
         ) : (
-          <div className="glass-card max-w-3xl rounded-xl p-8">
-            <h2 className="mb-4 text-2xl font-bold text-white">Demo host not connected yet</h2>
-            <p className="mb-6 text-gray-400">
-              Set `NEXT_PUBLIC_REUX_DEMO_URL` on the website deployment after the Node demo service is live.
-            </p>
-            <AnimatedButton href="/projects/reux" variant="secondary">
-              Back to Reux
-            </AnimatedButton>
+          <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+            <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+              <div className="border-b border-white/10 p-6 md:p-8 lg:border-b-0 lg:border-r">
+                <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-500/25 bg-amber-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-amber-200">
+                  <Terminal className="h-3.5 w-3.5" />
+                  Demo standby
+                </div>
+                <h2 className="mb-4 text-3xl font-black tracking-tight text-white">
+                  The hosted console is being refreshed.
+                </h2>
+                <p className="mb-6 text-sm leading-relaxed text-gray-400 md:text-base">
+                  The Reux backend demo may be offline while the public service is redeployed. You can still try the flagship Business Simulator, review the Reux developer preview, or request a founder pilot with one real decision.
+                </p>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <AnimatedButton href="/simulator" variant="primary">
+                    Try Business Simulator
+                  </AnimatedButton>
+                  <AnimatedButton href="/docs" variant="secondary">
+                    Developer Preview
+                  </AnimatedButton>
+                </div>
+              </div>
+
+              <div className="grid gap-4 p-6 md:p-8">
+                {[
+                  "Commerce and logistics demos run against the same Reux runtime patterns.",
+                  "The Business Simulator remains the primary public proof point.",
+                  "Founder pilot requests are routed through the live intake flow when the backend is configured.",
+                ].map((item) => (
+                  <div key={item} className="flex gap-3 rounded-xl border border-white/10 bg-black/20 p-4">
+                    <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#00F0FF]" />
+                    <p className="text-sm leading-relaxed text-gray-300">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
 

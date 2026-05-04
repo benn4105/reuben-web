@@ -70,7 +70,7 @@ const EXAMPLES = [
   },
   {
     title: "Transaction and outbox event",
-    filename: "payments.dl",
+    filename: "payments.reux",
     code: `transaction function capturePayment(orderRef: Order, amount: Decimal<12,2>) writes Payment retry 3 {
   let order = load orderRef for update
   let payment = insert Payment {
@@ -104,7 +104,7 @@ async function checkout(orderId: string, amount: string) {
     amount
   });
   
-  console.log(result.bindings.payment.id);
+  return result.bindings.payment.id;
 }`
   }
 ];
@@ -209,7 +209,7 @@ export default function DocsPage() {
             </div>
           </section>
 
-          {/* ─── START USING REUX LOCALLY ─── */}
+          {/* Start using Reux locally */}
           <section className="mb-16" id="start-locally">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 rounded-lg bg-violet-500/10">
@@ -248,7 +248,7 @@ export default function DocsPage() {
             <div className="mt-6 rounded-lg border border-amber-500/20 bg-amber-500/[0.04] px-5 py-4">
               <p className="text-sm text-amber-500/80 leading-relaxed">
                 <strong className="text-amber-300">Developer preview:</strong>{" "}
-                This is the from-source path. The standard <code className="text-cyan-400 font-mono">npm install @reux/cli</code> package is still being prepared — syntax and APIs may change before the public beta.
+                This is the from-source path. The standard <code className="text-cyan-400 font-mono">npm install @reux/cli</code> package is still being prepared; syntax and APIs may change before the public beta.
               </p>
             </div>
 
@@ -262,7 +262,7 @@ export default function DocsPage() {
             </div>
           </section>
 
-          {/* ─── DEVELOPER PREVIEW STATUS ─── */}
+          {/* Developer preview status */}
           <section className="mb-16" id="developer-preview-status">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 rounded-lg bg-cyan-500/10">

@@ -65,7 +65,7 @@ export default function Home() {
             className="text-lg md:text-xl text-gray-400 max-w-2xl mb-12"
           >
             Reuben builds data-aware tools powered by the <strong className="text-white">Reux</strong> backend engine.
-            Try the live Business Simulator — model operational decisions, compare scenarios, and see which path wins.
+            Try the live Business Simulator: model operational decisions, compare scenarios, and see which path wins.
           </motion.p>
 
           <motion.div 
@@ -144,7 +144,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Start Here — Audience Paths */}
+      {/* Start Here: Audience Paths */}
       <section className="py-24 relative z-20 border-t border-white/5 bg-[#0A0A0A]/15 backdrop-blur-xl">
         <div className="container mx-auto px-4 md:px-8">
           <div className="text-center mb-12">
@@ -157,7 +157,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[
               {
-                emoji: "🎮",
+                label: "Demo",
                 title: "Try the Demo",
                 description: "Model operational decisions and see Reux evaluate the outcomes. No account needed.",
                 href: "/simulator",
@@ -166,7 +166,7 @@ export default function Home() {
                 border: "hover:border-cyan-500/30",
               },
               {
-                emoji: "🔧",
+                label: "Dev",
                 title: "Evaluate the Language",
                 description: "Syntax examples, editor support, run-from-source instructions, and architecture notes.",
                 href: "/docs",
@@ -175,7 +175,7 @@ export default function Home() {
                 border: "hover:border-violet-500/30",
               },
               {
-                emoji: "🗺️",
+                label: "Map",
                 title: "See the Roadmap",
                 description: "What is live, what is prototype-complete, what is planned, and the long-term direction.",
                 href: "/projects/reux/roadmap",
@@ -189,11 +189,11 @@ export default function Home() {
                 href={path.href}
                 className={`group glass-card p-6 rounded-2xl border border-white/5 ${path.border} transition-all duration-300 hover:-translate-y-1 block`}
               >
-                <div className="text-3xl mb-4">{path.emoji}</div>
+                <div className="mb-4 inline-flex rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-[#00F0FF]">{path.label}</div>
                 <h3 className="text-lg font-bold text-white mb-2">{path.title}</h3>
                 <p className="text-sm text-gray-400 leading-relaxed mb-4">{path.description}</p>
                 <span className="text-sm font-semibold text-white group-hover:text-[#00F0FF] transition-colors">
-                  {path.cta} →
+                  {path.cta} -&gt;
                 </span>
               </a>
             ))}
@@ -209,15 +209,15 @@ export default function Home() {
               <h2 className="text-3xl font-bold tracking-tight mb-6">The Problem</h2>
               <ul className="space-y-4 text-gray-400 leading-relaxed">
                 <li className="flex gap-3">
-                  <span className="text-rose-400 shrink-0 mt-1">✕</span>
+                  <span className="text-rose-400 shrink-0 mt-1">x</span>
                   Backend logic scattered across controllers, ORMs, migrations, workers, and config files.
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-rose-400 shrink-0 mt-1">✕</span>
+                  <span className="text-rose-400 shrink-0 mt-1">x</span>
                   State changes that are hard to audit, trace, or simulate.
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-rose-400 shrink-0 mt-1">✕</span>
+                  <span className="text-rose-400 shrink-0 mt-1">x</span>
                   Simulations and forecasts bolted on later with spreadsheets or ad hoc scripts.
                 </li>
               </ul>
@@ -226,15 +226,15 @@ export default function Home() {
               <h2 className="text-3xl font-bold tracking-tight mb-6">The Answer</h2>
               <ul className="space-y-4 text-gray-300 leading-relaxed">
                 <li className="flex gap-3">
-                  <span className="text-emerald-400 shrink-0 mt-1">✓</span>
+                  <span className="text-emerald-400 shrink-0 mt-1">OK</span>
                   Reux models data, state, transactions, events, and simulations together in one language.
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-emerald-400 shrink-0 mt-1">✓</span>
-                  The UI stays normal React/Next.js — Reux only owns the backend logic.
+                  <span className="text-emerald-400 shrink-0 mt-1">OK</span>
+                  The UI stays normal React/Next.js; Reux only owns the backend logic.
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-emerald-400 shrink-0 mt-1">✓</span>
+                  <span className="text-emerald-400 shrink-0 mt-1">OK</span>
                   The Business Simulator proves this works today.
                 </li>
               </ul>

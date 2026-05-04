@@ -53,9 +53,9 @@ export default function ReuxModelCatalog() {
         <div className="flex items-start gap-3">
           <Database className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" />
           <div>
-            <h2 className="text-sm font-semibold text-white">Live Reux models unavailable</h2>
+            <h2 className="text-sm font-semibold text-white">Hosted Reux model catalog is offline</h2>
             <p className="mt-1 text-sm leading-relaxed text-gray-400">
-              Configure `NEXT_PUBLIC_REUX_DEMO_URL` to show the hosted model catalog and run the public simulator against Railway.
+              The public simulator still works with safe sample data. The hosted model catalog appears here when the live backend is connected.
             </p>
           </div>
         </div>
