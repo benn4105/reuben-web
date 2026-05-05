@@ -8,6 +8,7 @@ const publicPages = [
   { path: "/projects/reux/demo", heading: /Try the Reux commerce console/i },
   { path: "/docs", heading: "Getting Started with Reux" },
   { path: "/founder-pilot", heading: /Turn one spreadsheet decision/i },
+  { path: "/founder-pilot/outreach", heading: /First-customer outreach/i },
   { path: "/founder-pilot/demo-script", heading: /Five-minute Founder Pilot walkthrough/i },
   { path: "/founder-pilot/intake", heading: /Send this before a Founder Pilot call/i },
   { path: "/founder-pilot/delivery-template", heading: /Founder Pilot closeout format/i },

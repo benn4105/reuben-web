@@ -63,6 +63,13 @@ const timeline = [
 
 const workflowResources = [
   {
+    title: "Outreach package",
+    copy: "Copy-ready messages and target customer profiles for finding the first founder pilot customers.",
+    href: "/founder-pilot/outreach",
+    icon: MessageSquare,
+    action: "Open outreach",
+  },
+  {
     title: "Demo script",
     copy: "A five-minute walkthrough for showing the simulator, the Reux transparency layer, and the founder pilot offer.",
     href: "/founder-pilot/demo-script",
@@ -235,7 +242,7 @@ export default function FounderPilotPage() {
             The offer page is public, but these resources are written to help you pitch, intake, and deliver the first pilot consistently.
           </p>
         </div>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {workflowResources.map((resource) => (
             <a
               key={resource.title}
