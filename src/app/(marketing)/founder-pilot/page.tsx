@@ -3,8 +3,10 @@ import {
   CheckCircle2,
   Clock3,
   FileSpreadsheet,
+  FileText,
   LineChart,
   ListChecks,
+  MessageSquare,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
@@ -56,6 +58,30 @@ const timeline = [
     step: "3",
     title: "Review session",
     copy: "You review the simulator, compare outcomes, and decide whether the model is worth expanding.",
+  },
+];
+
+const workflowResources = [
+  {
+    title: "Demo script",
+    copy: "A five-minute walkthrough for showing the simulator, the Reux transparency layer, and the founder pilot offer.",
+    href: "/founder-pilot/demo-script",
+    icon: MessageSquare,
+    action: "Open script",
+  },
+  {
+    title: "Intake checklist",
+    copy: "The questions to send before a pilot call so the first conversation starts with a real decision and real numbers.",
+    href: "/founder-pilot/intake",
+    icon: FileSpreadsheet,
+    action: "Open checklist",
+  },
+  {
+    title: "Delivery template",
+    copy: "A repeatable closeout format for assumptions, scenario comparison, recommendation, risks, and next step.",
+    href: "/founder-pilot/delivery-template",
+    icon: FileText,
+    action: "Open template",
   },
 ];
 
@@ -196,6 +222,34 @@ export default function FounderPilotPage() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="container mx-auto mt-20 px-4 md:px-8">
+        <div className="mb-8 max-w-3xl">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-cyan-300">Pilot workflow</p>
+          <h2 className="text-3xl font-black tracking-tight text-white md:text-4xl">
+            Use these links to run the first customer conversation.
+          </h2>
+          <p className="mt-4 text-gray-400">
+            The offer page is public, but these resources are written to help you pitch, intake, and deliver the first pilot consistently.
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {workflowResources.map((resource) => (
+            <a
+              key={resource.title}
+              href={resource.href}
+              className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-cyan-500/35 hover:bg-cyan-500/[0.04]"
+            >
+              <resource.icon className="mb-5 h-7 w-7 text-[#00F0FF]" />
+              <h3 className="mb-3 text-lg font-bold text-white">{resource.title}</h3>
+              <p className="mb-5 text-sm leading-relaxed text-gray-500">{resource.copy}</p>
+              <span className="text-sm font-semibold text-cyan-200 transition-colors group-hover:text-white">
+                {resource.action} -&gt;
+              </span>
+            </a>
+          ))}
         </div>
       </section>
 
