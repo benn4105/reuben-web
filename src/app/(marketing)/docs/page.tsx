@@ -536,15 +536,19 @@ export default function DocsPage() {
                   key={card.title}
                   href={card.href}
                   {...(card.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className={`group flex gap-4 p-5 rounded-xl border ${card.color} bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-200`}
+                  className="block group"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-xs font-bold text-[#00F0FF]">
-                    {card.icon}
-                  </span>
-                  <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-white mb-1 group-hover:text-[#00F0FF] transition-colors">{card.title}</h3>
-                    <p className="text-xs text-gray-500 leading-relaxed">{card.description}</p>
-                  </div>
+                  <Card className={`flex border ${card.color} bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-200`}>
+                    <CardContent className="p-5 flex gap-4 w-full items-start">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-xs font-bold text-[#00F0FF]">
+                        {card.icon}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-sm font-bold text-white mb-1 group-hover:text-[#00F0FF] transition-colors">{card.title}</h3>
+                        <p className="text-xs text-gray-500 leading-relaxed">{card.description}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </a>
               ))}
             </div>

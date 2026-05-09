@@ -21,6 +21,24 @@ import {
   Minus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 // ─── Mock Data ───────────────────────────────────────────────────────────────
 
@@ -163,6 +181,17 @@ export default function OperationsDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
+          <Breadcrumb className="mb-3">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/simulator">Simulator</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Operations</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           <h1 className="text-2xl font-bold text-white tracking-tight">Operations</h1>
           <p className="text-sm text-gray-500 mt-1">Cross-domain queue health and worker status.</p>
         </div>
@@ -185,39 +214,41 @@ export default function OperationsDashboard() {
       </div>
 
       {/* Overall Status Banner */}
-      <div className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border", statusColor)}>
+      <Badge variant="outline" className={cn("flex items-center gap-3 px-4 py-3 rounded-xl w-full justify-start", statusColor)}>
         <StatusDot status={overallStatus} />
         <span className="text-sm font-medium">{statusLabel}</span>
         <span className="text-xs opacity-60 ml-auto hidden sm:inline">Mock data · Live backend integration coming soon</span>
-      </div>
+      </Badge>
 
       {/* Service Health Cards */}
       <div>
         <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Service Health</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {data.services.map(service => (
-            <div
+            <Card
               key={service.name}
-              className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.04] transition-colors"
+              className="border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
             >
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-lg bg-white/[0.05] text-gray-400">{service.icon}</div>
-                  <span className="text-sm font-semibold text-white">{service.name}</span>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-2 rounded-lg bg-white/[0.05] text-gray-400">{service.icon}</div>
+                    <span className="text-sm font-semibold text-white">{service.name}</span>
+                  </div>
+                  <StatusIcon status={service.status} />
                 </div>
-                <StatusIcon status={service.status} />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <div className="text-[10px] text-gray-600 uppercase tracking-wider">Latency</div>
-                  <div className="text-sm font-mono text-gray-300 tabular-nums">{service.latency}ms</div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <div className="text-[10px] text-gray-600 uppercase tracking-wider">Latency</div>
+                    <div className="text-sm font-mono text-gray-300 tabular-nums">{service.latency}ms</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-gray-600 uppercase tracking-wider">Uptime</div>
+                    <div className="text-sm font-mono text-gray-300 tabular-nums">{service.uptime}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-[10px] text-gray-600 uppercase tracking-wider">Uptime</div>
-                  <div className="text-sm font-mono text-gray-300 tabular-nums">{service.uptime}</div>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
@@ -227,40 +258,42 @@ export default function OperationsDashboard() {
         <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Queue Monitor</h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
           {data.queues.map(queue => (
-            <div
+            <Card
               key={queue.domain}
-              className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5 space-y-4"
+              className="border-white/[0.06] bg-white/[0.02]"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <DomainIcon domain={queue.domain} />
-                  <span className="text-sm font-semibold text-white">{queue.domain}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <TrendIcon trend={queue.trend} />
-                  <span className="text-xs font-mono text-gray-400 tabular-nums">{queue.throughput}</span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-4 gap-2">
-                {[
-                  { label: "Pending", value: queue.pending, color: "text-amber-400" },
-                  { label: "Active", value: queue.processing, color: "text-cyan-400" },
-                  { label: "Done", value: queue.completed, color: "text-emerald-400" },
-                  { label: "Failed", value: queue.failed, color: queue.failed > 0 ? "text-rose-400" : "text-gray-600" },
-                ].map(m => (
-                  <div key={m.label}>
-                    <div className="text-[10px] text-gray-600 uppercase tracking-wider">{m.label}</div>
-                    <div className={cn("text-sm font-semibold font-mono tabular-nums", m.color)}>{m.value.toLocaleString()}</div>
+              <CardContent className="p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <DomainIcon domain={queue.domain} />
+                    <span className="text-sm font-semibold text-white">{queue.domain}</span>
                   </div>
-                ))}
-              </div>
+                  <div className="flex items-center gap-1.5">
+                    <TrendIcon trend={queue.trend} />
+                    <span className="text-xs font-mono text-gray-400 tabular-nums">{queue.throughput}</span>
+                  </div>
+                </div>
 
-              <MiniBar
-                values={[queue.pending, queue.processing, queue.completed, queue.failed]}
-                colors={["bg-amber-500", "bg-cyan-500", "bg-emerald-500", "bg-rose-500"]}
-              />
-            </div>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { label: "Pending", value: queue.pending, color: "text-amber-400" },
+                    { label: "Active", value: queue.processing, color: "text-cyan-400" },
+                    { label: "Done", value: queue.completed, color: "text-emerald-400" },
+                    { label: "Failed", value: queue.failed, color: queue.failed > 0 ? "text-rose-400" : "text-gray-600" },
+                  ].map(m => (
+                    <div key={m.label}>
+                      <div className="text-[10px] text-gray-600 uppercase tracking-wider">{m.label}</div>
+                      <div className={cn("text-sm font-semibold font-mono tabular-nums", m.color)}>{m.value.toLocaleString()}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <MiniBar
+                  values={[queue.pending, queue.processing, queue.completed, queue.failed]}
+                  colors={["bg-amber-500", "bg-cyan-500", "bg-emerald-500", "bg-rose-500"]}
+                />
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
@@ -268,30 +301,30 @@ export default function OperationsDashboard() {
       {/* Worker Table */}
       <div>
         <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Worker Pool</h2>
-        <div className="rounded-xl border border-white/[0.06] overflow-hidden">
+        <Card className="border-white/[0.06] overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm" role="table">
-              <thead>
-                <tr className="border-b border-white/[0.06] bg-white/[0.02]">
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Worker</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Domain</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Uptime</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Heartbeat</th>
-                  <th className="text-right px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Processed</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table>
+              <TableHeader>
+                <TableRow className="border-b border-white/[0.06] bg-white/[0.02]">
+                  <TableHead className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Worker</TableHead>
+                  <TableHead className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Domain</TableHead>
+                  <TableHead className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Status</TableHead>
+                  <TableHead className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Uptime</TableHead>
+                  <TableHead className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Heartbeat</TableHead>
+                  <TableHead className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider text-right">Processed</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {data.workers.map(worker => (
-                  <tr key={worker.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
-                    <td className="px-4 py-3 font-mono text-xs text-gray-300">{worker.id}</td>
-                    <td className="px-4 py-3">
+                  <TableRow key={worker.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
+                    <TableCell className="font-mono text-xs text-gray-300">{worker.id}</TableCell>
+                    <TableCell>
                       <div className="flex items-center gap-1.5">
                         <DomainIcon domain={worker.domain} />
                         <span className="text-gray-400 text-xs">{worker.domain}</span>
                       </div>
-                    </td>
-                    <td className="px-4 py-3">
+                    </TableCell>
+                    <TableCell>
                       <div className="flex items-center gap-1.5">
                         <StatusDot status={worker.status} />
                         <span className={cn(
@@ -301,47 +334,49 @@ export default function OperationsDashboard() {
                           {worker.status}
                         </span>
                       </div>
-                    </td>
-                    <td className="px-4 py-3 text-xs text-gray-500 font-mono hidden sm:table-cell">{worker.uptime}</td>
-                    <td className="px-4 py-3 hidden sm:table-cell">
+                    </TableCell>
+                    <TableCell className="text-xs text-gray-500 font-mono hidden sm:table-cell">{worker.uptime}</TableCell>
+                    <TableCell className="hidden sm:table-cell">
                       <div className="flex items-center gap-1.5">
                         <Clock size={12} className="text-gray-600" />
                         <span className="text-xs text-gray-500">{worker.lastHeartbeat}</span>
                       </div>
-                    </td>
-                    <td className="px-4 py-3 text-right font-mono text-xs text-gray-300 tabular-nums">{worker.processed.toLocaleString()}</td>
-                  </tr>
+                    </TableCell>
+                    <TableCell className="text-right font-mono text-xs text-gray-300 tabular-nums">{worker.processed.toLocaleString()}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Cross-Domain Summary */}
-      <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <Activity size={16} className="text-cyan-400" />
-          <h3 className="text-sm font-semibold text-white">Cross-Domain Overview</h3>
-          <span className="text-[10px] text-gray-600 bg-white/[0.05] px-2 py-0.5 rounded-md ml-auto">Mock data</span>
-        </div>
-        <p className="text-xs text-gray-500 mb-4">
-          This dashboard will connect to the live Reux backend to display real-time queue depth, worker health, and cross-domain throughput once the operations API is available.
-        </p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {[
-            { label: "Total Processed", value: "3,226", color: "text-emerald-400" },
-            { label: "Active Workers", value: "4 / 6", color: "text-cyan-400" },
-            { label: "Failed Jobs", value: "3", color: "text-rose-400" },
-            { label: "Avg Latency", value: "22ms", color: "text-gray-300" },
-          ].map(stat => (
-            <div key={stat.label}>
-              <div className="text-[10px] text-gray-600 uppercase tracking-wider mb-1">{stat.label}</div>
-              <div className={cn("text-lg font-bold font-mono tabular-nums", stat.color)}>{stat.value}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <Card className="border-white/[0.06] bg-white/[0.02]">
+        <CardContent className="p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Activity size={16} className="text-cyan-400" />
+            <h3 className="text-sm font-semibold text-white">Cross-Domain Overview</h3>
+            <Badge variant="outline" className="ml-auto text-[10px] text-gray-600 border-white/10">Mock data</Badge>
+          </div>
+          <p className="text-xs text-gray-500 mb-4">
+            This dashboard will connect to the live Reux backend to display real-time queue depth, worker health, and cross-domain throughput once the operations API is available.
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {[
+              { label: "Total Processed", value: "3,226", color: "text-emerald-400" },
+              { label: "Active Workers", value: "4 / 6", color: "text-cyan-400" },
+              { label: "Failed Jobs", value: "3", color: "text-rose-400" },
+              { label: "Avg Latency", value: "22ms", color: "text-gray-300" },
+            ].map(stat => (
+              <div key={stat.label}>
+                <div className="text-[10px] text-gray-600 uppercase tracking-wider mb-1">{stat.label}</div>
+                <div className={cn("text-lg font-bold font-mono tabular-nums", stat.color)}>{stat.value}</div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -150,27 +150,33 @@ export default function SimulatorDashboard() {
       </div>
 
       <section className="grid gap-3 md:grid-cols-3">
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
-          <ShieldCheck className="mb-3 h-5 w-5 text-emerald-400" />
-          <h2 className="text-sm font-semibold text-white">Safe public sandbox</h2>
-          <p className="mt-1 text-xs leading-relaxed text-gray-500">
-            No login, admin token, or customer data is required. Templates use sample assumptions you can edit freely.
-          </p>
-        </div>
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
-          <TimerReset className="mb-3 h-5 w-5 text-cyan-400" />
-          <h2 className="text-sm font-semibold text-white">Fast demo path</h2>
-          <p className="mt-1 text-xs leading-relaxed text-gray-500">
-            Load a guided demo, run the simulation, and review the recommendation in under two minutes.
-          </p>
-        </div>
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
-          <Share2 className="mb-3 h-5 w-5 text-violet-400" />
-          <h2 className="text-sm font-semibold text-white">Temporary share links</h2>
-          <p className="mt-1 text-xs leading-relaxed text-gray-500">
-            Results can be shared for review, then expire automatically so the public demo stays clean.
-          </p>
-        </div>
+        <Card className="border-white/[0.06] bg-white/[0.02]">
+          <CardContent className="p-4">
+            <ShieldCheck className="mb-3 h-5 w-5 text-emerald-400" />
+            <h2 className="text-sm font-semibold text-white">Safe public sandbox</h2>
+            <p className="mt-1 text-xs leading-relaxed text-gray-500">
+              No login, admin token, or customer data is required. Templates use sample assumptions you can edit freely.
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-white/[0.06] bg-white/[0.02]">
+          <CardContent className="p-4">
+            <TimerReset className="mb-3 h-5 w-5 text-cyan-400" />
+            <h2 className="text-sm font-semibold text-white">Fast demo path</h2>
+            <p className="mt-1 text-xs leading-relaxed text-gray-500">
+              Load a guided demo, run the simulation, and review the recommendation in under two minutes.
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-white/[0.06] bg-white/[0.02]">
+          <CardContent className="p-4">
+            <Share2 className="mb-3 h-5 w-5 text-violet-400" />
+            <h2 className="text-sm font-semibold text-white">Temporary share links</h2>
+            <p className="mt-1 text-xs leading-relaxed text-gray-500">
+              Results can be shared for review, then expire automatically so the public demo stays clean.
+            </p>
+          </CardContent>
+        </Card>
       </section>
 
       <div id="pilot-cta" className="scroll-mt-8">

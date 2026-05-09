@@ -24,6 +24,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { encodeShareLink, copyToClipboard } from "@/lib/simulation/share";
 import { exportToCsv, exportToPdf } from "@/lib/simulation/export";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Share2, Check, Download, FileText, FileSpreadsheet, Link2, Clock, MessageSquare, ArrowRight, BarChart3 } from "lucide-react";
 
 const CHART_COLORS = [
@@ -209,6 +217,17 @@ export default function SimulationResultsPage({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div className="min-w-0">
+          <Breadcrumb className="mb-3">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/simulator">Simulator</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Result</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           <h1 className="text-2xl font-bold text-white tracking-tight truncate">
             {simulation.name}
           </h1>

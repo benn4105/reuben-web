@@ -16,6 +16,14 @@ import type { ScenarioInputs, MetricSnapshot } from "@/lib/simulation/types";
 import { Plus, Trash2, Wand2, Share2, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { SIMULATION_LIMITS } from "@/lib/simulation/constants";
 
 type PresetKey = "expansion" | "optimization" | "surge";
@@ -451,6 +459,17 @@ export default function NewSimulationPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
+          <Breadcrumb className="mb-3">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/simulator">Simulator</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>New Simulation</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-white tracking-tight">
               Build Simulation
