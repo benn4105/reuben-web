@@ -5,6 +5,8 @@ import { useRef } from "react";
 import dynamic from "next/dynamic";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import ProjectCard from "@/components/ui/ProjectCard";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const HeroScene = dynamic(() => import("@/components/3d/HeroScene"), {
   ssr: false,
@@ -38,12 +40,14 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-8"
+            className="mb-8"
           >
-            <span className="w-2 h-2 rounded-full bg-[#00F0FF] animate-pulse" />
-            <span className="text-sm font-medium tracking-wide text-gray-300 uppercase">
-              Welcome to Reuben
-            </span>
+            <Badge variant="outline" className="glass px-4 py-1.5 rounded-full gap-2 border-white/10">
+              <span className="w-2 h-2 rounded-full bg-[#00F0FF] animate-pulse" />
+              <span className="text-sm font-medium tracking-wide text-gray-300 uppercase">
+                Welcome to Reuben
+              </span>
+            </Badge>
           </motion.div>
 
           <motion.h1 
@@ -184,17 +188,19 @@ export default function Home() {
                 border: "hover:border-amber-500/30",
               },
             ].map((path) => (
-              <a
-                key={path.title}
-                href={path.href}
-                className={`group glass-card p-6 rounded-2xl border border-white/5 ${path.border} transition-all duration-300 hover:-translate-y-1 block`}
-              >
-                <div className="mb-4 inline-flex rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-[#00F0FF]">{path.label}</div>
-                <h3 className="text-lg font-bold text-white mb-2">{path.title}</h3>
-                <p className="text-sm text-gray-400 leading-relaxed mb-4">{path.description}</p>
-                <span className="text-sm font-semibold text-white group-hover:text-[#00F0FF] transition-colors">
-                  {path.cta} -&gt;
-                </span>
+              <a key={path.title} href={path.href} className="block group">
+                <Card className={`glass-card ${path.border} transition-all duration-300 group-hover:-translate-y-1`}>
+                  <CardContent className="p-6">
+                    <Badge variant="outline" className="mb-4 bg-white/5 border-white/10 text-[#00F0FF] uppercase tracking-wider font-semibold">
+                      {path.label}
+                    </Badge>
+                    <h3 className="text-lg font-bold text-white mb-2">{path.title}</h3>
+                    <p className="text-sm text-gray-400 leading-relaxed mb-4">{path.description}</p>
+                    <span className="text-sm font-semibold text-white group-hover:text-[#00F0FF] transition-colors">
+                      {path.cta} -&gt;
+                    </span>
+                  </CardContent>
+                </Card>
               </a>
             ))}
           </div>

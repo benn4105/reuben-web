@@ -25,6 +25,8 @@ import {
 } from "lucide-react";
 import IdeMockup from "@/components/ui/IdeMockup";
 import { copyToClipboard } from "@/lib/simulation/share";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 
 function CopyButton({ text }: { text: string }) {
@@ -169,12 +171,10 @@ export default function DocsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-8">
+          <Badge variant="outline" className="glass px-4 py-2 rounded-full mb-8 space-x-2 border-white/10 font-medium tracking-wide text-[#00F0FF] uppercase">
             <Terminal size={14} className="text-[#00F0FF]" />
-            <span className="text-sm font-medium tracking-wide text-[#00F0FF] uppercase">
-              Developer Preview
-            </span>
-          </div>
+            <span>Developer Preview</span>
+          </Badge>
           
           <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6">
             Getting Started with Reux
@@ -224,11 +224,11 @@ export default function DocsPage() {
 
             <div className="space-y-4">
               {ONBOARDING_STEPS.map((s) => (
-                <div
+                <Card
                   key={s.step}
-                  className="rounded-xl border border-white/10 bg-white/[0.02] overflow-hidden"
+                  className="bg-white/[0.02] border-white/10"
                 >
-                  <div className="flex items-start gap-4 p-5">
+                  <CardContent className="flex items-start gap-4 p-5">
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-500/15 text-sm font-bold text-violet-400 border border-violet-500/20">
                       {s.step}
                     </span>
@@ -240,8 +240,8 @@ export default function DocsPage() {
                         <CopyButton text={s.command} />
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
 
@@ -273,36 +273,40 @@ export default function DocsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Available now */}
-              <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.03] p-6">
-                <div className="flex items-center gap-2 mb-5">
-                  <CheckCircle2 size={18} className="text-emerald-400" />
-                  <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wider">Available now</h3>
-                </div>
-                <ul className="space-y-3">
-                  {AVAILABLE_NOW.map((item) => (
-                    <li key={item.label} className="flex items-center gap-3">
-                      <item.icon size={16} className="text-emerald-400/70 shrink-0" />
-                      <span className="text-sm text-gray-300">{item.label}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Card className="border-emerald-500/20 bg-emerald-500/[0.03]">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-2 mb-5">
+                    <CheckCircle2 size={18} className="text-emerald-400" />
+                    <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wider">Available now</h3>
+                  </div>
+                  <ul className="space-y-3">
+                    {AVAILABLE_NOW.map((item) => (
+                      <li key={item.label} className="flex items-center gap-3">
+                        <item.icon size={16} className="text-emerald-400/70 shrink-0" />
+                        <span className="text-sm text-gray-300">{item.label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
 
               {/* Not yet packaged */}
-              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
-                <div className="flex items-center gap-2 mb-5">
-                  <CircleDashed size={18} className="text-gray-500" />
-                  <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider">Not yet packaged</h3>
-                </div>
-                <ul className="space-y-3">
-                  {NOT_YET_PACKAGED.map((item) => (
-                    <li key={item.label} className="flex items-center gap-3">
-                      <item.icon size={16} className="text-gray-600 shrink-0" />
-                      <span className="text-sm text-gray-500">{item.label}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Card className="border-white/10 bg-white/[0.02]">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-2 mb-5">
+                    <CircleDashed size={18} className="text-gray-500" />
+                    <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider">Not yet packaged</h3>
+                  </div>
+                  <ul className="space-y-3">
+                    {NOT_YET_PACKAGED.map((item) => (
+                      <li key={item.label} className="flex items-center gap-3">
+                        <item.icon size={16} className="text-gray-600 shrink-0" />
+                        <span className="text-sm text-gray-500">{item.label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
             </div>
 
             <div className="mt-6 flex flex-col sm:flex-row gap-4">
@@ -364,11 +368,13 @@ export default function DocsPage() {
                   description: "If the demo maps to a real business problem, use the pilot CTA to start with one spreadsheet decision and a few scenarios.",
                 },
               ].map((step) => (
-                <div key={step.title} className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
-                  <step.icon className="mb-4 h-6 w-6 text-[#00F0FF]" />
-                  <h3 className="text-sm font-bold text-white mb-2">{step.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{step.description}</p>
-                </div>
+                <Card key={step.title} className="border-white/10 bg-white/[0.03]">
+                  <CardContent className="p-5">
+                    <step.icon className="mb-4 h-6 w-6 text-[#00F0FF]" />
+                    <h3 className="text-sm font-bold text-white mb-2">{step.title}</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed">{step.description}</p>
+                  </CardContent>
+                </Card>
               ))}
             </div>
 
@@ -387,10 +393,12 @@ export default function DocsPage() {
                   description: "Shows the model source that produced the forecast, so the decision logic is inspectable.",
                 },
               ].map((item) => (
-                <div key={item.title} className="rounded-xl border border-cyan-500/10 bg-cyan-500/[0.03] p-5">
-                  <h3 className="text-sm font-bold text-white mb-2">{item.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{item.description}</p>
-                </div>
+                <Card key={item.title} className="border-cyan-500/10 bg-cyan-500/[0.03]">
+                  <CardContent className="p-5">
+                    <h3 className="text-sm font-bold text-white mb-2">{item.title}</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed">{item.description}</p>
+                  </CardContent>
+                </Card>
               ))}
             </div>
 
@@ -417,17 +425,17 @@ export default function DocsPage() {
 
             <div className="space-y-8">
               {EXAMPLES.map((example, i) => (
-                <div key={i} className="rounded-xl overflow-hidden glass border border-white/10">
+                <Card key={i} className="overflow-hidden glass border-white/10">
                   <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-black/50">
                     <span className="text-xs text-gray-500 font-mono">{example.filename}</span>
                     <span className="text-xs text-gray-500">{example.title}</span>
                   </div>
-                  <div className="p-6 bg-[#0A0A0A]/80 overflow-x-auto">
+                  <CardContent className="p-6 bg-[#0A0A0A]/80 overflow-x-auto">
                     <pre className="font-mono text-sm leading-relaxed text-gray-300">
                       <code>{example.code}</code>
                     </pre>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
 
