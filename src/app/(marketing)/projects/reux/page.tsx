@@ -572,10 +572,12 @@ export default function ReuxPage() {
               const icons = [Code2, Database, ShieldCheck, Terminal, LineChart, Gauge, Truck, PackageCheck];
               const Icon = icons[index] ?? ShieldCheck;
               return (
-                <div key={capability} className="glass-card flex items-start gap-3 rounded-xl p-4">
-                  <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#00F0FF]" />
-                  <span className="text-sm leading-relaxed text-gray-300">{capability}</span>
-                </div>
+                <Card key={capability} className="flex items-start gap-3">
+                  <CardContent className="flex items-start gap-3 p-4">
+                    <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#00F0FF]" />
+                    <span className="text-sm leading-relaxed text-gray-300">{capability}</span>
+                  </CardContent>
+                </Card>
               );
             })}
           </div>
@@ -668,22 +670,30 @@ export default function ReuxPage() {
             <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="glass-card p-6 rounded-xl border border-white/5">
-              <h3 className="text-lg font-bold text-white mb-2">Is Reux full-stack?</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">No. Reux focuses strictly on backend data, workflows, and simulations. You still build your frontend with React, Vue, or your framework of choice.</p>
-            </div>
-            <div className="glass-card p-6 rounded-xl border border-white/5">
-              <h3 className="text-lg font-bold text-white mb-2">Is it production-ready?</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">Not yet. It is currently in an active prototype phase, being proven internally through the Business Simulator and domain-specific pilots.</p>
-            </div>
-            <div className="glass-card p-6 rounded-xl border border-white/5">
-              <h3 className="text-lg font-bold text-white mb-2">How is it different from SQL or TypeScript?</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">Reux compiles to SQL and generates TypeScript, but acts as a higher-level state and business rule modeler to prevent logic fragmentation.</p>
-            </div>
-            <div className="glass-card p-6 rounded-xl border border-white/5">
-              <h3 className="text-lg font-bold text-white mb-2">What powers the live demos?</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">The demos run the Reux runtime engine on Node.js, dynamically compiling queries and transactions to an underlying PostgreSQL database.</p>
-            </div>
+            <Card className="border-white/5">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-bold text-white mb-2">Is Reux full-stack?</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">No. Reux focuses strictly on backend data, workflows, and simulations. You still build your frontend with React, Vue, or your framework of choice.</p>
+              </CardContent>
+            </Card>
+            <Card className="border-white/5">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-bold text-white mb-2">Is it production-ready?</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">Not yet. It is currently in an active prototype phase, being proven internally through the Business Simulator and domain-specific pilots.</p>
+              </CardContent>
+            </Card>
+            <Card className="border-white/5">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-bold text-white mb-2">How is it different from SQL or TypeScript?</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">Reux compiles to SQL and generates TypeScript, but acts as a higher-level state and business rule modeler to prevent logic fragmentation.</p>
+              </CardContent>
+            </Card>
+            <Card className="border-white/5">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-bold text-white mb-2">What powers the live demos?</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">The demos run the Reux runtime engine on Node.js, dynamically compiling queries and transactions to an underlying PostgreSQL database.</p>
+              </CardContent>
+            </Card>
           </div>
         </motion.div>
 
