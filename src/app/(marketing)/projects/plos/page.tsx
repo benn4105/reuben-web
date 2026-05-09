@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import Link from "next/link";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const features = [
   {
@@ -51,12 +53,10 @@ export default function PlosPage() {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto text-center mb-24"
         >
-          <div className="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-8 border border-[#8A2BE2]/30">
-            <Rocket className="w-4 h-4 text-[#8A2BE2]" />
-            <span className="text-sm font-medium tracking-wide text-[#8A2BE2] uppercase">
-              Planned Product
-            </span>
-          </div>
+          <Badge variant="outline" className="mb-8 gap-2 bg-[#8A2BE2]/10 border-[#8A2BE2]/30 text-[#8A2BE2] uppercase tracking-wide font-medium">
+            <Rocket className="w-4 h-4" />
+            Planned Product
+          </Badge>
           
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70">PLOS</span>
@@ -118,13 +118,15 @@ export default function PlosPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {features.map((feature, idx) => (
-              <div key={idx} className="glass p-8 rounded-2xl border border-white/5 hover:border-white/15 transition-all duration-300 group">
-                <div className="transform group-hover:scale-110 transition-transform duration-300 origin-left">
-                  {feature.icon}
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-3">{feature.title}</h3>
-                <p className="text-gray-400 leading-relaxed text-lg">{feature.description}</p>
-              </div>
+              <Card key={idx} className="glass border-white/5 hover:border-white/15 transition-all duration-300 group">
+                <CardContent className="p-8">
+                  <div className="transform group-hover:scale-110 transition-transform duration-300 origin-left">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-3">{feature.title}</h3>
+                  <p className="text-gray-400 leading-relaxed text-lg">{feature.description}</p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </motion.div>

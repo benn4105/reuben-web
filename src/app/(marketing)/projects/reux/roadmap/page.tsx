@@ -4,6 +4,8 @@ import { motion, Variants } from "framer-motion";
 import { CheckCircle2, CircleDashed, ArrowRightCircle } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import { cn } from "@/lib/utils";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export default function RoadmapPage() {
   const availableNow = [
@@ -126,27 +128,31 @@ export default function RoadmapPage() {
         transition={{ delay: 0.2, duration: 0.5 }}
         className="mb-20 grid grid-cols-1 md:grid-cols-2 gap-6"
       >
-        <div className="glass p-6 rounded-2xl border border-[#00F0FF]/20 relative overflow-hidden group">
+        <Card className="glass border-[#00F0FF]/20 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-[#00F0FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <h3 className="text-sm font-semibold text-[#00F0FF] uppercase tracking-wider mb-2">Demo Status</h3>
-          <div className="flex items-end gap-3">
-            <span className="text-5xl font-bold text-white">Live</span>
-          </div>
-          <div className="mt-4 w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
-            <div className="bg-[#00F0FF] h-1.5 rounded-full" style={{ width: '100%' }}></div>
-          </div>
-        </div>
+          <CardContent className="p-6">
+            <h3 className="text-sm font-semibold text-[#00F0FF] uppercase tracking-wider mb-2">Demo Status</h3>
+            <div className="flex items-end gap-3">
+              <span className="text-5xl font-bold text-white">Live</span>
+            </div>
+            <div className="mt-4 w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
+              <div className="bg-[#00F0FF] h-1.5 rounded-full" style={{ width: '100%' }}></div>
+            </div>
+          </CardContent>
+        </Card>
         
-        <div className="glass p-6 rounded-2xl border border-[#8A2BE2]/20 relative overflow-hidden group">
+        <Card className="glass border-[#8A2BE2]/20 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-[#8A2BE2]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <h3 className="text-sm font-semibold text-[#8A2BE2] uppercase tracking-wider mb-2">Prototype Completion</h3>
-          <div className="flex items-end gap-3">
-            <span className="text-5xl font-bold text-white">100%</span>
-          </div>
-          <div className="mt-4 w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
-            <div className="bg-[#8A2BE2] h-1.5 rounded-full" style={{ width: '100%' }}></div>
-          </div>
-        </div>
+          <CardContent className="p-6">
+            <h3 className="text-sm font-semibold text-[#8A2BE2] uppercase tracking-wider mb-2">Prototype Completion</h3>
+            <div className="flex items-end gap-3">
+              <span className="text-5xl font-bold text-white">100%</span>
+            </div>
+            <div className="mt-4 w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
+              <div className="bg-[#8A2BE2] h-1.5 rounded-full" style={{ width: '100%' }}></div>
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="col-span-1 md:col-span-2 glass p-6 rounded-2xl border border-white/5 bg-white/5">
           <p className="text-gray-300 text-center text-sm md:text-base">
@@ -165,7 +171,7 @@ export default function RoadmapPage() {
         <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
           <CheckCircle2 className="text-[#00F0FF] w-8 h-8" />
           <h2 className="text-3xl font-bold text-white">Available Now</h2>
-          <span className="ml-3 rounded-full bg-[#00F0FF]/10 px-3 py-1 text-xs font-medium text-[#00F0FF] border border-[#00F0FF]/20">Prototype Core</span>
+          <Badge variant="outline" className="ml-3 bg-[#00F0FF]/10 border-[#00F0FF]/20 text-[#00F0FF]">Prototype Core</Badge>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {availableNow.map((item, idx) => (
@@ -191,7 +197,7 @@ export default function RoadmapPage() {
         <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
           <CircleDashed className="text-[#8A2BE2] w-8 h-8 animate-spin-slow" style={{ animationDuration: '4s' }} />
           <h2 className="text-3xl font-bold text-white">In Active Beta</h2>
-          <span className="ml-3 rounded-full bg-[#8A2BE2]/10 px-3 py-1 text-xs font-medium text-[#8A2BE2] border border-[#8A2BE2]/20">Live Pilots</span>
+          <Badge variant="outline" className="ml-3 bg-[#8A2BE2]/10 border-[#8A2BE2]/20 text-[#8A2BE2]">Live Pilots</Badge>
         </div>
         <div className="grid grid-cols-1 gap-4">
           {inActiveBeta.map((item, idx) => (
@@ -234,9 +240,9 @@ export default function RoadmapPage() {
                   {milestone.title}
                 </h3>
                 {milestone.done && (
-                  <span className="rounded-full bg-orange-500/10 border border-orange-500/20 px-3 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-orange-400">
+                  <Badge variant="outline" className="bg-orange-500/10 border-orange-500/20 text-orange-400">
                     In Progress
-                  </span>
+                  </Badge>
                 )}
               </div>
               <p className="text-gray-400 text-sm leading-relaxed mb-4">
@@ -244,28 +250,32 @@ export default function RoadmapPage() {
               </p>
               {milestone.done && milestone.next && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="rounded-xl border border-emerald-500/15 bg-emerald-500/[0.03] p-4">
-                    <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3">Done</h4>
-                    <ul className="space-y-2">
-                      {milestone.done.map((item: string) => (
-                        <li key={item} className="flex items-center gap-2 text-sm text-gray-300">
-                          <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Next</h4>
-                    <ul className="space-y-2">
-                      {milestone.next.map((item: string) => (
-                        <li key={item} className="flex items-center gap-2 text-sm text-gray-500">
-                          <CircleDashed size={14} className="text-gray-600 shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <Card className="border-emerald-500/15 bg-emerald-500/[0.03]">
+                    <CardContent className="p-4">
+                      <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3">Done</h4>
+                      <ul className="space-y-2">
+                        {milestone.done.map((item: string) => (
+                          <li key={item} className="flex items-center gap-2 text-sm text-gray-300">
+                            <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-white/10 bg-white/[0.02]">
+                    <CardContent className="p-4">
+                      <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Next</h4>
+                      <ul className="space-y-2">
+                        {milestone.next.map((item: string) => (
+                          <li key={item} className="flex items-center gap-2 text-sm text-gray-500">
+                            <CircleDashed size={14} className="text-gray-600 shrink-0" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
                 </div>
               )}
             </motion.div>

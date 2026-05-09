@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export const metadata = {
   title: "Reuben Blog & Changelog",
@@ -40,22 +42,24 @@ export default function BlogPage() {
         <div className="space-y-8">
           {posts.map((post) => (
             <Link key={post.slug} href={`/blog/${post.slug}`} className="block group">
-              <div className="glass-card p-8 rounded-2xl border border-white/10 group-hover:border-white/20 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-[#00F0FF] bg-[#00F0FF]/10 px-2 py-1 rounded-sm">
-                    {post.category}
-                  </span>
-                  <span className="text-sm text-gray-500">
-                    {new Date(post.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-                  </span>
-                </div>
-                <h2 className="text-2xl font-bold mb-3 group-hover:text-[#00F0FF] transition-colors">
-                  {post.title}
-                </h2>
-                <p className="text-gray-400 leading-relaxed">
-                  {post.excerpt}
-                </p>
-              </div>
+              <Card className="group-hover:border-white/20 transition-all duration-300">
+                <CardContent className="p-8">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Badge variant="outline" className="bg-[#00F0FF]/10 border-[#00F0FF]/20 text-[#00F0FF]">
+                      {post.category}
+                    </Badge>
+                    <span className="text-sm text-gray-500">
+                      {new Date(post.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                    </span>
+                  </div>
+                  <h2 className="text-2xl font-bold mb-3 group-hover:text-[#00F0FF] transition-colors">
+                    {post.title}
+                  </h2>
+                  <p className="text-gray-400 leading-relaxed">
+                    {post.excerpt}
+                  </p>
+                </CardContent>
+              </Card>
             </Link>
           ))}
         </div>

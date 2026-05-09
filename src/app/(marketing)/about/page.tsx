@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import AnimatedButton from "@/components/ui/AnimatedButton";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export default function AboutPage() {
   return (
@@ -99,17 +101,17 @@ export default function AboutPage() {
                   <Link href="/simulator" className="flex-1 max-w-[400px] glass border border-white/10 p-6 md:py-8 rounded-2xl text-center hover:border-[#00F0FF]/40 transition-colors cursor-pointer group shadow-lg">
                     <h4 className="text-lg md:text-xl text-white font-bold mb-1 group-hover:text-[#00F0FF] transition-colors">Business Simulator</h4>
                     <p className="text-xs md:text-sm text-gray-400 mb-2">Live operational scenario modeling</p>
-                    <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-400">
+                    <Badge variant="outline" className="gap-1.5 bg-emerald-500/10 border-emerald-500/30 text-emerald-400">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                       Live Demo
-                    </span>
+                    </Badge>
                   </Link>
                   <Link href="/projects/plos" className="flex-1 max-w-[400px] glass border border-white/10 p-6 md:py-8 rounded-2xl text-center hover:border-[#8A2BE2]/40 transition-colors cursor-pointer group shadow-lg">
                     <h4 className="text-lg md:text-xl text-white font-bold mb-1 group-hover:text-[#8A2BE2] transition-colors">PLOS</h4>
                     <p className="text-xs md:text-sm text-gray-400 mb-2">Personal Life Operating System</p>
-                    <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                    <Badge variant="outline" className="bg-white/5 border-white/10 text-gray-500">
                       Planned
-                    </span>
+                    </Badge>
                   </Link>
                 </div>
               </div>
@@ -130,15 +132,17 @@ export default function AboutPage() {
               We are a small team of engineers and designers focused on language design, simulation tooling, and developer experience.
             </p>
             
-            <div className="glass-card p-8 rounded-2xl flex flex-col items-center text-center">
-              <h3 className="text-2xl font-bold text-white mb-4">Join Our Mission</h3>
-              <p className="text-gray-400 mb-8 max-w-md">
-                We&apos;re always looking for exceptional engineers who want to push the boundaries of what&apos;s possible in software.
-              </p>
-              <AnimatedButton href="/contact" variant="primary">
-                View Open Roles
-              </AnimatedButton>
-            </div>
+            <Card className="glass-card">
+              <CardContent className="p-8 flex flex-col items-center text-center">
+                <h3 className="text-2xl font-bold text-white mb-4">Join Our Mission</h3>
+                <p className="text-gray-400 mb-8 max-w-md">
+                  We&apos;re always looking for exceptional engineers who want to push the boundaries of what&apos;s possible in software.
+                </p>
+                <AnimatedButton href="/contact" variant="primary">
+                  View Open Roles
+                </AnimatedButton>
+              </CardContent>
+            </Card>
           </motion.div>
         </div>
       </div>

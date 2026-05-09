@@ -21,6 +21,8 @@ import AnimatedButton from "@/components/ui/AnimatedButton";
 import CodeComparison from "@/components/ui/CodeComparison";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const TOOLTIP_DATA: Record<string, string> = {
   "module": "A self-contained namespace for related logic and data models.",
@@ -171,11 +173,9 @@ export default function ReuxPage() {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto text-center mb-24"
         >
-          <div className="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-8">
-            <span className="text-sm font-medium tracking-wide text-[#00F0FF] uppercase">
-              Prototype complete - public beta next
-            </span>
-          </div>
+          <Badge variant="outline" className="mb-8 bg-white/[0.03] border-white/10 text-[#00F0FF] uppercase tracking-wide font-medium">
+            Prototype complete - public beta next
+          </Badge>
           <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6">
             Reux Programming Language
           </h1>
@@ -204,9 +204,9 @@ export default function ReuxPage() {
         >
           <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="p-6 md:p-10 lg:p-12">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-emerald-300">
+              <Badge variant="outline" className="mb-5 bg-emerald-500/10 border-emerald-500/25 text-emerald-300 uppercase tracking-wider font-semibold">
                 Sellable prototype
-              </div>
+              </Badge>
               <h2 className="mb-5 text-3xl font-black tracking-tight text-white md:text-5xl">
                 Business Simulator
               </h2>
@@ -299,13 +299,15 @@ export default function ReuxPage() {
               copy: "Reux is not replacing React, Next.js, or TypeScript UI work. It owns the backend logic that needs to be auditable and explainable.",
             },
           ].map((item) => (
-            <div key={item.title} className="glass-card rounded-xl border border-white/10 p-6">
-              <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-[#00F0FF]">
-                {item.label}
-              </div>
-              <h2 className="mb-3 text-xl font-bold text-white">{item.title}</h2>
-              <p className="text-sm leading-relaxed text-gray-400">{item.copy}</p>
-            </div>
+            <Card key={item.title} className="glass-card border-white/10">
+              <CardContent className="p-6">
+                <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-[#00F0FF]">
+                  {item.label}
+                </div>
+                <h2 className="mb-3 text-xl font-bold text-white">{item.title}</h2>
+                <p className="text-sm leading-relaxed text-gray-400">{item.copy}</p>
+              </CardContent>
+            </Card>
           ))}
         </motion.div>
 
@@ -394,11 +396,13 @@ export default function ReuxPage() {
                 description: "Model operational assumptions, run branching scenarios, and compare forecasted outcomes.",
               },
             ].map((feature, i) => (
-              <div key={i} className="glass-card p-6 rounded-xl border border-white/5 hover:border-white/15 transition-all duration-300">
-                {feature.icon}
-                <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>
-              </div>
+              <Card key={i} className="glass-card border-white/5 hover:border-white/15 transition-all duration-300">
+                <CardContent className="p-6">
+                  {feature.icon}
+                  <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </motion.div>
@@ -461,11 +465,13 @@ export default function ReuxPage() {
                 description: "Models habit compounding, budget forecasting, and major career decision scenarios over decades.",
               },
             ].map((useCase) => (
-              <div key={useCase.title} className="glass-card p-6 rounded-xl border border-white/5 hover:border-white/15 transition-all duration-300">
-                {useCase.icon}
-                <h3 className="text-xl font-bold text-white mb-2">{useCase.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{useCase.description}</p>
-              </div>
+              <Card key={useCase.title} className="glass-card border-white/5 hover:border-white/15 transition-all duration-300">
+                <CardContent className="p-6">
+                  {useCase.icon}
+                  <h3 className="text-xl font-bold text-white mb-2">{useCase.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{useCase.description}</p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </motion.div>
@@ -490,43 +496,46 @@ export default function ReuxPage() {
                 { label: "Demo status", value: "Live" },
                 { label: "Prototype completion", value: "100%" },
               ].map((metric) => (
-                <div key={metric.label} className="glass-card rounded-xl p-5">
-                  <div className="text-3xl font-black text-white">{metric.value}</div>
-                  <div className="mt-1 text-xs uppercase tracking-wide text-gray-500">{metric.label}</div>
-                </div>
+                <Card key={metric.label} className="glass-card">
+                  <CardContent className="p-5">
+                    <div className="text-3xl font-black text-white">{metric.value}</div>
+                    <div className="mt-1 text-xs uppercase tracking-wide text-gray-500">{metric.label}</div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
             {roadmapMilestones.map((milestone) => (
-              <div key={milestone.title} className="glass-card rounded-xl p-6">
-                <div className="mb-5 flex items-center justify-between gap-3">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-[#00F0FF]">
-                    {milestone.phase}
-                  </span>
-                  <span className={cn(
-                    "rounded-full px-3 py-1 text-xs font-medium",
-                    milestone.status === "Completed" || milestone.status === "100% prototype"
-                      ? "border border-emerald-500/30 text-emerald-400 bg-emerald-500/10"
-                      : milestone.status === "In Progress"
-                      ? "border border-amber-500/30 text-amber-400 bg-amber-500/10"
-                      : "border border-white/10 text-gray-400"
-                  )}>
-                    {milestone.status}
-                  </span>
-                </div>
-                <h3 className="mb-3 text-xl font-bold text-white">{milestone.title}</h3>
-                <p className="mb-5 text-sm leading-relaxed text-gray-400">{milestone.description}</p>
-                <ul className="space-y-2">
-                  {milestone.items.map((item) => (
-                    <li key={item} className="flex gap-2 text-sm text-gray-300">
-                      <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#00F0FF]" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Card key={milestone.title} className="glass-card">
+                <CardContent className="p-6">
+                  <div className="mb-5 flex items-center justify-between gap-3">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-[#00F0FF]">
+                      {milestone.phase}
+                    </span>
+                    <Badge variant="outline" className={cn(
+                      milestone.status === "Completed" || milestone.status === "100% prototype"
+                        ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10"
+                        : milestone.status === "In Progress"
+                        ? "border-amber-500/30 text-amber-400 bg-amber-500/10"
+                        : "border-white/10 text-gray-400"
+                    )}>
+                      {milestone.status}
+                    </Badge>
+                  </div>
+                  <h3 className="mb-3 text-xl font-bold text-white">{milestone.title}</h3>
+                  <p className="mb-5 text-sm leading-relaxed text-gray-400">{milestone.description}</p>
+                  <ul className="space-y-2">
+                    {milestone.items.map((item) => (
+                      <li key={item} className="flex gap-2 text-sm text-gray-300">
+                        <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#00F0FF]" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
             ))}
           </div>
 
@@ -546,12 +555,10 @@ export default function ReuxPage() {
           className="mt-24 grid grid-cols-1 gap-8 lg:grid-cols-[0.8fr_1.2fr]"
         >
           <div>
-            <div className="mb-4 inline-flex items-center gap-2 glass px-4 py-2 rounded-full">
+            <Badge variant="outline" className="mb-4 gap-2 bg-white/[0.03] border-white/10 text-gray-300 uppercase tracking-wide font-medium">
               <Rocket className="h-4 w-4 text-[#00F0FF]" />
-              <span className="text-sm font-medium tracking-wide text-gray-300 uppercase">
-                Live today
-              </span>
-            </div>
+              Live today
+            </Badge>
             <h2 className="mb-4 text-3xl font-bold">What is Real Today</h2>
             <p className="text-gray-400 text-lg leading-relaxed mb-4">
               Reux is an active prototype. It is not yet production-ready for external teams to build their entire company on. 
@@ -624,26 +631,27 @@ export default function ReuxPage() {
                 external: true,
               },
             ].map((pilot) => (
-              <div key={pilot.title} className="glass-card p-8 rounded-xl border border-white/10">
-                <div className="flex items-start justify-between gap-4 mb-6">
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                    {pilot.icon}
+              <Card key={pilot.title} className="glass-card border-white/10">
+                <CardContent className="p-8">
+                  <div className="flex items-start justify-between gap-4 mb-6">
+                    <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                      {pilot.icon}
+                    </div>
+                    <Badge variant="outline" className={cn(
+                      pilot.status === "Flagship MVP"
+                        ? "text-[#00F0FF] border-[#00F0FF]/30"
+                        : "text-[#8A2BE2] border-[#8A2BE2]/30"
+                    )}>
+                      {pilot.status}
+                    </Badge>
                   </div>
-                  <span className={cn(
-                    "text-xs font-semibold uppercase tracking-wide border rounded-full px-3 py-1",
-                    pilot.status === "Flagship MVP"
-                      ? "text-[#00F0FF] border-[#00F0FF]/30"
-                      : "text-[#8A2BE2] border-[#8A2BE2]/30"
-                  )}>
-                    {pilot.status}
-                  </span>
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-3">{pilot.title}</h3>
-                <p className="text-gray-400 leading-relaxed mb-6">{pilot.description}</p>
-                <AnimatedButton href={pilot.href} variant="secondary" external={pilot.external}>
-                  {pilot.action}
-                </AnimatedButton>
-              </div>
+                  <h3 className="text-2xl font-bold text-white mb-3">{pilot.title}</h3>
+                  <p className="text-gray-400 leading-relaxed mb-6">{pilot.description}</p>
+                  <AnimatedButton href={pilot.href} variant="secondary" external={pilot.external}>
+                    {pilot.action}
+                  </AnimatedButton>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </motion.div>
@@ -687,12 +695,10 @@ export default function ReuxPage() {
           transition={{ duration: 0.8 }}
           className="mt-32 text-center pb-12"
         >
-          <div className="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-6">
-            <Terminal size={14} className="text-[#00F0FF]" />
-            <span className="text-sm font-medium tracking-wide text-[#00F0FF] uppercase">
-              Start Exploring
-            </span>
-          </div>
+          <Badge variant="outline" className="mb-6 gap-2 bg-white/[0.03] border-white/10 text-[#00F0FF] uppercase tracking-wide font-medium">
+            <Terminal size={14} />
+            Start Exploring
+          </Badge>
           <h2 className="text-3xl font-bold mb-4">Ready to see the code?</h2>
           <p className="text-gray-400 text-lg leading-relaxed max-w-2xl mx-auto mb-8">
             Check out the Developer Preview to see current capabilities, generated TypeScript integration, and syntax examples.

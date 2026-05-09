@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import ProjectCard from "@/components/ui/ProjectCard";
+import { Badge } from "@/components/ui/badge";
 
 const liveProjects = [
   {
@@ -47,10 +48,10 @@ function StatusBadge({ status, color }: { status: string; color: string }) {
     gray: "bg-white/5 border-white/10 text-gray-400",
   };
   return (
-    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold uppercase tracking-wider ${colorMap[color]}`}>
+    <Badge variant="outline" className={`gap-1.5 ${colorMap[color]}`}>
       {color === "emerald" && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />}
       {status}
-    </span>
+    </Badge>
   );
 }
 

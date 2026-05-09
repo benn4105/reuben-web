@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 
 const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "buildreuben.dev@gmail.com";
 
@@ -152,10 +153,12 @@ export default function ContactPage() {
               copy: "Staffing, pricing, capacity, overtime, quality risk, or process-change decisions.",
             },
           ].map((item) => (
-            <div key={item.title} className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
-              <h2 className="mb-2 text-sm font-semibold text-white">{item.title}</h2>
-              <p className="text-sm leading-relaxed text-gray-500">{item.copy}</p>
-            </div>
+            <Card key={item.title} className="border-white/10 bg-white/[0.03]">
+              <CardContent className="p-5">
+                <h2 className="mb-2 text-sm font-semibold text-white">{item.title}</h2>
+                <p className="text-sm leading-relaxed text-gray-500">{item.copy}</p>
+              </CardContent>
+            </Card>
           ))}
         </motion.div>
 
@@ -163,8 +166,9 @@ export default function ContactPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="glass-card p-8 rounded-2xl border border-white/10"
+          className="glass-card border-white/10"
         >
+          <CardContent className="p-8">
           {status === "success" ? (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -237,6 +241,7 @@ export default function ContactPage() {
               </Button>
             </form>
           )}
+          </CardContent>
         </motion.div>
       </div>
     </div>

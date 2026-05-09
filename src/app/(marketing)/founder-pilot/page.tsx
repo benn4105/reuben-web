@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import PilotRequestPanel from "@/components/simulator/PilotRequestPanel";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const deliverables = [
   {
@@ -98,10 +100,10 @@ export default function FounderPilotPage() {
       <section className="container mx-auto px-4 md:px-8">
         <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="max-w-4xl">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-500/25 bg-cyan-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-cyan-200">
+            <Badge variant="outline" className="mb-6 gap-2 bg-cyan-500/10 border-cyan-500/25 text-cyan-200 uppercase tracking-wider font-semibold">
               <Sparkles className="h-4 w-4" />
               Founder Pilot
-            </div>
+            </Badge>
             <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white md:text-6xl">
               Turn one spreadsheet decision into a working simulator.
             </h1>
@@ -156,11 +158,13 @@ export default function FounderPilotPage() {
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {deliverables.map((item) => (
-            <div key={item.title} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-              <item.icon className="mb-5 h-7 w-7 text-[#00F0FF]" />
-              <h3 className="mb-3 text-lg font-bold text-white">{item.title}</h3>
-              <p className="text-sm leading-relaxed text-gray-500">{item.copy}</p>
-            </div>
+            <Card key={item.title} className="border-white/10 bg-white/[0.03]">
+              <CardContent className="p-6">
+                <item.icon className="mb-5 h-7 w-7 text-[#00F0FF]" />
+                <h3 className="mb-3 text-lg font-bold text-white">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-gray-500">{item.copy}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </section>
@@ -244,18 +248,21 @@ export default function FounderPilotPage() {
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {workflowResources.map((resource) => (
-            <a
+            <Card
               key={resource.title}
-              href={resource.href}
-              className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-cyan-500/35 hover:bg-cyan-500/[0.04]"
+              className="border-white/10 bg-white/[0.03] transition-colors hover:border-cyan-500/35 hover:bg-cyan-500/[0.04] group"
             >
-              <resource.icon className="mb-5 h-7 w-7 text-[#00F0FF]" />
-              <h3 className="mb-3 text-lg font-bold text-white">{resource.title}</h3>
-              <p className="mb-5 text-sm leading-relaxed text-gray-500">{resource.copy}</p>
-              <span className="text-sm font-semibold text-cyan-200 transition-colors group-hover:text-white">
-                {resource.action} -&gt;
-              </span>
-            </a>
+              <a href={resource.href} className="block">
+                <CardContent className="p-6">
+                  <resource.icon className="mb-5 h-7 w-7 text-[#00F0FF]" />
+                  <h3 className="mb-3 text-lg font-bold text-white">{resource.title}</h3>
+                  <p className="mb-5 text-sm leading-relaxed text-gray-500">{resource.copy}</p>
+                  <span className="text-sm font-semibold text-cyan-200 transition-colors group-hover:text-white">
+                    {resource.action} -&gt;
+                  </span>
+                </CardContent>
+              </a>
+            </Card>
           ))}
         </div>
       </section>
