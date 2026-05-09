@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const POSTS: Record<string, { title: string; date: string; category: string; content: React.ReactNode }> = {
   "reux-prototype-complete": {
@@ -73,9 +74,9 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         <article>
           <header className="mb-12">
             <div className="flex items-center gap-3 mb-6">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#00F0FF] bg-[#00F0FF]/10 px-2 py-1 rounded-sm">
+              <Badge variant="outline" className="bg-[#00F0FF]/10 border-[#00F0FF]/20 text-[#00F0FF]">
                 {post.category}
-              </span>
+              </Badge>
               <span className="text-sm text-gray-500">
                 {new Date(post.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
               </span>
