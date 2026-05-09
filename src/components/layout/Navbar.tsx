@@ -49,7 +49,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden md:flex items-center space-x-8" aria-label="Main navigation">
           {links.map((link) => (
             <Link
               key={link.href}
@@ -68,6 +68,7 @@ export default function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm font-medium"
+            aria-label="Reux GitHub repository (opens in new tab)"
           >
             <GithubIcon size={18} />
             <span>GitHub</span>
@@ -95,6 +96,8 @@ export default function Navbar() {
           initial={false}
           animate={isOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: -20, pointerEvents: "none" }}
           className="absolute top-0 left-0 w-full h-screen bg-[#0A0A0A]/95 backdrop-blur-xl flex flex-col items-center justify-center space-y-8 md:hidden"
+          role="dialog"
+          aria-label="Mobile navigation"
         >
           {links.map((link) => (
             <Link

@@ -6,7 +6,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-white/5 bg-[#0A0A0A] py-12 mt-20">
+    <footer className="border-t border-white/5 bg-[#0A0A0A] py-12 mt-20" aria-label="Site footer">
       <div className="container mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
@@ -71,7 +71,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="https://github.com/benn4105/Reux" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#00F0FF] transition-colors text-sm flex items-center gap-1.5">
+                <a href="https://github.com/benn4105/Reux" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#00F0FF] transition-colors text-sm flex items-center gap-1.5" aria-label="Reux GitHub repository (opens in new tab)">
                   <GithubIcon size={14} />
                   GitHub
                 </a>

@@ -211,6 +211,7 @@ export default function ContactPage() {
                   id="topic" 
                   value={topic}
                   onChange={(event) => setTopic(event.target.value)}
+                  aria-label="Select a topic"
                   className="w-full h-10 px-3 py-2 rounded-md bg-black/50 border border-white/10 text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20"
                 >
                   <option value="business-simulator">Business Simulator Pilot</option>
