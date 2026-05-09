@@ -5,13 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-
-const GithubIcon = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.02c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A4.8 4.8 0 0 0 9 18v4"></path>
-    <path d="M9 18c-4.51 2-5-2-7-2"></path>
-  </svg>
-);
+import GithubIcon from "@/components/ui/GithubIcon";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -38,7 +32,9 @@ export default function Navbar() {
     <header
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300",
-        isScrolled ? "glass py-4" : "bg-transparent py-6"
+        isScrolled
+          ? "bg-[#0A0A0A]/85 backdrop-blur-xl border-b border-white/[0.06] py-4"
+          : "bg-transparent py-6"
       )}
     >
       <div className="container mx-auto px-4 md:px-8 flex items-center justify-between">
@@ -98,7 +94,7 @@ export default function Navbar() {
         <motion.div
           initial={false}
           animate={isOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: -20, pointerEvents: "none" }}
-          className="absolute top-0 left-0 w-full h-screen bg-[#0A0A0A]/95 backdrop-blur-xl flex flex-col items-center justify-center space-y-8"
+          className="absolute top-0 left-0 w-full h-screen bg-[#0A0A0A]/95 backdrop-blur-xl flex flex-col items-center justify-center space-y-8 md:hidden"
         >
           {links.map((link) => (
             <Link
